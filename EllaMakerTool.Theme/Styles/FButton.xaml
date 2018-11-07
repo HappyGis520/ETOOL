@@ -1,0 +1,339 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Custom="http://www.ayjs.net/controls"
+                    xmlns:controls="clr-namespace:EllaMakerTool.Controls;assembly=EllaMakerTool.Controls">
+    <!--FButton模板-->
+    <ControlTemplate x:Key="FButton_Template" TargetType="{x:Type controls:FButton}">
+        <Border x:Name="border"
+                Background="{Binding Background, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                Height="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                Width="{Binding Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+            <!--Icon/Text-->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                        Margin="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+                <ContentControl x:Name="icon"
+                                Margin="{Binding FIconMargin, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                RenderTransformOrigin="0.5,0.5"
+                                Background="Transparent"
+                                Content="{Binding FIcon, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                FontSize="{Binding FIconSize, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                    <ContentControl.RenderTransform>
+                        <RotateTransform x:Name="transIcon" Angle="0" />
+                    </ContentControl.RenderTransform>
+                </ContentControl>
+
+                <TextBlock VerticalAlignment="Center" x:Name="txt"
+                           TextDecorations="{Binding ContentDecorations, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                           Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                           FontSize="{Binding FontSize, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                           Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+            </StackPanel>
+        </Border>
+        <!--触发器-->
+        <ControlTemplate.Triggers>
+            <!--设置鼠标进入时的背景、前景样式-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background"
+                        Value="{Binding MouseOverBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="border" />
+                <Setter Property="Foreground"
+                        Value="{Binding MouseOverForeground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="icon" />
+                <Setter Property="Foreground"
+                        Value="{Binding MouseOverForeground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="txt" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            </Trigger>
+            <!--Ficon的动画触发器-->
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="true" />
+                    <Condition Property="AllowsAnimation" Value="true" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="transIcon" Storyboard.TargetProperty="Angle"
+                                             To="180" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.EnterActions>
+                <MultiTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="transIcon" Storyboard.TargetProperty="Angle" To="0"
+                                             Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.ExitActions>
+            </MultiTrigger>
+            <!--鼠标按下时的前景、背景样式-->
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background"
+                        Value="{Binding PressedBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="border" />
+                <Setter Property="Foreground"
+                        Value="{Binding PressedForeground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="icon" />
+                <Setter Property="Foreground"
+                        Value="{Binding PressedForeground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        TargetName="txt" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Opacity" Value="1" TargetName="border" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--默认样式-->
+    <Style TargetType="{x:Type controls:FButton}">
+        <Setter Property="Background" Value="{StaticResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource ButtonForeground}" />
+        <Setter Property="MouseOverBackground" Value="{StaticResource ButtonMouseOverBackground}" />
+        <Setter Property="MouseOverForeground" Value="{StaticResource ButtonMouseOverForeground}" />
+        <Setter Property="PressedBackground" Value="{StaticResource ButtonPressedBackground}" />
+        <Setter Property="PressedForeground" Value="{StaticResource ButtonPressedForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="FIconSize" Value="22" />
+        <Setter Property="Template" Value="{StaticResource FButton_Template}" />
+        <Setter Property="Padding" Value="3,1,3,1" />
+        <Setter Property="Content" Value="{x:Null}" />
+        <Setter Property="FIconMargin" Value="0,0,5,0" />
+        <Setter Property="AllowsAnimation" Value="False" />
+    </Style>
+    <Style x:Key="FButton_Transparency" TargetType="{x:Type controls:FButton}">
+        <Setter Property="Background" Value="#5973b8" />
+        <Setter Property="MouseOverBackground" Value="#FF384F8B" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="MouseOverForeground" Value="White" />
+        <Setter Property="PressedForeground" Value="#FF384F8B" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FIconSize" Value="20" />
+        <Setter Property="Template" Value="{StaticResource FButton_Template}" />
+        <Setter Property="Padding" Value="3,1,3,1" />
+        <Setter Property="Content" Value="{x:Null}" />
+        <Setter Property="FIconMargin" Value="0,0,2,0" />
+        <Setter Property="AllowsAnimation" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderBrush" Value="#5973b8" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <!--LinkButton的FButton样式，默认无FIcon-->
+    <Style x:Key="FButton_LinkButton" TargetType="{x:Type controls:FButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MouseOverBackground" Value="Transparent" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource LinkForeground}" />
+        <Setter Property="MouseOverForeground" Value="{StaticResource MouseOverForeground}" />
+        <Setter Property="PressedForeground" Value="{StaticResource PressedForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FIconSize" Value="20" />
+        <Setter Property="Template" Value="{StaticResource FButton_Template}" />
+        <Setter Property="Padding" Value="3,1,3,1" />
+        <Setter Property="Content" Value="{x:Null}" />
+        <Setter Property="FIconMargin" Value="0" />
+        <Setter Property="FIcon" Value="" />
+        <Setter Property="AllowsAnimation" Value="False" />
+        <Setter Property="ContentDecorations" Value="Underline" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style x:Key="FButton_LinkButton_Noline" TargetType="{x:Type controls:FButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MouseOverBackground" Value="Transparent" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource LinkForeground}" />
+        <Setter Property="MouseOverForeground" Value="{StaticResource MouseOverForeground}" />
+        <Setter Property="PressedForeground" Value="{StaticResource PressedForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FIconSize" Value="20" />
+        <Setter Property="Template" Value="{StaticResource FButton_Template}" />
+        <Setter Property="Padding" Value="3,1,3,1" />
+        <Setter Property="Content" Value="{x:Null}" />
+        <Setter Property="FIconMargin" Value="0" />
+        <Setter Property="FIcon" Value="" />
+        <Setter Property="AllowsAnimation" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style x:Key="AyImageTransButtonStyle" TargetType="{x:Type Custom:AyImageButton}">
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Custom:AyImageButton}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="AyImageCloseButtonStyle" TargetType="{x:Type Custom:AyImageButton}">
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Custom:AyImageButton}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="red"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="red"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DefaultAyImageButtonStyle" TargetType="{x:Type Custom:AyImageButton}">
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FF707070"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Custom:AyImageButton}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#ECF4FC"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#FFC4E5F6"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

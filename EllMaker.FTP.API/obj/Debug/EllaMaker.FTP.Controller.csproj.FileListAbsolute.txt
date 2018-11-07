@@ -1,0 +1,12 @@
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\EllaMaker.FTP.Controller.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\EllaMaker.FTP.Controller.pdb
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\EllaMaker.FTP.Messages.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\GTD.Core.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\Newtonsoft.Json.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\GTD.Core.pdb
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\EllaMaker.FTP.Messages.pdb
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\bin\Debug\Newtonsoft.Json.xml
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\obj\Debug\EllaMaker.FTP.Controller.csprojResolveAssemblyReference.cache
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\obj\Debug\EllaMaker.FTP.Controller.dll
+D:\EllaMakerTool\code\EllMaker.FTP.Controller\obj\Debug\EllaMaker.FTP.Controller.pdb

@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="EllaMakerTool.CustomControls.MainToolBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Aycontrols="http://www.ayjs.net/controls"
+             xmlns:converter="clr-namespace:EllaMakerTool.Converter;assembly=EllaMakerTool.Converter"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Height="74" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0 0 0 1">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="74">
+            <Aycontrols:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
+                <StackPanel>
+                    <Grid>
+                        <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                           Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={x:Type converter:SvgToXamlConverter}}" />
+                        <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                         Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={x:Type converter:SvgToXamlConverter}}"/>
+                        <!--Visibility="{Binding indexnow,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}"-->
+                    </Grid>
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="后退" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoFront}" Width="74" Height="74" >
+                <StackPanel>
+                    <Grid>
+                        <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                           Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={x:Type converter:SvgToXamlConverter}}" />
+                        <Image Width="25" Height="25" Stretch="Uniform"
+                                           Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={x:Type converter:SvgToXamlConverter}}"
+                                           Visibility="{Binding indexnow,Converter={x:Static converter:XConverter.GofrontEnableVisConverter}}" />
+
+                    </Grid>
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="前进" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandRefreshFiles}">
+                <StackPanel>
+                    <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_refresh.svg, Converter={x:Static converter:XConverter.GobackEnableVisConverter}, Mode=OneWay}" />
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="刷新" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandUploadFileShow}"
+                                      Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                                      Width="74" Height="74">
+                <StackPanel>
+                    <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_Uploadbar.svg, Converter={x:Type converter:SvgToXamlConverter}, Mode=OneWay}" />
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="上传" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                        Width="74" Height="74" Command="{Binding CommandNewFolder}" Style="{DynamicResource DefaultAyImageButtonStyle}">
+                <StackPanel>
+                    <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_NewFolderBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="新建文件夹" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}"
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarDeleteButtonVisConverter}}"
+                        Width="74" Height="74" Command="{Binding CommandDeletFiles}">
+                <StackPanel>
+                    <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_DeleteBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="删除" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+            <Aycontrols:AyImageButton  Style="{DynamicResource DefaultAyImageButtonStyle}"
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                        Width="74" IsTabStop="False" Height="74"
+                        Command="{Binding CommandShowMoveDocWin}">
+                <StackPanel>
+                    <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_MoveBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                    <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="移动到" />
+                </StackPanel>
+            </Aycontrols:AyImageButton>
+
+        </StackPanel>
+    </Border>
+</UserControl>

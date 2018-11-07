@@ -1,0 +1,89 @@
+﻿<mvvm:MVVMWindow x:Class="EllaMakerTool.WPF.IrRecourdWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:controls="clr-namespace:EllaMakerTool.Controls;assembly=EllaMakerTool.Controls"
+                 xmlns:local="clr-namespace:EllaMakerTool.Converter;assembly=EllaMakerTool.Converter"
+                 xmlns:vm="clr-namespace:EllaMakerTool.WPF.ViewModels"
+                 xmlns:mvvm="clr-namespace:MVVMSidekick.Views;assembly=MVVMSidekick"
+                 xmlns:controls1="http://www.ayjs.net/controls"
+                 Title="更新记录"
+                 AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Background="Transparent"
+                 WindowStartupLocation="CenterOwner"
+                 Width="440" Height="396" Style="{StaticResource Window_style}">
+    <FrameworkElement.Resources>
+        <vm:IrRecourdWindow_Model x:Key="DesignVM" />
+    </FrameworkElement.Resources>
+    <Grid x:Name="grid" DataContext="{StaticResource DesignVM}">
+        <Border CornerRadius="3" BorderBrush="{StaticResource LineBrush}" BorderThickness="1"
+                Background="{StaticResource WindowBackground}">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Height="36" Margin="5 0 5 0"
+                            MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
+                    <Label Content="更新记录" FontWeight="Bold" HorizontalContentAlignment="Left"
+                           VerticalContentAlignment="Center" Width="390" />
+                    <controls1:AyImageButton DockPanel.Dock="Right" Width="40" Height="30" Margin="0 -5 -25 0" VerticalAlignment="Center"
+                                             HorizontalAlignment="Right" Style="{DynamicResource AyImageCloseButtonStyle}"
+                                             Command="{Binding CommandCloseWindow}" CommandParameter="0">
+                        <Image Width="15" Stretch="Uniform"
+                               Source="{Binding ConverterParameter=pc_Button_Close.svg, Converter={x:Static local:XConverter.SvgToXamlConverter}, Mode=OneWay}" />
+                    </controls1:AyImageButton>
+                </StackPanel>
+                <DataGrid RowHeight="24" Margin="30 0 30 0" BorderBrush="{StaticResource LineBrush}"
+                          BorderThickness="1" ItemsSource="{Binding IrData}" CanUserResizeColumns="False"
+                          CanUserAddRows="False" Style="{StaticResource FileBroswerDataGridStyle}" Height="315"
+                          HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
+                          GridLinesVisibility="Horizontal" MinRowHeight="44">
+                    <DataGrid.Columns>
+                        <!--作者-->
+                        <DataGridTemplateColumn Width="auto" MinWidth="100" Header="作者">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
+                                                HorizontalAlignment="Left">
+                                        <Label MinWidth="50" Content="{Binding CreatorName}"
+                                               HorizontalContentAlignment="Left" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--时间-->
+                        <DataGridTemplateColumn Width="*" MinWidth="100" Header="时间">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
+                                                HorizontalAlignment="Left">
+                                        <Label MinWidth="100"
+                                               Content="{Binding CreateTime,Converter={x:Static local:XConverter.DataTimeTostringConverter},ConverterParameter=yyyy-MM-dd HH:mm}"
+                                               HorizontalContentAlignment="Left" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--下载-->
+                        <DataGridTemplateColumn Width="50" MinWidth="20" Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls1:AyImageButton Width="50" Style="{DynamicResource AyImageTransButtonStyle}"
+                                                      Command="{Binding DataContext.CommandDownLoadSingle, ElementName=grid}"
+                                                      CommandParameter="{Binding}">
+                                        <Image Width="15" Stretch="Uniform"
+                                                   Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={x:Static local:XConverter.SvgToXamlConverter}, Mode=OneWay}" />
+                                    </controls1:AyImageButton>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <StackPanel Margin="0 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                    <controls:FButton Width="80" Height="30" Style="{StaticResource FButton_Transparency}"
+                                      Foreground="{StaticResource NormalBtnBg}"
+                                      Background="{StaticResource WindowBackground}"
+                                      Command="{Binding CommandCloseWindow}" CommandParameter="1" BorderThickness="1"
+                                      Content="关闭" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</mvvm:MVVMWindow>

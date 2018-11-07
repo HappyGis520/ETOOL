@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F620D3FE-9610-4AF3-8444-D7F938FCCA75}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EllaMakerTool.Api</RootNamespace>
+    <AssemblyName>EllaMakerTool.Api</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiResult.cs" />
+    <Compile Include="Enum\EnumDocFileType.cs" />
+    <Compile Include="Enum\EnumDocStatusType.cs" />
+    <Compile Include="Enum\EnumDocType.cs" />
+    <Compile Include="Enum\EnumEmployeeRoleType.cs" />
+    <Compile Include="Enum\EnumPsAndDeptItemtype.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\DocBaseInfoApiModel.cs" />
+    <Compile Include="Request\DocumentDeleteRequest.cs" />
+    <Compile Include="Request\DocumentV1Request.cs" />
+    <Compile Include="Request\StatusList.cs" />
+    <Compile Include="Response\AuthToken.cs" />
+    <Compile Include="Response\CompanyStoreStatusApiModel.cs" />
+    <Compile Include="Response\CoverDocResultApiModel.cs" />
+    <Compile Include="Response\DepartmentApiModel.cs" />
+    <Compile Include="Response\DocumentTreeNodelApiModel.cs" />
+    <Compile Include="Response\DocumentV1QueryModel.cs" />
+    <Compile Include="Response\EmployeeAndDeptNodelApiModel.cs" />
+    <Compile Include="Response\EmployeeJobApiModel.cs" />
+    <Compile Include="Response\EmployerApiModel.cs" />
+    <Compile Include="Response\FunctionItemApiModel.cs" />
+    <Compile Include="Response\FunctionPermissionApiModel.cs" />
+    <Compile Include="Response\ProfileApiModel.cs" />
+    <Compile Include="TheResult.cs" />
+    <Compile Include="WebApis.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GTD.Core\EllaMakerTool.Core.csproj">
+      <Project>{14b75d26-49df-47fa-a4c6-17456987d604}</Project>
+      <Name>EllaMakerTool.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

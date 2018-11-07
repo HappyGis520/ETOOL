@@ -1,0 +1,16 @@
+D:\EllaMakerTool\Code\EllMaker.FTP.Controller\obj\Debug\EllaMaker.FTP.API.csprojAssemblyReference.cache
+D:\EllaMakerTool\Code\EllMaker.FTP.Controller\obj\Debug\EllaMaker.FTP.API.csproj.CoreCompileInputs.cache
+D:\EllaMakerTool\Code\EllMaker.FTP.API\obj\Debug\EllaMaker.FTP.API.csprojAssemblyReference.cache
+D:\EllaMakerTool\Code\EllMaker.FTP.API\obj\Debug\EllaMaker.FTP.API.csproj.CoreCompileInputs.cache
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\EllaMaker.FTP.API.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\EllaMaker.FTP.API.pdb
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\EllaMaker.FTP.Message.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\GTD.Core.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\Newtonsoft.Json.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\GTD.Core.pdb
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\EllaMaker.FTP.Message.pdb
+D:\EllaMakerTool\Code\EllMaker.FTP.API\bin\Debug\Newtonsoft.Json.xml
+D:\EllaMakerTool\Code\EllMaker.FTP.API\obj\Debug\EllaMaker.FTP.API.csproj.CopyComplete
+D:\EllaMakerTool\Code\EllMaker.FTP.API\obj\Debug\EllaMaker.FTP.API.dll
+D:\EllaMakerTool\Code\EllMaker.FTP.API\obj\Debug\EllaMaker.FTP.API.pdb

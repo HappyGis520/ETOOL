@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:EllaMakerTool.Controls;assembly=EllaMakerTool.Controls">
+    <Style TargetType="controls:StoreProgressBar" x:Key="StoreProgressBarStyle">
+        <Setter Property="Background" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="Maximum" Value="1" />
+        <Setter Property="Value" Value="0" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Foreground" Value="{StaticResource FocusBorderBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:StoreProgressBar">
+                    <Grid Name="TemplateRoot">
+                        <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                Background="{TemplateBinding Panel.Background}" ClipToBounds="True">
+
+                            <Grid Name="PART_Indicator" HorizontalAlignment="Left" ClipToBounds="True">
+                                <Border CornerRadius="{TemplateBinding CornerRadius}"
+                                        Background="{TemplateBinding TextElement.Foreground}" Name="Indicator" />
+                            </Grid>
+                        </Border>
+                        <Rectangle Name="PART_Track" />
+
+                    </Grid>
+                    <!--<Grid x:Name="Root" >
+                        <Border x:Name="PART_Track" Background="{TemplateBinding Background}" 
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ClipToBounds="True">
+                            <Border  x:Name="PART_Indicator" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}" 
+                                     CornerRadius="{TemplateBinding CornerRadius}"
+                                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ClipToBounds="True"/>
+                        </Border>
+                        
+                    </Grid>-->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

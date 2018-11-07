@@ -1,0 +1,61 @@
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\GTD.Core.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\GTD.Core.pdb
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\AutoMapper.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\EntityFramework.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\EntityFramework.SqlServer.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\log4net.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Newtonsoft.Json.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Spire.XLS.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\StackExchange.Redis.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Spire.Pdf.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Spire.License.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Microsoft.mshtml.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\AutoMapper.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\EntityFramework.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\EntityFramework.SqlServer.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\log4net.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\Newtonsoft.Json.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\StackExchange.Redis.pdb
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\StackExchange.Redis.xml
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\zh-Hans\EntityFramework.resources.dll
+D:\Project\GTD Project\GTD\GTD.Core\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
+D:\Project\GTD Project\GTD\GTD.Core\obj\Release\GTD.Core.csproj.CoreCompileInputs.cache
+D:\Project\GTD Project\GTD\GTD.Core\obj\Release\GTD.Core.dll
+D:\Project\GTD Project\GTD\GTD.Core\obj\Release\GTD.Core.pdb
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\GTD.Core.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\GTD.Core.pdb
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\AutoMapper.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\EntityFramework.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\EntityFramework.SqlServer.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Newtonsoft.Json.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Spire.XLS.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Spire.Pdf.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Spire.License.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Microsoft.mshtml.dll
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\AutoMapper.xml
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\EntityFramework.xml
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\EntityFramework.SqlServer.xml
+D:\Project\GTD_Document_WPF\GTD.Core\bin\Release\Newtonsoft.Json.xml
+D:\Project\GTD_Document_WPF\GTD.Core\obj\Release\GTD.Core.csproj.CoreCompileInputs.cache
+D:\Project\GTD_Document_WPF\GTD.Core\obj\Release\GTD.Core.dll
+D:\Project\GTD_Document_WPF\GTD.Core\obj\Release\GTD.Core.pdb
+D:\Project\GTD_WPF\GTD.Core\bin\Release\GTD.Core.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\GTD.Core.pdb
+D:\Project\GTD_WPF\GTD.Core\bin\Release\AutoMapper.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\EntityFramework.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\EntityFramework.SqlServer.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Newtonsoft.Json.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Spire.XLS.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Spire.Pdf.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Spire.License.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Microsoft.mshtml.dll
+D:\Project\GTD_WPF\GTD.Core\bin\Release\AutoMapper.xml
+D:\Project\GTD_WPF\GTD.Core\bin\Release\EntityFramework.xml
+D:\Project\GTD_WPF\GTD.Core\bin\Release\EntityFramework.SqlServer.xml
+D:\Project\GTD_WPF\GTD.Core\bin\Release\Newtonsoft.Json.xml
+D:\Project\GTD_WPF\GTD.Core\obj\Release\GTD.Core.csproj.CoreCompileInputs.cache
+D:\Project\GTD_WPF\GTD.Core\obj\Release\GTD.Core.dll
+D:\Project\GTD_WPF\GTD.Core\obj\Release\GTD.Core.pdb
