@@ -1,2 +1,0 @@
-E:\PC\Code2\code\EllaMakerTool.Converters\obj\Debug\EllaMakerTool.Converters.csprojAssemblyReference.cache
-E:\PC\Code2\code\EllaMakerTool.Converters\obj\Debug\EllaMakerTool.Converters.csproj.CoreCompileInputs.cache

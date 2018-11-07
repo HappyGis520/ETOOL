@@ -1,6 +1,0 @@
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\bin\Debug\EllaMaker.FTP.Message.dll
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\bin\Debug\EllaMaker.FTP.Message.pdb
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\obj\Debug\EllaMaker.FTP.Message.csproj.CoreCompileInputs.cache
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\obj\Debug\EllaMaker.FTP.Message.dll
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\obj\Debug\EllaMaker.FTP.Message.pdb
-D:\EllaMakerTool\Code\EllaMaker.FTP.Message\obj\Debug\EllaMaker.FTP.Message.csprojAssemblyReference.cache

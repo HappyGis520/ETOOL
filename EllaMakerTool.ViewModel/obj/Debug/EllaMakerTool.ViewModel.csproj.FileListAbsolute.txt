@@ -1,5 +1,0 @@
-E:\PC\Code2\code\EllaMakerTool.ViewModel\obj\Debug\EllaMakerTool.ViewModel.csproj.App.config
-E:\PC\Code2\code\EllaMakerTool.ViewModel\obj\Debug\EllaMakerTool.ViewModel.csprojAssemblyReference.cache
-E:\PC\Code2\code\EllaMakerTool.ViewModel\obj\Debug\EllaMakerTool.ViewModel.Properties.Resources.resources
-E:\PC\Code2\code\EllaMakerTool.ViewModel\obj\Debug\EllaMakerTool.ViewModel.csproj.GenerateResource.cache
-E:\PC\Code2\code\EllaMakerTool.ViewModel\obj\Debug\EllaMakerTool.ViewModel.csproj.CoreCompileInputs.cache

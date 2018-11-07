@@ -1,5 +1,0 @@
-E:\PC\Code2\code\EllaMakerTool.Message\bin\Debug\EllaMakerTool.Message.dll
-E:\PC\Code2\code\EllaMakerTool.Message\bin\Debug\EllaMakerTool.Message.pdb
-E:\PC\Code2\code\EllaMakerTool.Message\obj\Debug\EllaMakerTool.Message.csproj.CoreCompileInputs.cache
-E:\PC\Code2\code\EllaMakerTool.Message\obj\Debug\EllaMakerTool.Message.dll
-E:\PC\Code2\code\EllaMakerTool.Message\obj\Debug\EllaMakerTool.Message.pdb
