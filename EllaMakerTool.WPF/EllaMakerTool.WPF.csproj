@@ -147,8 +147,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BookList.xaml.cs">
+      <DependentUpon>BookList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChangeStatusWindow.xaml.cs">
       <DependentUpon>ChangeStatusWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FileList.xaml.cs">
+      <DependentUpon>FileList.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\UserControls\CoverMessageBox.cs" />
     <Compile Include="Controls\UserControls\CoverMessageBoxControl.xaml.cs">
@@ -175,6 +182,9 @@
     <Compile Include="Helper\CollectHelper.cs" />
     <Compile Include="IrRecourdWindow.xaml.cs">
       <DependentUpon>IrRecourdWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainToolBar.xaml.cs">
+      <DependentUpon>MainToolBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="MoveDocumentWindow.xaml.cs">
       <DependentUpon>MoveDocumentWindow.xaml</DependentUpon>
@@ -204,6 +214,9 @@
     <Compile Include="Startups\SelectPersonWindow.cs" />
     <Compile Include="Startups\ToastInstance.cs" />
     <Compile Include="Startups\UploadMesWindow.cs" />
+    <Compile Include="Controls\TransFileList.xaml.cs">
+      <DependentUpon>TransFileList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserLoginItem.cs" />
     <Compile Include="ViewModels\ChangeStatusWindow_Model.cs" />
     <Compile Include="ViewModels\CreatenewFolderWindow_Model.cs" />
@@ -215,9 +228,17 @@
     <Compile Include="ViewModels\SelectDeptWindow_Model.cs" />
     <Compile Include="ViewModels\SelectPersonWindow_Model.cs" />
     <Compile Include="ViewModels\UploadMesWindow_Model.cs" />
+    <Page Include="BookList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChangeStatusWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FileList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Controls\UserControls\CoverMessageBoxControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -260,6 +281,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,6 +342,10 @@
     <Compile Include="ViewModels\MainWindow_Model.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\TransFileList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UploadMesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

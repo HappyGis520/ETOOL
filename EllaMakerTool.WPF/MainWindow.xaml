@@ -11,8 +11,7 @@
     x:Class="EllaMakerTool.WPF.MainWindow"
     Title="咿啦做书工具"
     AllowsTransparency="True" MinWidth="800" MinHeight="500" WindowStyle="None" ResizeMode="NoResize" Width="1240"
-    Height="700" SizeChanged="mVVMWindow_SizeChanged" MouseLeftButtonDown="Border_MouseLeftButtonDown"
-    Style="{StaticResource Window_style}">
+    Height="700" SizeChanged="mVVMWindow_SizeChanged"  MouseLeftButtonDown="Border_MouseLeftButtonDown" Style="{DynamicResource Window_style}">
     <mvvm:MVVMWindow.Resources>
         <converter:SvgToXamlConverter x:Key="SvgToXamlConverter" />
         <vm:MainWindow_Model x:Key="DesignVM" />
@@ -20,10 +19,6 @@
             <EllipseGeometry RadiusX="23" RadiusY="23" Center="23,23" />
         </GeometryGroup>
     </mvvm:MVVMWindow.Resources>
-    <mvvm:MVVMWindow.Background>
-        <StaticResource ResourceKey="WindowBackground" />
-    </mvvm:MVVMWindow.Background>
-
     <Grid x:Name="LayoutMain" DataContext="{StaticResource DesignVM}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180" />
@@ -58,7 +53,7 @@
         </Grid>
         <StackPanel Height="130" Grid.Row="0" Margin="0 40 0 0" Grid.Column="1" VerticalAlignment="Top"
                     Orientation="Vertical" Grid.ColumnSpan="2" Grid.RowSpan="2">
-            <Border Height="54" Margin="0 0 0 0" BorderBrush="{StaticResource LineBrush}" VerticalAlignment="Center"
+            <Border Height="54" Margin="0 0 0 0" BorderBrush="{DynamicResource LineBrush}" VerticalAlignment="Center"
                     BorderThickness="0 0 0 1">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -67,14 +62,14 @@
                         <ColumnDefinition Width="44" />
                     </Grid.ColumnDefinitions>
                     <Label VerticalAlignment="Top" Margin="20 0 0 0" Content="{Binding BroswerPathStr}" FontSize="18"
-                           FontFamily="{StaticResource FontFamily}" Foreground="Black"
+                           FontFamily="{DynamicResource FontFamily}" Foreground="Black"
                            Visibility="{Binding TransVisibility,Converter={x:Static converter:XConverter.CollaspedToVisConverter}}" />
                     <Label VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="20 0 0 0" Content="传输列表"
-                           FontSize="18" FontFamily="{StaticResource FontFamily}" Foreground="Black"
+                           FontSize="18" FontFamily="{DynamicResource FontFamily}" Foreground="Black"
                            Visibility="{Binding TransVisibility}" />
                     <controls:ExtendTextBox VerticalAlignment="Top" x:Name="searchBox"
                                             MouseLeftButtonUp="searchBox_MouseLeftButtonUp" CornerRadiusValue="4"
-                                            BorderBrush="{StaticResource LineBrush}" VerticalContentAlignment="Center"
+                                            BorderBrush="{DynamicResource LineBrush}" VerticalContentAlignment="Center"
                                             Grid.Column="1" WaterMark="搜索资源名称..." Height="32" Width="320"
                                             Text="{Binding SearchKeyStr}">
                         <controls:ExtendTextBox.HeaderObj>
@@ -177,7 +172,6 @@
                             <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="移动到" />
                         </StackPanel>
                     </Aycontrols:AyImageButton>
-
                 </StackPanel>
             </Border>
         </StackPanel>
@@ -194,8 +188,8 @@
                         </Grid>
                         <Grid>
                             <Label Margin="0 6 0 0" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"
-                                   FontFamily="{StaticResource FontFamily}" FontSize="12"
-                                   Foreground="{StaticResource UserInfoForeground}" Content="{Binding UserNick}" />
+                                   FontFamily="{DynamicResource FontFamily}" FontSize="12"
+                                   Foreground="{DynamicResource UserInfoForeground}" Content="{Binding UserNick}" />
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -203,39 +197,38 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <ComboBox Grid.ColumnSpan="2" x:Name="ComChangeCbx" Width="90" Text="切换部门" FontSize="12"
-                                      Foreground="{StaticResource UserInfoForeground}"
-                                      Style="{StaticResource ComboBoxStyle}" Background="Transparent"
+                                      Foreground="{DynamicResource UserInfoForeground}"
+                                      Style="{DynamicResource ComboBoxStyle}" Background="Transparent"
                                       HorizontalContentAlignment="Right" IsReadOnly="True"
                                       ItemsSource="{Binding CompanyList}"
                                       SelectionChanged="ComChangeCbx_SelectionChanged" />
-                            <Label Grid.ColumnSpan="2" Background="{StaticResource WindowBackground}"
+                            <Label Grid.ColumnSpan="2" Background="{DynamicResource WindowBackground}"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
                                    Content="{Binding Text, ElementName=ComChangeCbx}" FontSize="12"
                                    Foreground="{StaticResource UserInfoForeground}" Width="73" Margin="0 0 15 0"
                                    HorizontalAlignment="Center" />
-                            <!--                            <controls:FButton Width="90" FontSize="12" Grid.Column="1" Content="更多服务" Style="{StaticResource FButton_LinkButton_Noline}" Foreground="{StaticResource UserInfoForeground}"/>-->
                         </Grid>
                         <Grid>
                             <controls:StoreProgressBar Width="159" Height="12"
                                                        Maximum="{Binding StoreUseStatus.DocumentsSize}"
                                                        Value="{Binding StoreUseStatus.UsedDocumentsSize}"
                                                        CornerRadius="5"
-                                                       Background="{StaticResource ProgressBarBackground}"
-                                                       Foreground="{StaticResource ProgressBarForeground}"
-                                                       Style="{StaticResource StoreProgressBarStyle}">
+                                                       Background="{DynamicResource ProgressBarBackground}"
+                                                       Foreground="{DynamicResource ProgressBarForeground}"
+                                                       Style="{DynamicResource StoreProgressBarStyle}">
                                 <controls:StoreProgressBar.Clip>
                                     <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,159,12" />
                                 </controls:StoreProgressBar.Clip>
                             </controls:StoreProgressBar>
                             <Label HorizontalContentAlignment="Center"
                                    Content="{Binding StoreUseStatus, Converter={x:Static converter:XConverter.StoreBarStrConverter}}"
-                                   Foreground="{StaticResource WindowBackground}" />
+                                   Foreground="{DynamicResource WindowBackground}" />
                         </Grid>
                     </StackPanel>
                 </Border>
                 <ListBox Width="180" BorderBrush="Transparent" SelectedIndex="{Binding TabCotrolSelectIndex}"
-                         Style="{StaticResource ListBoxControl}">
-                    <ListBoxItem Width="176" Height="40" Style="{StaticResource ListBoxItemStyle}">
+                         Style="{DynamicResource ListBoxControl}">
+                    <ListBoxItem Width="176" Height="40" Style="{DynamicResource ListBoxItemStyle}">
                         <WrapPanel>
                             <Image Margin="40 0 10 0" Width="20" Stretch="Uniform"
                                    Source="{Binding ConverterParameter=Icon_All.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
@@ -249,14 +242,14 @@
                             <Label>动画书资源</Label>
                         </WrapPanel>
                     </ListBoxItem>
-                    <ListBoxItem Width="176" Height="40" Style="{StaticResource ListBoxItemStyle}">
+                    <ListBoxItem Width="176" Height="40" Style="{DynamicResource ListBoxItemStyle}">
                         <WrapPanel>
                             <Image Margin="40 0 10 0" Width="20" Stretch="Uniform"
                                    Source="{Binding ConverterParameter=Icon_Share.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                             <Label>共享资源</Label>
                         </WrapPanel>
                     </ListBoxItem>
-                    <ListBoxItem Width="176" Height="40" Style="{StaticResource ListBoxItemStyle}">
+                    <ListBoxItem Width="176" Height="40" Style="{DynamicResource ListBoxItemStyle}">
                         <WrapPanel>
                             <Image Margin="40 0 10 0" Width="20" Stretch="Uniform"
                                    Source="{Binding ConverterParameter=Icon_Personal.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
@@ -266,48 +259,49 @@
                 </ListBox>
             </StackPanel>
         </Border>
+        <!--文件列表--><!--
         <DataGrid x:Name="dgfileBrowser" Margin="0 85 0 0" Grid.Column="1" Grid.Row="1"
                   ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
-                  Style="{StaticResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
+                  Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
                   SelectionMode="Extended" SelectedItem="{Binding DgSelectItem,Mode=TwoWay}">
             <DataGrid.InputBindings>
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding CommandBrowserLeftDoubleClick}" />
             </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <!--ID-->
+                --><!--ID--><!--
                 <DataGridTemplateColumn Visibility="Collapsed" Width="auto" MinWidth="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Label Foreground="{StaticResource BrowserFontSizeColor}"
+                                <Label Foreground="{DynamicResource BrowserFontSizeColor}"
                                        HorizontalContentAlignment="Center" Content="{Binding Id}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--勾选框-->
+                --><!--勾选框--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="30">
                     <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="ckall" Margin="0 5 0 0" BorderBrush="{StaticResource LineBrush}"
-                                  Foreground="{StaticResource UserInfoForeground}"
-                                  FontFamily="{StaticResource FontFamily}" FontSize="13"
+                        <CheckBox x:Name="ckall" Margin="0 5 0 0" BorderBrush="{DynamicResource LineBrush}"
+                                  Foreground="{DynamicResource UserInfoForeground}"
+                                  FontFamily="{DynamicResource FontFamily}" FontSize="13"
                                   IsChecked="{Binding DataContext.IsAllCheck, ElementName=LayoutMain}"
                                   Checked="ckall_Checked" Unchecked="ckall_Unchecked"
-                                  Style="{StaticResource MyCheckBoxStyle}" />
+                                  Style="{DynamicResource MyCheckBoxStyle}" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsEnabled="False" Margin="8 0 0 0" IsChecked="{Binding isChecked}"
-                                      BorderBrush="{StaticResource LineBrush}"
-                                      Foreground="{StaticResource UserInfoForeground}"
-                                      FontFamily="{StaticResource FontFamily}" FontSize="13"
-                                      Style="{StaticResource MyCheckBoxStyle}" />
+                                      BorderBrush="{DynamicResource LineBrush}"
+                                      Foreground="{DynamicResource UserInfoForeground}"
+                                      FontFamily="{DynamicResource FontFamily}" FontSize="13"
+                                      Style="{DynamicResource MyCheckBoxStyle}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--文件名-->
+                --><!--文件名--><!--
                 <DataGridTemplateColumn Width="*" MinWidth="200" Header="文件名">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -320,7 +314,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--工具栏列-->
+                --><!--工具栏列--><!--
                 <DataGridTemplateColumn MinWidth="200" Width="250">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -364,7 +358,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--更新时间-->
+                --><!--更新时间--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="200">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -404,7 +398,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--状态-->
+                --><!--状态--><!--
                 <DataGridTemplateColumn Width="80" MinWidth="80">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -442,7 +436,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--下载次数-->
+                --><!--下载次数--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="80">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -463,7 +457,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--上传者/创建者-->
+                --><!--上传者/创建者--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="120">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -483,7 +477,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--大小-->
+                --><!--大小--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="100">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -505,6 +499,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        --><!--下载列表--><!--
         <DataGrid Visibility="{Binding TransVisibility}" ItemsSource="{Binding DownRecordList}" Grid.Column="1"
                   Grid.Row="1" CanUserResizeColumns="False" BorderBrush="Transparent" CanUserAddRows="False"
                   BorderThickness="0" Style="{StaticResource FileBroswerDataGridStyle}"
@@ -512,7 +507,7 @@
                   GridLinesVisibility="Horizontal" MinRowHeight="44" SelectionMode="Extended"
                   SelectedItem="{Binding DownloadRecSelectItem}">
             <DataGrid.Columns>
-                <!--文件名-->
+                --><!--文件名--><!--
                 <DataGridTemplateColumn Width="*" MinWidth="120" Header=" 文件名">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -525,7 +520,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--工具栏列-->
+                --><!--工具栏列--><!--
                 <DataGridTemplateColumn MinWidth="120" Width="auto">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -546,7 +541,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--进度-->
+                --><!--进度--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="200">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -567,7 +562,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--状态-->
+                --><!--状态--><!--
                 <DataGridTemplateColumn Width="300" MinWidth="50">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -587,7 +582,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
 
-        </DataGrid>
+        </DataGrid>-->
         <Grid Grid.ColumnSpan="3" Grid.RowSpan="3">
             <Aycontrols:BusyIndicator IsBusy="{Binding IsUIBusy}" Background="Transparent">
                 <Aycontrols:BusyIndicator.ProgressBarStyle>
