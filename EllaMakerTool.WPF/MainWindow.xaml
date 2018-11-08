@@ -6,7 +6,6 @@
     xmlns:mvvm="clr-namespace:MVVMSidekick.Views;assembly=MVVMSidekick"
     xmlns:converter="clr-namespace:EllaMakerTool.Converter;assembly=EllaMakerTool.Converter"
     xmlns:controls="clr-namespace:EllaMakerTool.Controls;assembly=EllaMakerTool.Controls"
-    xmlns:uc="clr-namespace:EllaMakerTool.CustomControls;assembly=EllaMakerTool.CustomControls"
     x:Name="mVVMWindow"
     x:Class="EllaMakerTool.WPF.MainWindow"
     Title="咿啦做书工具"

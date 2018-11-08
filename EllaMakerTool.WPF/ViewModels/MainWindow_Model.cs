@@ -253,7 +253,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
         public void RefreshDownRec()
         {
-            var res = Helper.INIOperationHelper.INIGetAllItems(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist");
+            var res = INIOperationHelper.INIGetAllItems(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist");
             DownRecordList.Clear();
             foreach (var item in res)
             {
@@ -950,7 +950,7 @@ namespace EllaMakerTool.WPF.ViewModels
             };
             if (!string.IsNullOrEmpty(req.Name))
             {
-                Helper.INIOperationHelper.INIWriteValue(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist", sessionID, Newtonsoft.Json.JsonConvert.SerializeObject(req));
+                INIOperationHelper.INIWriteValue(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist", sessionID, Newtonsoft.Json.JsonConvert.SerializeObject(req));
             }
             
             ProgressBarValue = 0;
@@ -2297,7 +2297,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             else
                             {
                                 var para = vm.DownloadRecSelectItem;
-                                Helper.INIOperationHelper.INIDeleteKey(GlobalPara.IniPath, Global.authToken.Profile.ProfileId+"Downlist", para.SessionId);
+                              INIOperationHelper.INIDeleteKey(GlobalPara.IniPath, Global.authToken.Profile.ProfileId+"Downlist", para.SessionId);
                                 vm.RefreshDownRec();
                             }
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();

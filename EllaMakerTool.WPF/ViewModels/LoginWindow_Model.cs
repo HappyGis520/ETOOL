@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using EllaMakerTool.Core;
 using EllaMakerTool.Message;
 
 namespace EllaMakerTool.WPF.ViewModels
@@ -104,9 +105,9 @@ namespace EllaMakerTool.WPF.ViewModels
                         {
                             Global.authToken = new AuthToken();
                             var para = e.EventArgs.Parameter as UserLoginItem;
-                            var res = GlobalPara.webApis.Login(para.UserName, para.Password);
+                            var res = GlobalPara.webApis.UserLogin(para.UserName, para.Password);
                             INIOperationHelper.INIWriteValue(GlobalPara.IniPath, "User", "Name", vm.UserLoginInfo.UserName);
-                            if (res.successful)
+                            if (res.Successful)
                             {
                                 if (vm.Remember)
                                 {
@@ -117,22 +118,27 @@ namespace EllaMakerTool.WPF.ViewModels
                                 {
                                     INIOperationHelper.INIWriteValue(GlobalPara.IniPath, "User", "Pwd", "");
                                 }
-                                Global.authToken = res.Data;
-                                var resdept = GlobalPara.webApis.GetCompanyTree();
-                                var resperson = GlobalPara.webApis.GetCompanyTree("", true);
-                                GlobalPara.SetDeptTreesSource(new List<EmployeeAndDeptNodelApiModel>()
+                                Global.authToken = new AuthToken()
                                 {
-                                    resdept.Data
-                                });
-                                GlobalPara.SetPersonTreesSource(new List<EmployeeAndDeptNodelApiModel>()
-                                {
-                                    resperson.Data
-                                });
-                                var res1 = GlobalPara.webApis.GetJoblist();
-                                if (res1.successful)
-                                {
-                                    Global.DepartId = res1.Data.Select(p => p.DepartmentId).ToList();
-                                }
+                                    Token = res.Data.token,
+                                    Username = res.Data.name,
+                                    Profile = null
+                                };
+                                //var resdept = GlobalPara.webApis.GetCompanyTree();
+                                //var resperson = GlobalPara.webApis.GetCompanyTree("", true);
+                                //GlobalPara.SetDeptTreesSource(new List<EmployeeAndDeptNodelApiModel>()
+                                //{
+                                //    resdept.Data
+                                //});
+                                //GlobalPara.SetPersonTreesSource(new List<EmployeeAndDeptNodelApiModel>()
+                                //{
+                                //    resperson.Data
+                                //});
+                                //var res1 = GlobalPara.webApis.GetJoblist();
+                                //if (res1.successful)
+                                //{
+                                //    Global.DepartId = res1.Data.Select(p => p.DepartmentId).ToList();
+                                //}
                                 vm.GlobalEventRouter.GetEventChannel(typeof(MesWindowResModel)).RaiseEvent(vm,
                                     "MesWindowOptResEventRouter", new MesWindowResModel()
                                     {

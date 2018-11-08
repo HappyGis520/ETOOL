@@ -147,7 +147,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BookList.xaml.cs">
+    <Compile Include="Controls\BookList.xaml.cs">
       <DependentUpon>BookList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ChangeStatusWindow.xaml.cs">
@@ -183,7 +183,7 @@
     <Compile Include="IrRecourdWindow.xaml.cs">
       <DependentUpon>IrRecourdWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainToolBar.xaml.cs">
+    <Compile Include="Controls\MainToolBar.xaml.cs">
       <DependentUpon>MainToolBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="MoveDocumentWindow.xaml.cs">
@@ -228,7 +228,7 @@
     <Compile Include="ViewModels\SelectDeptWindow_Model.cs" />
     <Compile Include="ViewModels\SelectPersonWindow_Model.cs" />
     <Compile Include="ViewModels\UploadMesWindow_Model.cs" />
-    <Page Include="BookList.xaml">
+    <Page Include="Controls\BookList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -284,7 +284,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainToolBar.xaml">
+    <Page Include="Controls\MainToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -319,8 +319,6 @@
       <DependentUpon>UploadUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\Command\ShowLoginCommand.cs" />
-    <Compile Include="Helper\DESEncryptHelper.cs" />
-    <Compile Include="Helper\INIOperationHelper.cs" />
     <Compile Include="Helper\PasswordHelper.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
@@ -389,10 +387,6 @@
     <ProjectReference Include="..\EllaMakerTool.Core\EllaMakerTool.Core.csproj">
       <Project>{14b75d26-49df-47fa-a4c6-17456987d604}</Project>
       <Name>EllaMakerTool.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EllaMakerTool.CustomControls\EllaMakerTool.CustomControls.csproj">
-      <Project>{c26c5bc0-3cb6-4a42-ae2a-e95e9c999cda}</Project>
-      <Name>EllaMakerTool.CustomControls</Name>
     </ProjectReference>
     <ProjectReference Include="..\EllaMakerTool.Message\EllaMakerTool.Message.csproj">
       <Project>{afbaed19-ae58-4fae-98c5-f5cfb1eacc18}</Project>

@@ -13,13 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.Message", "El
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.Controls", "EllaMakerTool.Controls\EllaMakerTool.Controls.csproj", "{3B7795D6-E268-4AF5-9ED1-5437115B6758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.CustomControls", "EllaMakerTool.CustomControls\EllaMakerTool.CustomControls.csproj", "{C26C5BC0-3CB6-4A42-AE2A-E95E9C999CDA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.Converter", "EllaMakerTool.Converter\EllaMakerTool.Converter.csproj", "{2C5B6493-2133-4841-864B-29CDA7B375E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.Models", "EllaMakerTool.Models\EllaMakerTool.Models.csproj", "{2888D44A-2457-4895-A55E-CE7FF811CAD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EllaMakerTool.Theme", "EllaMakerTool.Theme\EllaMakerTool.Theme.csproj", "{C0FB57A3-36F8-42C6-858D-1C48B5350C9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DESTool", "DESTool\DESTool.csproj", "{54C0A6D5-8200-4581-BA65-80B72AF4A158}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{3B7795D6-E268-4AF5-9ED1-5437115B6758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B7795D6-E268-4AF5-9ED1-5437115B6758}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B7795D6-E268-4AF5-9ED1-5437115B6758}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C26C5BC0-3CB6-4A42-AE2A-E95E9C999CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C26C5BC0-3CB6-4A42-AE2A-E95E9C999CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C26C5BC0-3CB6-4A42-AE2A-E95E9C999CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C26C5BC0-3CB6-4A42-AE2A-E95E9C999CDA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C5B6493-2133-4841-864B-29CDA7B375E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C5B6493-2133-4841-864B-29CDA7B375E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C5B6493-2133-4841-864B-29CDA7B375E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,12 +59,16 @@ Global
 		{C0FB57A3-36F8-42C6-858D-1C48B5350C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0FB57A3-36F8-42C6-858D-1C48B5350C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0FB57A3-36F8-42C6-858D-1C48B5350C9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C0A6D5-8200-4581-BA65-80B72AF4A158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C0A6D5-8200-4581-BA65-80B72AF4A158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C0A6D5-8200-4581-BA65-80B72AF4A158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C0A6D5-8200-4581-BA65-80B72AF4A158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {04CB2928-8DA3-4819-AEC3-9C1792BD8CAB}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+		SolutionGuid = {04CB2928-8DA3-4819-AEC3-9C1792BD8CAB}
 	EndGlobalSection
 EndGlobal

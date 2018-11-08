@@ -5,11 +5,16 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using EllaMakerTool.Message;
+using EllaMakerTool.Message.Data;
+using EllaMakerTool.Message.Param;
 
 namespace EllaMakerTool.Api
 {
     public class WebApis
     {
+        #region 路由常量
+        private const string Login_UserLogin = "UserLogin";
+        #endregion
         public WebApis(string url)
         {
             WebApiUtil.Url = url;
@@ -26,6 +31,14 @@ namespace EllaMakerTool.Api
                 Token = res.Data.Token;
             }
             return res;
+        }
+        internal ResponseModelBase<LoginUser> UserLogin(string UserName, String Password)
+        {
+           UserLoginParam param = new UserLoginParam(UserName,Password);
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<LoginUser>>(Login_UserLogin, param
+                 );
+            return obj;
+
         }
 
         /// <summary>

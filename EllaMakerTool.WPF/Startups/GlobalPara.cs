@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using AutoMapper;
+using EllaMakerTool.Core;
 using  EllaMakerTool.Message;
 using EllaMakerTool.Models;
 using EllaMakerTool.WPF.Helper;

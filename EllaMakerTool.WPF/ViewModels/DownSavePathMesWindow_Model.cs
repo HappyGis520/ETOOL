@@ -5,6 +5,7 @@ using MVVMSidekick.ViewModels;
 using System;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using EllaMakerTool.Core;
 
 namespace EllaMakerTool.WPF.ViewModels
 {

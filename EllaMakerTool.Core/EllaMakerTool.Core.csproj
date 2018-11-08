@@ -78,6 +78,7 @@
     <Compile Include="ImageUtil.cs" />
     <Compile Include="Extended.cs" />
     <Compile Include="FileUtil.cs" />
+    <Compile Include="INIOperationHelper.cs" />
     <Compile Include="MapCommon.cs" />
     <Compile Include="SharpZip.cs" />
     <Compile Include="Singleton.cs" />

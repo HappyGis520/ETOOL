@@ -1,6 +1,18 @@
-﻿using System;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： DESEncryptHelper.cs
+ * * 功   能：   DES加密/解密类
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-11-08 14:57:23
+ * * 修改记录： 
+ * * 日期时间： 2018-11-08 14:57:23  修改人：王建军  创建
+ * *******************************************************************/
+using System;
 using System.Security.Cryptography;
 using System.Text;
+
 
 namespace EllaMakerTool.Core
 {
@@ -22,7 +34,7 @@ namespace EllaMakerTool.Core
         /// <returns></returns>
         public static string Encrypt(string Text)
         {
-            return Encrypt(Text, "QIJISOFT");
+            return Encrypt(Text, "ELLASOFT");
         }
 
         /// <summary>
@@ -80,7 +92,7 @@ namespace EllaMakerTool.Core
         /// <returns></returns>
         public static string Decrypt(string Text)
         {
-            return Decrypt(Text, "QIJISOFT");
+            return Decrypt(Text, "ELLASOFT");
         }
         /// <summary> 
         /// 解密数据 

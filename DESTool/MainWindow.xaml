@@ -1,0 +1,33 @@
+﻿<Window x:Class="DESTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DESTool"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="229.828" Width="613.627">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="明文:" FontSize="30"  VerticalAlignment="Center"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="密文:" FontSize="30"  VerticalAlignment="Center"></TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="txtChare"></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="2" Margin="5" Name="txtCode"></TextBox>
+        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Name="btnChar2Code" Width="80" Margin="10" Content="加密" Click="BtnChar2Code_OnClick"></Button>
+            <Button Name="btnCode2Char" Width="80" Margin="10" Content="解密" Click="BtnCode2Char_OnClick"></Button>
+            <Button Name="btnExite" Width="80" Margin="10" Content="退出" Click="BtnExite_OnClick"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

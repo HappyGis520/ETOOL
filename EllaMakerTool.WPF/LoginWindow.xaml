@@ -60,16 +60,6 @@
                                       CommandParameter="{Binding UserLoginInfo,Mode=TwoWay}" CornerRadius="20"
                                       Height="38" Content="登录" Foreground="White" />
                 </StackPanel>
-                <StackPanel Margin="0 12 25 0" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:FButton Style="{StaticResource FButton_LinkButton_Noline}"
-                                      Command="{Binding CommandNagetiveToUrl}"
-                                      CommandParameter="http://www.work-oa.com/Register" BorderBrush="#d3d9eb"
-                                      Foreground="#5973b8" Content="注册账号" FontSize="12" Visibility="Hidden"/>
-                    <controls:FButton Margin="10 0 0 0" Style="{StaticResource FButton_LinkButton_Noline}"
-                                      Command="{Binding CommandNagetiveToUrl}"
-                                      CommandParameter="http://www.work-oa.com/Login/ForgetPassword#"
-                                      BorderBrush="#d3d9eb" Foreground="#5973b8" Content="忘记密码？" FontSize="12" Visibility="Hidden" />
-                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>
