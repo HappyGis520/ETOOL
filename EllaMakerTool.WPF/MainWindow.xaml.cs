@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using EllaMakerTool.Models;
 
 namespace EllaMakerTool.WPF
 {
@@ -21,13 +22,17 @@ namespace EllaMakerTool.WPF
     /// </summary>
     public partial class MainWindow : MVVMWindow
     {
+        ucBookList _ucBookList = null;
         public MainWindow()
         {
             InitializeComponent();
+
 #if DEBUG
             if (!Debugger.IsAttached)
                 Debugger.Launch();
 #endif
+
+             
             InitLoginShowCommand();
             maximge = SvgToimge("pc_Button_MaxBack.svg");
             normalimge = SvgToimge("pc_Button_ToMax.svg");
@@ -91,6 +96,22 @@ namespace EllaMakerTool.WPF
             //        {
             //            ckall.IsChecked = false;
             //        });
+
+            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
+                .Where(p => p.EventName == Global.ShowBookListMSG).Subscribe(
+                    p =>
+                    {
+                        if (_ucBookList == null) _ucBookList = new ucBookList();
+                        if (grdDocker.Children.Count > 0)
+                        {
+                            if(grdDocker.Children[0].GetType().Equals(typeof(ucBookList)))
+                                return;
+                            grdDocker.Children.Clear();
+                        }
+                        grdDocker.Children.Add(_ucBookList);
+  
+
+                    });
         }
 
         private void ComChangeCbx_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -545,38 +545,41 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.LoginWin:
                                 if (para.IsOk)
                                 {
-                                    GetCompanyList();
-                                    GetCompanySotreStatus();
-                                    var res = GlobalPara.webApis.GetFunc();
-                                    try
-                                    {
-                                        var rigthItem = res.Data.FirstOrDefault(p => p.Name == "企业文档");
-                                        if (rigthItem != null)
-                                        {
-                                            Global.CompanyFileEditRight = rigthItem.FuncList
-                                                .Where(p => p.Name == "管理文件-上传、重命名、移动").Select(p => p.Enable).FirstOrDefault();
-                                            Global.CompanyDocEditRight = rigthItem.FuncList
-                                                .Where(p => p.Name == "管理文件夹-新建文件夹、重命名、移动").Select(p => p.Enable)
-                                                .FirstOrDefault();
-                                            Global.CompanyFileDeletRight = rigthItem.FuncList
-                                                .Where(p => p.Name == "管理文件-删除文件").Select(p => p.Enable).FirstOrDefault();
-                                            Global.CompanyDocDeletRight = rigthItem.FuncList
-                                                .Where(p => p.Name == "管理文件夹-删除文件夹").Select(p => p.Enable).FirstOrDefault();
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        Global.CompanyFileEditRight = false;
-                                        Global.CompanyDocEditRight = false;
-                                        Global.CompanyFileDeletRight = false;
-                                        Global.CompanyDocDeletRight = false;
-                                    }
-                                    UserNick = Global.authToken.Profile.Nick;
-                                    HeadImageSource =
-                                        $"{Global.ImageServerAdress}{string.Format(Global.authToken.Profile.FaceUrl, 40, 40, "c")}";
-                                    TabCotrolSelectIndex = 1;
+                                    //GetCompanyList();
+                                    //GetCompanySotreStatus();
+                                    //获取权限 
+                                    //var res = GlobalPara.webApis.GetFunc();
+                                    //try
+                                    //{
+                                    //    var rigthItem = res.Data.FirstOrDefault(p => p.Name == "企业文档");
+                                    //    if (rigthItem != null)
+                                    //    {
+                                    //        Global.CompanyFileEditRight = rigthItem.FuncList
+                                    //            .Where(p => p.Name == "管理文件-上传、重命名、移动").Select(p => p.Enable).FirstOrDefault();
+                                    //        Global.CompanyDocEditRight = rigthItem.FuncList
+                                    //            .Where(p => p.Name == "管理文件夹-新建文件夹、重命名、移动").Select(p => p.Enable)
+                                    //            .FirstOrDefault();
+                                    //        Global.CompanyFileDeletRight = rigthItem.FuncList
+                                    //            .Where(p => p.Name == "管理文件-删除文件").Select(p => p.Enable).FirstOrDefault();
+                                    //        Global.CompanyDocDeletRight = rigthItem.FuncList
+                                    //            .Where(p => p.Name == "管理文件夹-删除文件夹").Select(p => p.Enable).FirstOrDefault();
+                                    //    }
+                                    //}
+                                    //catch
+                                    //{
+                                    //    Global.CompanyFileEditRight = false;
+                                    //    Global.CompanyDocEditRight = false;
+                                    //    Global.CompanyFileDeletRight = false;
+                                    //    Global.CompanyDocDeletRight = false;
+                                    //}
+                                    //UserNick = Global.authToken.Profile.Nick;
+                                    UserNick = Global.authToken.Username;
+                                    //头像
+                                    //HeadImageSource =
+                                    //    $"{Global.ImageServerAdress}{string.Format(Global.authToken.Profile.FaceUrl, 40, 40, "c")}";
+                                    //TabCotrolSelectIndex = 1;
                                     
-                                    GetUploadPath(3);
+                                    //GetUploadPath(3);
                                 }
                                 break;
                             case MesWinType.UploadWin:
@@ -997,34 +1000,37 @@ namespace EllaMakerTool.WPF.ViewModels
                 if (GlobalPara.rootTypeNow == value) return;
                 switch (value)
                 {
-                    //全部
+                    //图书资源
                     case 0:
-                        IsNotAllTab = false;
-                        if(!isLockTab) GetRootFile(0, 1, 2);
-                        //BroswerPathStr = "全部";
+                        //IsNotAllTab = false;
+                        //if(!isLockTab)
+                        //    GetRootFile(0, 1, 2);
+                        //
+                        //BroswerPathStr = "图书资源";
                         TransVisibility = System.Windows.Visibility.Collapsed;
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true,Global.ShowBookListMSG);
                         break;
-                    //公司
+                    //动画书资源
                     case 1:
                         IsNotAllTab = true;
                         if (!isLockTab) GetRootFile(1, 1, 2);
-                        //BroswerPathStr = "公司";
+                        //BroswerPathStr = "动画书资源";
                         TransVisibility = Visibility.Collapsed;
                         GetUploadPath(1);
                         break;
-                    //共享
+                    //共享资源
                     case 2:
                         IsNotAllTab = true;
                         if (!isLockTab) GetRootFile(2, 1, 2);
-                        //BroswerPathStr = "共享";
+                        //BroswerPathStr = "共享资源";
                         TransVisibility = Visibility.Collapsed;
                         GetUploadPath(2);
                         break;
-                    //个人
+                    //私有资源
                     case 3:
                         IsNotAllTab = true;
                         if (!isLockTab) GetRootFile(3, 1, 2);
-                        //BroswerPathStr = "个人";
+                        //BroswerPathStr = "私有资源";
                         TransVisibility = Visibility.Collapsed;
                         GetUploadPath(3);
                         break;
@@ -1034,7 +1040,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #region Property int TabCotrolSelectIndex Setup        
         protected Property<int> _TabCotrolSelectIndex = new Property<int> { LocatorFunc = _TabCotrolSelectIndexLocator };
         static Func<BindableBase, ValueContainer<int>> _TabCotrolSelectIndexLocator = RegisterContainerLocator<int>("TabCotrolSelectIndex", model => model.Initialize("TabCotrolSelectIndex", ref model._TabCotrolSelectIndex, ref _TabCotrolSelectIndexLocator, _TabCotrolSelectIndexDefaultValueFactory));
-        static Func<int> _TabCotrolSelectIndexDefaultValueFactory = () => 0;
+        static Func<int> _TabCotrolSelectIndexDefaultValueFactory = () => -1;
         #endregion
 
 

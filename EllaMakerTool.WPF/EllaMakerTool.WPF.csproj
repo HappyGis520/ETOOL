@@ -147,14 +147,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\BookList.xaml.cs">
-      <DependentUpon>BookList.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ChangeStatusWindow.xaml.cs">
       <DependentUpon>ChangeStatusWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileList.xaml.cs">
-      <DependentUpon>FileList.xaml</DependentUpon>
+    <Compile Include="Controls\ucFTPList.xaml.cs">
+      <DependentUpon>ucFTPList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ucBookList.xaml.cs">
+      <DependentUpon>ucBookList.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\UserControls\CoverMessageBox.cs" />
@@ -228,15 +228,15 @@
     <Compile Include="ViewModels\SelectDeptWindow_Model.cs" />
     <Compile Include="ViewModels\SelectPersonWindow_Model.cs" />
     <Compile Include="ViewModels\UploadMesWindow_Model.cs" />
-    <Page Include="Controls\BookList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ChangeStatusWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\FileList.xaml">
+    <Page Include="Controls\ucFTPList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ucBookList.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>

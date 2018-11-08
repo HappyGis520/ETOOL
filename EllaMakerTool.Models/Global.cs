@@ -19,5 +19,7 @@ namespace EllaMakerTool.Models
         public static AuthToken authToken = new AuthToken();
         public static List<string> DepartId;
         public static List<OpenFolderOptDataModel> RecordList = new List<OpenFolderOptDataModel>();
+
+        public const string ShowBookListMSG = "MainBookListEventRouter";
     }
 }

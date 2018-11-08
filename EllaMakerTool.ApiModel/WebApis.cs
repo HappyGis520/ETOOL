@@ -14,6 +14,10 @@ namespace EllaMakerTool.Api
     {
         #region 路由常量
         private const string Login_UserLogin = "UserLogin";
+
+
+        private const string BOOK = "Book";
+        private const string BOOK_AllBook = "AllBooksByPage";
         #endregion
         public WebApis(string url)
         {
@@ -22,16 +26,6 @@ namespace EllaMakerTool.Api
 
         public string Token { get; set; }
 
-        public ApiResult<AuthToken> Login(string username, string password, string imei = "", string mac = "")
-        {
-            var res = WebApiUtil.PostAPI<ApiResult<AuthToken>>(
-                $"api/login?username={username}&password={password}&imei={imei}&mac={mac}",null);
-            if (res.successful)
-            {
-                Token = res.Data.Token;
-            }
-            return res;
-        }
         internal ResponseModelBase<LoginUser> UserLogin(string UserName, String Password)
         {
            UserLoginParam param = new UserLoginParam(UserName,Password);
@@ -40,6 +34,20 @@ namespace EllaMakerTool.Api
             return obj;
 
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
+        internal ResponseModelBase<BookListByPage> AllBookListByPage(BookListByPageParam param)
+        {
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<BookListByPage>>($"{BOOK}/{BOOK_AllBook}" , param);
+            return obj;
+
+        }
+
+
 
         /// <summary>
         /// 获取上传路径

@@ -124,21 +124,6 @@ namespace EllaMakerTool.WPF.ViewModels
                                     Username = res.Data.name,
                                     Profile = null
                                 };
-                                //var resdept = GlobalPara.webApis.GetCompanyTree();
-                                //var resperson = GlobalPara.webApis.GetCompanyTree("", true);
-                                //GlobalPara.SetDeptTreesSource(new List<EmployeeAndDeptNodelApiModel>()
-                                //{
-                                //    resdept.Data
-                                //});
-                                //GlobalPara.SetPersonTreesSource(new List<EmployeeAndDeptNodelApiModel>()
-                                //{
-                                //    resperson.Data
-                                //});
-                                //var res1 = GlobalPara.webApis.GetJoblist();
-                                //if (res1.successful)
-                                //{
-                                //    Global.DepartId = res1.Data.Select(p => p.DepartmentId).ToList();
-                                //}
                                 vm.GlobalEventRouter.GetEventChannel(typeof(MesWindowResModel)).RaiseEvent(vm,
                                     "MesWindowOptResEventRouter", new MesWindowResModel()
                                     {

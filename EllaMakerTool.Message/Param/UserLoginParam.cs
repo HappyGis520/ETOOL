@@ -17,13 +17,13 @@ namespace EllaMakerTool.Message.Param
     public class UserLoginParam
     {
 
-        public string Password { get; }
-        public string UserName { get; }
+        public string password { get; }
+        public string userName { get; }
 
         public UserLoginParam(string UserName, string Password)
         {
-            this.Password = Password;
-            this.UserName = UserName;
+            this.password = Password;
+            this.userName = UserName;
         }
     }
 

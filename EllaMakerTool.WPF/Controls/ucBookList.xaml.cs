@@ -18,9 +18,9 @@ namespace EllaMakerTool.WPF
     /// <summary>
     /// FileList.xaml 的交互逻辑
     /// </summary>
-    public partial class FileList : UserControl
+    public partial class ucBookList : UserControl
     {
-        public FileList()
+        public ucBookList()
         {
             InitializeComponent();
             SubscribeCommand();
