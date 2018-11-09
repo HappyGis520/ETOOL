@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using EllaMakerTool.Message;
 using EllaMakerTool.Models;
+using MVVMSidekick.EventRouting;
 
 namespace EllaMakerTool.WPF
 {
@@ -24,6 +25,7 @@ namespace EllaMakerTool.WPF
     public partial class MainWindow : MVVMWindow
     {
         ucBookList _ucBookList = null;
+        ucEBookList _ucEBookList = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -196,6 +198,36 @@ namespace EllaMakerTool.WPF
 
 
                     });
+
+            //显示动画书列表
+            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
+                .Where(p => p.EventName == Global.ShowEBookListMSG).Subscribe(LoadEBookData);
+        }
+
+        private void LoadEBookData(RouterEventData<bool> param)
+        {
+            if (_ucEBookList == null) _ucEBookList = new ucEBookList();
+            if (grdDocker.Children.Count > 0)
+            {
+                if (!grdDocker.Children[0].GetType().Equals(typeof(ucEBookList)))
+                {
+                    grdDocker.Children.Clear();
+                    grdDocker.Children.Add(_ucEBookList);
+                }
+            }
+            else
+            {
+                grdDocker.Children.Add(_ucBookList);
+            }
+            EBookListByPageParam _param = new EBookListByPageParam()
+            {
+                pageIndex = 0,
+                pageSize = 10,
+                token = Global.authToken.Token
+
+            };
+            EventRouter.Instance.RaiseEvent(this, _param, Global.RefreshEBookListData);
+
         }
         private void ComChangeCbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

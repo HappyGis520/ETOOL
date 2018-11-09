@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\EBookListByPage.cs" />
     <Compile Include="Data\BookItem.cs" />
     <Compile Include="Data\BookListByPage.cs" />
+    <Compile Include="Data\EBookItem.cs" />
     <Compile Include="Data\FTPFileInfo.cs" />
+    <Compile Include="Data\ListByPage.cs" />
     <Compile Include="Data\LoginUser.cs" />
     <Compile Include="Enum\EnumDocFileType.cs" />
     <Compile Include="Enum\EnumDocStatusType.cs" />
@@ -54,6 +57,7 @@
     <Compile Include="Param\BookListByPageParam.cs" />
     <Compile Include="Enum\EnumFileResourceType.cs" />
     <Compile Include="Enum\EnumFTPFileInfoType.cs" />
+    <Compile Include="Param\EBookListByPageParam.cs" />
     <Compile Include="Param\ListFTPRootParam.cs" />
     <Compile Include="Param\ListByPageParam.cs" />
     <Compile Include="Param\UserLoginParam.cs" />

@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="dgfileBrowser" 
-                  ItemsSource="{Binding BookListData,Mode=TwoWay}" CanUserResizeColumns="False"
+                  ItemsSource="{Binding EBookListData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
@@ -25,23 +25,23 @@
             </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <!--ID-->
-                <DataGridTemplateColumn Visibility="Collapsed" Width="auto" MinWidth="50">
+                <DataGridTemplateColumn Visibility="Collapsed" Width="auto" MinWidth="50" Header="动画书编号">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
                                 <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       HorizontalContentAlignment="Center" Content="{Binding Isbn}" />
+                                       HorizontalContentAlignment="Center" Content="{Binding id}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!--图书名称-->
-                <DataGridTemplateColumn Width="*" MinWidth="200" Header="图书名称">
+                <DataGridTemplateColumn Width="*" MinWidth="200" Header="动画书名称">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding Name}">
-                                <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding ebookname}">
+                                <Label MinWidth="200" Content="{Binding ebookname}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -50,8 +50,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding BookSetName}">
-                                <Label MinWidth="200" Content="{Binding BookSetName}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding seriesname}">
+                                <Label MinWidth="200" Content="{Binding seriesname}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -60,38 +60,28 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding PublisherName}">
-                                <Label MinWidth="200" Content="{Binding PublisherName}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding publishername}">
+                                <Label MinWidth="200" Content="{Binding publishername}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" MinWidth="200" Header="作者">
+                <DataGridTemplateColumn Width="*" MinWidth="200" Header="创建者">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding AuthorName}">
-                                <Label MinWidth="200" Content="{Binding AuthorName}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding creatorname}">
+                                <Label MinWidth="200" Content="{Binding creatorname}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" MinWidth="200" Header="动画书数量">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding EBookCount}">
-                                <Label MinWidth="200" Content="{Binding EBookCount}" HorizontalContentAlignment="Left" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--更新时间-->
+               <!-- 创建时间-->
                 <!--<DataGridTemplateColumn Width="auto" MinWidth="200">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
                             <Label MinWidth="200" BorderBrush="{DynamicResource LineBrush}"
-                                   HorizontalContentAlignment="Left" Content="更新时间"
+                                   HorizontalContentAlignment="Left" Content="更新记录"
                                    Foreground="{DynamicResource UserInfoForeground}"
                                    FontFamily="{DynamicResource FontFamily}" FontSize="13" />
                         </StackPanel>
@@ -100,11 +90,11 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Label
-                                    Content="{Binding CreateTime, ConverterParameter=yyyy-MM-dd HH:mm,Converter={x:Static converter:XConverter.DataTimeTostringConverter}}"
+                                    Content="{Binding createtime, ConverterParameter=yyyy-MM-dd HH:mm,Converter={x:Static converter:XConverter.DataTimeTostringConverter}}"
                                     Foreground="{DynamicResource BrowserFontSizeColor}" />
                                 <controls:AyImageButton Style="{DynamicResource AyImageTransButtonStyle}" Width="100" 
                                                   Visibility="{Binding Converter={x:Static converter:XConverter.DocmentItemsToIrVisConvert}}"
-                                                  Foreground="{DynamicResource BrowserFontSizeColor}" CommandParameter="{Binding IrList}"
+                                                  Foreground="{DynamicResource BrowserFontSizeColor}" CommandParameter="{Binding uploadtimes}"
                                                   Command="{Binding CommandShowIrWindow, Source={StaticResource DesignVM}}">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Foreground="{DynamicResource BrowserFontSizeColor}" Content="更新记录" />

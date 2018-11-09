@@ -218,7 +218,7 @@
     <Compile Include="Controls\TransFileList.xaml.cs">
       <DependentUpon>TransFileList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ucEBookList.xaml.cs">
+    <Compile Include="Controls\ucEBookList.xaml.cs">
       <DependentUpon>ucEBookList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserLoginItem.cs" />
@@ -347,7 +347,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ucEBookList.xaml">
+    <Page Include="Controls\ucEBookList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

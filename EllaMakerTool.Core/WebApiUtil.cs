@@ -74,7 +74,9 @@ namespace EllaMakerTool
             request.Method = "POST";
             request.ContentType = "application/json;charset=UTF-8";
             request.UserAgent = DefaultUserAgent;
+            var jsonSetting = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string paraUrlCoded = JsonConvert.SerializeObject(param);
+            
             byte[] payload;
             payload = System.Text.Encoding.UTF8.GetBytes(paraUrlCoded);
             request.ContentLength = payload.Length;
@@ -92,7 +94,7 @@ namespace EllaMakerTool
             {
                 strValue += StrDate;
             }
-            var res = JsonConvert.DeserializeObject<T>(strValue);
+            var res = JsonConvert.DeserializeObject<T>(strValue,jsonSetting);
             Reader.Close();
             return res;
         }

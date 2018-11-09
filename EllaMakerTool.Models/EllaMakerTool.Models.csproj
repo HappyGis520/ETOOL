@@ -92,6 +92,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EbookListItem.cs" />
     <Compile Include="BookListItem.cs" />
     <Compile Include="ChangeStatusWinPara.cs" />
     <Compile Include="CreatnewFolderWinPara.cs" />

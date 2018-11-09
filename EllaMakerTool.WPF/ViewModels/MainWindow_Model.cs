@@ -128,6 +128,29 @@ namespace EllaMakerTool.WPF.ViewModels
                             System.Windows.MessageBox.Show(res.Message);
                         }
                     }).DisposeWith(this);
+            //加载动画书列表数据
+            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<EBookListByPageParam>()
+    .Where(x => x.EventName == Global.RefreshEBookListData).Subscribe(
+        async e =>
+        {
+            var Param = e.EventData;
+            var res = GlobalPara.webApis.AllEBookListByPage(Param);
+            if (res.Successful)
+            {
+                BroswerPathStr = "动画资源--动画书列表";
+                            //GlobalPara.CatalogNow = res.Data;
+                EBookListData.Clear();
+                foreach (var item in res.Data)
+                {
+                    EBookListData.Add(MapperUtil.Mapper.Map<EBookListItem>(item));
+                }
+                await MVVMSidekick.Utilities.TaskExHelper.Yield();
+            }
+            else
+            {
+                System.Windows.MessageBox.Show(res.Message);
+            }
+        }).DisposeWith(this);
 
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<string>()
                 .Where(x => x.EventName == "AddSyncFileEventRouter").Subscribe(
@@ -461,6 +484,84 @@ namespace EllaMakerTool.WPF.ViewModels
 
         }
 
+
+        #region 绑定数据
+
+        private void ClearData()
+        {
+            BookListData.Clear();
+            EBookListData.Clear();
+        }
+
+
+        public bool IsAllCheck
+        {
+            get { return _IsAllCheckLocator(this).Value; }
+            set
+            {
+                _IsAllCheckLocator(this).SetValueAndTryNotify(value);
+                if (!value)
+                    SetMainWinCkall();
+            }
+        }
+        #region Property bool IsAllCheck Setup        
+        protected Property<bool> _IsAllCheck = new Property<bool> { LocatorFunc = _IsAllCheckLocator };
+        static Func<BindableBase, ValueContainer<bool>> _IsAllCheckLocator = RegisterContainerLocator<bool>("IsAllCheck", model => model.Initialize("IsAllCheck", ref model._IsAllCheck, ref _IsAllCheckLocator, _IsAllCheckDefaultValueFactory));
+        static Func<bool> _IsAllCheckDefaultValueFactory = () => false;
+        #endregion
+
+
+        /// <summary>
+        /// 图书列表数据
+        /// </summary>
+        public ObservableCollection<BookListItem> BookListData
+        {
+            get { return _BookListDataLocator(this).Value; }
+            set { _BookListDataLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property ObservableCollection<DocumentV1ApiModel> BookListData Setup        
+        protected Property<ObservableCollection<BookListItem>> _BookListData = new Property<ObservableCollection<BookListItem>> { LocatorFunc = _BookListDataLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<BookListItem>>> _BookListDataLocator = RegisterContainerLocator<ObservableCollection<BookListItem>>("BookListData", model => model.Initialize("BookListData", ref model._BookListData, ref _BookListDataLocator, _BookListDataDefaultValueFactory));
+        static Func<ObservableCollection<BookListItem>> _BookListDataDefaultValueFactory = () => new ObservableCollection<BookListItem>();
+        #endregion
+
+        /// <summary>
+        /// 动画书列表数据
+        /// </summary>
+        public ObservableCollection<EBookListItem> EBookListData
+        {
+            get { return _EBookListDataLocator(this).Value; }
+            set { _EBookListDataLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property ObservableCollection<DocumentV1ApiModel> EBookListData Setup        
+        protected Property<ObservableCollection<EBookListItem>> _EBookListData = new Property<ObservableCollection<EBookListItem>> { LocatorFunc = _EBookListDataLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<EBookListItem>>> _EBookListDataLocator = RegisterContainerLocator<ObservableCollection<EBookListItem>>("EBookListData", model => model.Initialize("EBookListData", ref model._EBookListData, ref _EBookListDataLocator, _EBookListDataDefaultValueFactory));
+        static Func<ObservableCollection<EBookListItem>> _EBookListDataDefaultValueFactory = () => new ObservableCollection<EBookListItem>();
+        #endregion
+
+
+        public ObservableCollection<DocumentsModel> FileBroswerData
+        {
+            get { return _FileBroswerDataLocator(this).Value; }
+            set { _FileBroswerDataLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property ObservableCollection<DocumentV1ApiModel> FileBroswerData Setup        
+        protected Property<ObservableCollection<DocumentsModel>> _FileBroswerData = new Property<ObservableCollection<DocumentsModel>> { LocatorFunc = _FileBroswerDataLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<DocumentsModel>>> _FileBroswerDataLocator = RegisterContainerLocator<ObservableCollection<DocumentsModel>>("FileBroswerData", model => model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator, _FileBroswerDataDefaultValueFactory));
+        static Func<ObservableCollection<DocumentsModel>> _FileBroswerDataDefaultValueFactory = () => new ObservableCollection<DocumentsModel>();
+        #endregion
+        #endregion
+
+
+        #region 命令处理
+
+        
+
+        #endregion
+
+
+
+
         /// <summary>
         /// 左侧导航栏选择改变
         /// </summary>
@@ -475,21 +576,15 @@ namespace EllaMakerTool.WPF.ViewModels
                 {
                     //图书资源
                     case 0:
-                        //IsNotAllTab = false;
-                        //if(!isLockTab)
-                        //    GetRootFile(0, 1, 2);
-                        //
                         //BroswerPathStr = "图书资源";
                         TransVisibility = System.Windows.Visibility.Collapsed;
                         MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowBookListMSG);
                         break;
                     //动画书资源
                     case 1:
-                        IsNotAllTab = true;
-                        if (!isLockTab) GetRootFile(1, 1, 2);
-                        //BroswerPathStr = "动画书资源";
-                        TransVisibility = Visibility.Collapsed;
-                        GetUploadPath(1);
+                        //BroswerPathStr = "图书资源";
+                        TransVisibility = System.Windows.Visibility.Collapsed;
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowEBookListMSG);
                         break;
                     //共享资源
                     case 2:
@@ -2321,51 +2416,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
 
 
-        #region 数据绑定
-        public bool IsAllCheck
-        {
-            get { return _IsAllCheckLocator(this).Value; }
-            set
-            {
-                _IsAllCheckLocator(this).SetValueAndTryNotify(value);
-                if (!value)
-                    SetMainWinCkall();
-            }
-        }
-        #region Property bool IsAllCheck Setup        
-        protected Property<bool> _IsAllCheck = new Property<bool> { LocatorFunc = _IsAllCheckLocator };
-        static Func<BindableBase, ValueContainer<bool>> _IsAllCheckLocator = RegisterContainerLocator<bool>("IsAllCheck", model => model.Initialize("IsAllCheck", ref model._IsAllCheck, ref _IsAllCheckLocator, _IsAllCheckDefaultValueFactory));
-        static Func<bool> _IsAllCheckDefaultValueFactory = () => false;
-        #endregion
 
-
-        /// <summary>
-        /// 图书列表数据
-        /// </summary>
-        public ObservableCollection<BookListItem> BookListData
-        {
-            get { return _BookListDataLocator(this).Value; }
-            set { _BookListDataLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property ObservableCollection<DocumentV1ApiModel> BookListData Setup        
-        protected Property<ObservableCollection<BookListItem>> _BookListData = new Property<ObservableCollection<BookListItem>> { LocatorFunc = _BookListDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<BookListItem>>> _BookListDataLocator = RegisterContainerLocator<ObservableCollection<BookListItem>>("BookListData", model => model.Initialize("BookListData", ref model._BookListData, ref _BookListDataLocator, _BookListDataDefaultValueFactory));
-        static Func<ObservableCollection<BookListItem>> _BookListDataDefaultValueFactory = () => new ObservableCollection<BookListItem>();
-        #endregion
-
-
-
-        public ObservableCollection<DocumentsModel> FileBroswerData
-        {
-            get { return _FileBroswerDataLocator(this).Value; }
-            set { _FileBroswerDataLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property ObservableCollection<DocumentV1ApiModel> FileBroswerData Setup        
-        protected Property<ObservableCollection<DocumentsModel>> _FileBroswerData = new Property<ObservableCollection<DocumentsModel>> { LocatorFunc = _FileBroswerDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<DocumentsModel>>> _FileBroswerDataLocator = RegisterContainerLocator<ObservableCollection<DocumentsModel>>("FileBroswerData", model => model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator, _FileBroswerDataDefaultValueFactory));
-        static Func<ObservableCollection<DocumentsModel>> _FileBroswerDataDefaultValueFactory = () => new ObservableCollection<DocumentsModel>();
-        #endregion
-        #endregion
 
 
 

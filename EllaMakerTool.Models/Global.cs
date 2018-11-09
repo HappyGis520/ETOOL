@@ -29,6 +29,14 @@ namespace EllaMakerTool.Models
         /// </summary>
         public const string RefreshBookListData = "RefreshBookListData";
         /// <summary>
+        /// 显示图书列表
+        /// </summary>
+        public const string ShowEBookListMSG = "MainEBookListEventRouter";
+        /// <summary>
+        /// 加图书列表数据
+        /// </summary>
+        public const string RefreshEBookListData = "RefreshEBookListData";
+        /// <summary>
         /// 切换部门或公司
         /// </summary>
         public const string CompanySwitchEventRouter = "CompanySwitchEventRouter";

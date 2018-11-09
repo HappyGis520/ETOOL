@@ -18,6 +18,9 @@ namespace EllaMakerTool.Api
 
         private const string BOOK = "Book";
         private const string BOOK_AllBook = "AllBooksByPage";
+
+        private const string EBOOK = "";
+        private const string EBOOK_AllBook = "FindEbookList";
         #endregion
         public WebApis(string url)
         {
@@ -37,16 +40,25 @@ namespace EllaMakerTool.Api
 
 
         /// <summary>
-        /// 
+        /// 获取图书
         /// </summary>
         /// <param name="param"></param>
-        internal ResponseModelBase<BookListByPage> AllBookListByPage(BookListByPageParam param)
+        internal ResponseModelBase<EBookListByPage> AllBookListByPage(BookListByPageParam param)
         {
-            var obj = WebApiUtil.PostAPI<ResponseModelBase<BookListByPage>>($"{BOOK}/{BOOK_AllBook}" , param);
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<EBookListByPage>>($"{BOOK}/{BOOK_AllBook}" , param);
             return obj;
 
         }
+        /// <summary>
+        /// 获取动画书
+        /// </summary>
+        /// <param name="param"></param>
+        internal ResponseModelBase<List<EbookItem>> AllEBookListByPage(EBookListByPageParam param)
+        {
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<List<EbookItem>>>($"/{EBOOK_AllBook}", param);
+            return obj;
 
+        }
 
 
         /// <summary>
@@ -58,6 +70,8 @@ namespace EllaMakerTool.Api
         {
             return WebApiUtil.GetAPI<TheResult<string>>($"api/docV1/getuploadpath?Token={Token}&rootType={rootType}");
         }
+
+
 
         /// <summary>
         /// 获取容量使用情况

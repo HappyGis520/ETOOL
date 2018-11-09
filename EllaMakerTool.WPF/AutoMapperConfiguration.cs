@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using EllaMakerTool.Message;
+using EllaMakerTool.Message.Data;
 using EllaMakerTool.Models;
 
 namespace EllaMakerTool.Models
@@ -18,6 +19,7 @@ namespace EllaMakerTool.Models
                 cfg.CreateMap<DocumentV1ApiModel, DocumentsModel>();
                 cfg.CreateMap<EmployeeAndDeptNodelApiModel, PsAndDeptTreeNodeItem>();
                 cfg.CreateMap<BookItem, BookListItem>();
+                cfg.CreateMap<EbookItem, EBookListItem>();
             });
             MapperUtil.Config(config.CreateMapper());
         }

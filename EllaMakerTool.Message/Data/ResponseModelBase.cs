@@ -15,7 +15,7 @@ namespace EllaMakerTool.Message
 {
 
 	[Serializable]
-    internal class ResponseModelBase<T>
+    public class ResponseModelBase<T>
 	{
 
 	//    private  String version;
