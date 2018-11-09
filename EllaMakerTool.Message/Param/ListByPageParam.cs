@@ -14,7 +14,7 @@ namespace EllaMakerTool.Message
     /// <summary>
     /// 分页获取对象集合信息
     /// </summary>
-    internal class ListByPageParam
+    public class ListByPageParam:RequestModelBase
 	{
         /// <summary>
         /// 每页记录数量
@@ -28,7 +28,7 @@ namespace EllaMakerTool.Message
         /// 起始记录数，数值=pageIndex*pageSize
         /// </summary>
         protected internal int startIndex;
-		public virtual int PageSize
+		public  int PageSize
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace EllaMakerTool.Message
 				this.pageSize = value;
 			}
 		}
-		public virtual int PageIndex
+		public  int PageIndex
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace EllaMakerTool.Message
 				this.pageIndex = value;
 			}
 		}
-		public virtual int StartIndex
+		public  int StartIndex
 		{
 			get
 			{

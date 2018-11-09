@@ -43,12 +43,12 @@ namespace EllaMakerTool.WPF
             //            this.Focus();
             //        });
 
-            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
-                .Where(p => p.EventName == "MainWinCkAllEventRouter").Subscribe(
-                    p =>
-                    {
-                        ckall.IsChecked = false;
-                    });
+            //MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
+            //    .Where(p => p.EventName == "MainWinCkAllEventRouter").Subscribe(
+            //        p =>
+            //        {
+            //            ckall.IsChecked = false;
+            //        });
         }
     }
 }

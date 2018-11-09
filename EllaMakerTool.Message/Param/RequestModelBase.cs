@@ -11,19 +11,19 @@
  * *******************************************************************/
 namespace  EllaMakerTool.Message
 {
-    internal class RequestModelBase
+    public class RequestModelBase
 	{
 
-		private string token;
-		public virtual string Token
+		private string _token;
+		public  string token
 		{
 			get
 			{
-				return token;
+				return _token;
 			}
 			set
 			{
-				token = value;
+				_token = value;
 			}
 		}
 

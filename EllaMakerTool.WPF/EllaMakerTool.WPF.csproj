@@ -147,6 +147,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="ChangeStatusWindow.xaml.cs">
       <DependentUpon>ChangeStatusWindow.xaml</DependentUpon>
     </Compile>
@@ -216,6 +217,9 @@
     <Compile Include="Startups\UploadMesWindow.cs" />
     <Compile Include="Controls\TransFileList.xaml.cs">
       <DependentUpon>TransFileList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ucEBookList.xaml.cs">
+      <DependentUpon>ucEBookList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserLoginItem.cs" />
     <Compile Include="ViewModels\ChangeStatusWindow_Model.cs" />
@@ -327,7 +331,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Startups\AutoMapperConfiguration.cs" />
     <Compile Include="Startups\GlobalPara.cs" />
     <Compile Include="Startups\LoginWindow.cs" />
     <Compile Include="Startups\StartupFunctions.cs">
@@ -343,6 +346,10 @@
     <Page Include="Controls\TransFileList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ucEBookList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UploadMesWindow.xaml">
       <SubType>Designer</SubType>

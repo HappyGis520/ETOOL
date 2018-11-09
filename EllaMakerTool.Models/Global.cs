@@ -19,7 +19,20 @@ namespace EllaMakerTool.Models
         public static AuthToken authToken = new AuthToken();
         public static List<string> DepartId;
         public static List<OpenFolderOptDataModel> RecordList = new List<OpenFolderOptDataModel>();
-
+        #region 事件消息
+        /// <summary>
+        /// 显示图书列表
+        /// </summary>
         public const string ShowBookListMSG = "MainBookListEventRouter";
+        /// <summary>
+        /// 加图书列表数据
+        /// </summary>
+        public const string RefreshBookListData = "RefreshBookListData";
+        /// <summary>
+        /// 切换部门或公司
+        /// </summary>
+        public const string CompanySwitchEventRouter = "CompanySwitchEventRouter";
+
+        #endregion
     }
 }

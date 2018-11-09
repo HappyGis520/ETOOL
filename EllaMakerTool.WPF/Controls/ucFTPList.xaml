@@ -14,8 +14,12 @@
         <viewModels:MainWindow_Model x:Key="DesignVM" />
     </UserControl.Resources>
     <Grid>
-        <DataGrid x:Name="dgfileBrowser" 
-                  ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <local:MainToolBar></local:MainToolBar>
+        <DataGrid x:Name="dgfileBrowser" Grid.Row="1" ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"

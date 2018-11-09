@@ -105,14 +105,6 @@ namespace EllaMakerTool.Api
                 $"api/docV1/AddDownloadTimes?Token={Token}&url={url}&times={times}");
         }
 
-        /// <summary>
-        /// 获取公司列表
-        /// </summary>
-        /// <returns></returns>
-        public ApiResult<List<EmployerApiModel>> GetMyCompanyList()
-        {
-            return WebApiUtil.GetAPI<ApiResult<List<EmployerApiModel>>>($"api/company/myCompany?Token={Token}");
-        }
 
         /// <summary>
         /// 切换公司

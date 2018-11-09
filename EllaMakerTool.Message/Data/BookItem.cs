@@ -14,21 +14,21 @@ namespace EllaMakerTool.Message
     /// <summary>
     /// 原版书信息描述对象，关联多张表数据的对象
     /// </summary>
-	internal class BookItem
+	public class BookItem
 	{
 	    public string id { set; get ; }
-	    protected internal string isbn;
-		protected internal string Name_Renamed;
-		protected internal decimal Price_Renamed;
-		private string PublisherID_Renamed;
-		private string PublisherName_Renamed;
-		private string AuthorID_Renamed;
-		private string AuthorName_Renamed;
-		private string BookSetID_Renamed;
-		private string BookSetName_Renamed;
-		private int EBookCount_Renamed;
-		protected internal bool? enabled;
-		protected internal bool? visibled;
+	    protected  string isbn;
+		protected  string name;
+		protected  decimal price;
+		private string publisherID;
+		private string publisherName;
+		private string authorID;
+		private string authorName;
+		private string bookSetID;
+		private string bookSetName;
+		private int eBookCount;
+		protected  bool? enabled;
+		protected  bool? visibled;
 
 		public virtual string Isbn
 		{
@@ -45,77 +45,77 @@ namespace EllaMakerTool.Message
 		{
 			get
 			{
-				return Name_Renamed;
+				return name;
 			}
 			set
 			{
-				Name_Renamed = value;
+				name = value;
 			}
 		}
 		public virtual string PublisherID
 		{
 			get
 			{
-				return PublisherID_Renamed;
+				return publisherID;
 			}
 			set
 			{
-				PublisherID_Renamed = value;
+				publisherID = value;
 			}
 		}
 		public virtual string PublisherName
 		{
 			get
 			{
-				return PublisherName_Renamed;
+				return publisherName;
 			}
 			set
 			{
-				PublisherName_Renamed = value;
+				publisherName = value;
 			}
 		}
 		public virtual string AuthorName
 		{
 			get
 			{
-				return AuthorName_Renamed;
+				return authorName;
 			}
 			set
 			{
-				AuthorName_Renamed = value;
+				authorName = value;
 			}
 		}
 		public virtual string BookSetName
 		{
 			get
 			{
-				return BookSetName_Renamed;
+				return bookSetName;
 			}
 			set
 			{
-				BookSetName_Renamed = value;
+				bookSetName = value;
 			}
 		}
 		public virtual int EBookCount
 		{
 			get
 			{
-				return EBookCount_Renamed;
+				return eBookCount;
 			}
 			set
 			{
-				this.EBookCount_Renamed = value;
+				this.eBookCount = value;
 			}
 		}
 		public virtual string AuthorID
 		{
 			get
 			{
-				return AuthorID_Renamed;
+				return authorID;
 			}
 			set
 			{
-				AuthorID_Renamed = value;
+				authorID = value;
 			}
 		}
 
@@ -123,11 +123,11 @@ namespace EllaMakerTool.Message
 		{
 			get
 			{
-				return BookSetID_Renamed;
+				return bookSetID;
 			}
 			set
 			{
-				BookSetID_Renamed = value;
+				bookSetID = value;
 			}
 		}
 
@@ -150,11 +150,11 @@ namespace EllaMakerTool.Message
 		{
 			get
 			{
-				return Price_Renamed;
+				return price;
 			}
 			set
 			{
-				Price_Renamed = value;
+				price = value;
 			}
 		}
 	}

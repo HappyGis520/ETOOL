@@ -25,6 +25,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
+using EllaMakerTool.Models;
+
 namespace EllaMakerTool.WPF
 {
     /// <summary>

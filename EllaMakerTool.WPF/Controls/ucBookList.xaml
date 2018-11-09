@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="dgfileBrowser" 
-                  ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
+                  ItemsSource="{Binding BookListData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
@@ -30,28 +30,8 @@
                         <DataTemplate>
                             <StackPanel>
                                 <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       HorizontalContentAlignment="Center" Content="{Binding Id}" />
+                                       HorizontalContentAlignment="Center" Content="{Binding Isbn}" />
                             </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--勾选框-->
-                <DataGridTemplateColumn Width="auto" MinWidth="30">
-                    <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="ckall" Margin="0 5 0 0" BorderBrush="{DynamicResource LineBrush}"
-                                  Foreground="{DynamicResource UserInfoForeground}"
-                                  FontFamily="{DynamicResource FontFamily}" FontSize="13"
-                                  IsChecked="{Binding DataContext.IsAllCheck, ElementName=LayoutMain}"
-                                  Checked="ckall_Checked" Unchecked="ckall_Unchecked"
-                                  Style="{DynamicResource MyCheckBoxStyle}" />
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsEnabled="False" Margin="8 0 0 0" IsChecked="{Binding isChecked}"
-                                      BorderBrush="{DynamicResource LineBrush}"
-                                      Foreground="{DynamicResource UserInfoForeground}"
-                                      FontFamily="{DynamicResource FontFamily}" FontSize="13"
-                                      Style="{DynamicResource MyCheckBoxStyle}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -61,8 +41,6 @@
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
                                         HorizontalAlignment="Left" ToolTip="{Binding Name}">
-                                <Image Width="28" Height="28"
-                                       Source="{Binding Name,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
                                 <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
@@ -72,10 +50,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding Name}">
-                                <Image Width="28" Height="28"
-                                       Source="{Binding Name,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
-                                <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding BookSetName}">
+                                <Label MinWidth="200" Content="{Binding BookSetName}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -84,10 +60,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding Name}">
-                                <Image Width="28" Height="28"
-                                       Source="{Binding Name,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
-                                <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding PublisherName}">
+                                <Label MinWidth="200" Content="{Binding PublisherName}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -96,37 +70,24 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding Name}">
-                                <Image Width="28" Height="28"
-                                       Source="{Binding Name,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
-                                <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
+                                        HorizontalAlignment="Left" ToolTip="{Binding AuthorName}">
+                                <Label MinWidth="200" Content="{Binding AuthorName}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--动画书数-->
-                <DataGridTemplateColumn Width="auto" MinWidth="80">
-                    <DataGridTemplateColumn.Header>
-                        <StackPanel>
-                            <Label MinWidth="50" BorderBrush="{DynamicResource LineBrush}" Content="动画书数"
-                                   Foreground="{DynamicResource UserInfoForeground}"
-                                   FontFamily="{DynamicResource FontFamily}" FontSize="13" />
-                        </StackPanel>
-                    </DataGridTemplateColumn.Header>
+                <DataGridTemplateColumn Width="*" MinWidth="200" Header="动画书数量">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel
-                                Visibility="{Binding Type,Converter={x:Static converter:XConverter.DocTypeVisConverter}}">
-                                <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       HorizontalContentAlignment="Center"
-                                       Content="{Binding DownloadTimes,Converter={x:Static converter:XConverter.StrAppendConverter},ConverterParameter=次}" />
+                            <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
+                                        HorizontalAlignment="Left" ToolTip="{Binding EBookCount}">
+                                <Label MinWidth="200" Content="{Binding EBookCount}" HorizontalContentAlignment="Left" />
                             </StackPanel>
-
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!--更新时间-->
-                <DataGridTemplateColumn Width="auto" MinWidth="200">
+                <!--<DataGridTemplateColumn Width="auto" MinWidth="200">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
                             <Label MinWidth="200" BorderBrush="{DynamicResource LineBrush}"
@@ -164,86 +125,7 @@
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--状态-->
-                <DataGridTemplateColumn Width="80" MinWidth="80">
-                    <DataGridTemplateColumn.Header>
-                        <StackPanel>
-                            <Label MinWidth="50" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
-                                   BorderBrush="{DynamicResource LineBrush}" Content="状态"
-                                   Foreground="{DynamicResource UserInfoForeground}"
-                                   FontFamily="{DynamicResource FontFamily}" FontSize="13" />
-                        </StackPanel>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <controls:AyImageButton Style="{DynamicResource AyImageTransButtonStyle}"
-                                    IsEnabled="{Binding Converter={x:Static converter:XConverter.ChangeStatusEnableConverter}}"
-                                    Width="60"
-                                    Foreground="{DynamicResource BrowserFontSizeColor}"
-                                    Command="{Binding CommandShowChangeStatus, Source={StaticResource DesignVM}}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                                   Content="{Binding Converter={x:Static converter:XConverter.EnumDescriptionConverter}}" />
-                                        <Path Width="8" Height="6" Data="M5,0 L10,10 L0,10 z"
-                                                  RenderTransformOrigin="0.5,0.5" Stretch="Fill" Fill="Gray">
-                                            <Path.RenderTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform />
-                                                    <SkewTransform />
-                                                    <RotateTransform Angle="180" />
-                                                    <TranslateTransform />
-                                                </TransformGroup>
-                                            </Path.RenderTransform>
-                                        </Path>
-                                    </StackPanel>
-                                </controls:AyImageButton>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <!--上传者/创建者-->
-                <DataGridTemplateColumn Width="auto" MinWidth="120">
-                    <DataGridTemplateColumn.Header>
-                        <StackPanel>
-                            <Label MinWidth="50" BorderBrush="{DynamicResource LineBrush}" Content="上传者/创建者"
-                                   Foreground="{DynamicResource UserInfoForeground}"
-                                   FontFamily="{DynamicResource FontFamily}" FontSize="13" />
-                        </StackPanel>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label HorizontalContentAlignment="Center"
-                                       Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       Content="{Binding CreatorName}" />
-                            </StackPanel>
-
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--大小-->
-                <DataGridTemplateColumn Width="auto" MinWidth="100">
-                    <DataGridTemplateColumn.Header>
-                        <StackPanel>
-                            <Label MinWidth="80" BorderBrush="{DynamicResource LineBrush}" Content="大小"
-                                   HorizontalContentAlignment="Center" Foreground="{DynamicResource UserInfoForeground}"
-                                   FontFamily="{DynamicResource FontFamily}" FontSize="13" />
-                        </StackPanel>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel
-                                Visibility="{Binding Type,Converter={x:Static converter:XConverter.DocTypeVisConverter}}">
-                                <Label HorizontalContentAlignment="Center"
-                                       Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       Content="{Binding Size,Converter={x:Static converter:XConverter.SizeToStringConverter}}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
                 <!--工具栏列-->
                 <DataGridTemplateColumn MinWidth="200" Width="250">
                     <DataGridTemplateColumn.Header>
@@ -255,15 +137,14 @@
                         <DataTemplate>
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0 0 42 0"
                                         Visibility="{Binding IsMouseOver,RelativeSource={RelativeSource AncestorType=DataGridRow},Converter={x:Static converter:XConverter.BooleanToVisibilityConverter}}">
-                                <controls:AyImageButton Height="40"  Style="{DynamicResource DefaultAyImageButtonStyle}"
-                                    Command="{Binding CommandDownload, Source={DynamicResource DesignVM}}" Width="40"
+                                <!--<controls:AyImageButton Height="40"  Style="{DynamicResource DefaultAyImageButtonStyle}"
+                                    Command="{Binding CommandDownload, Source={StaticResource DesignVM}}" Width="40"
                                     Visibility="{Binding Type,Converter={x:Static converter:XConverter.DocTypeVisConverter}}">
                                     <Image Width="15" Stretch="Uniform"
                                                Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
                                 <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Height="40"  Visibility="Collapsed" Width="40">
-                                    <Image Width="15" Stretch="Uniform"
-                                               Source="{Binding ConverterParameter=pc_Button_share.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                                    <Image Width="15" Stretch="Uniform" Source="{Binding ConverterParameter=pc_Button_share.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
                                 <controls:AyImageButton Height="40" Style="{DynamicResource DefaultAyImageButtonStyle}" 
                                     Command="{Binding CommandShowRenameWin, Source={StaticResource DesignVM}}"
@@ -276,10 +157,10 @@
                                                   Visibility="{Binding Converter={x:Static converter:XConverter.DeleteButtonVisConverter}}">
                                     <Image Width="15" Stretch="Uniform"
                                                Source="{Binding ConverterParameter=pc_Button_close.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
-                                </controls:AyImageButton>
+                                </controls:AyImageButton>-->
                                 <controls:AyImageButton Width="40" Height="40"  Style="{DynamicResource DefaultAyImageButtonStyle}"
-                                                  Visibility="{Binding Converter={x:Static converter:XConverter.SyncButtonVisConverter}}"
-                                                  Command="{Binding CommandSyncFiles, Source={StaticResource DesignVM}}">
+                                                  Visibility ="Visible"
+                                                  Command="{Binding CommandDownload, Source={StaticResource DesignVM}}">
                                     <Image Width="15" Stretch="Uniform"
                                                Source="{Binding ConverterParameter=pc_Button_Sync.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}"
                                                RenderTransformOrigin="0.5,0.5" />
