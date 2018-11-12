@@ -21,6 +21,9 @@ namespace EllaMakerTool.Api
 
         private const string EBOOK = "";
         private const string EBOOK_AllBook = "FindEbookList";
+
+        private const string FTP = "FTP";
+        private const string FTP_ROOT = "ListRoot";
         #endregion
         public WebApis(string url)
         {
@@ -37,8 +40,6 @@ namespace EllaMakerTool.Api
             return obj;
 
         }
-
-
         /// <summary>
         /// 获取图书
         /// </summary>
@@ -60,16 +61,30 @@ namespace EllaMakerTool.Api
 
         }
 
-
+        /// <summary>
+        /// 获取图书或动画根目录资源
+        /// </summary>
+        /// <param name="param"></param>
+        internal ResponseModelBase<List<FTPFileInfo>> FTPRoot(string Token, string BookID,bool IsBook)
+        {
+            ListFTPRootParam param = new ListFTPRootParam(IsBook, BookID);
+            param.token = Token;
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<List<FTPFileInfo>>>($"{FTP}/{FTP_ROOT}", param);
+            return obj;
+        }
         /// <summary>
         /// 获取上传路径
         /// </summary>
         /// <param name="rootType">0：其他 1-公司；2-共享；3-个人</param>
         /// <returns></returns>
-        public TheResult<string> GetUpaloadPath(int rootType)
+        public ResponseModelBase<String> GetUpaloadPath(String DirectID)
         {
-            return WebApiUtil.GetAPI<TheResult<string>>($"api/docV1/getuploadpath?Token={Token}&rootType={rootType}");
+            var _result = new ResponseModelBase<string>("", "1", "", "");
+            return _result;
+            //return WebApiUtil.GetAPI<TheResult<string>>($"api/docV1/getuploadpath?Token={Token}&rootType={rootType}");
         }
+        //------------------------------------------------------------------------------------
+
 
 
 
@@ -79,8 +94,7 @@ namespace EllaMakerTool.Api
         /// <returns></returns>
         public TheResult<CompanyStoreStatusApiModel> getCompanyStoreStatus()
         {
-            return WebApiUtil.GetAPI<TheResult<CompanyStoreStatusApiModel>>(
-                $"api/docV1/getCompanyStoreStatus?Token={Token}");
+            throw new  NotImplementedException();
         }
         /// <summary>
         /// 获取根目录文件列表

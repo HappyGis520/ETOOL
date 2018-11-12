@@ -100,6 +100,7 @@
     <Compile Include="DocumentsModel.cs" />
     <Compile Include="DownRecordModel.cs" />
     <Compile Include="DownSaveWinParaModel.cs" />
+    <Compile Include="FTPListItem.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="MesWindowResModel.cs" />
     <Compile Include="OpenFolderOptDataModel.cs" />

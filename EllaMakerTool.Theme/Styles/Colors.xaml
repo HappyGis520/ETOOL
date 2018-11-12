@@ -11,7 +11,7 @@
     <SolidColorBrush x:Key="UserInfoForeground" Color="#44474a"></SolidColorBrush>
     <SolidColorBrush x:Key="UserInfoBorderground" Color="#e3e3e3"></SolidColorBrush>
     <SolidColorBrush x:Key="ProgressBarForeground" Color="#445e97"></SolidColorBrush>
-    <SolidColorBrush x:Key="ProgressBarBackground" Color="#a0b3d6"></SolidColorBrush>
+    <SolidColorBrush x:Key="ProgressBarBackground" Color="#FF445E97"></SolidColorBrush>
     <Path x:Key="MinBtn" Data="M91.5,22.6H36.7c-5,0-9.1,4.1-9.1,9.1v3h73.1v-3C100.6,26.7,96.5,22.6,91.5,22.6 M75.5,16.5l1.3,9.6H51.3
 	l1.3-9.6H75.5 M76.3,10.4H51.9c-2.5,0-4.9,2-5.2,4.5l-1.8,12.7c-0.3,2.5,1.4,4.5,3.9,4.5h30.5c2.5,0,4.3-2,3.9-4.5l-1.8-12.7
 	C81.1,12.4,78.8,10.4,76.3,10.4 M93,40.8H35.1c-3.3,0-5.8,2.7-5.5,6.1l5,54.9c0.3,3.3,3.3,6.1,6.6,6.1h45.7c3.3,0,6.3-2.7,6.6-6.1

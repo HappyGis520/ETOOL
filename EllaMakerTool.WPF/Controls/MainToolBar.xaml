@@ -13,7 +13,7 @@
         <converter:SvgToXamlConverter x:Key="SvgToXamlConverter" />
         <viewModels:MainWindow_Model x:Key="DesignVM" />
     </UserControl.Resources>
-    <Border Height="74" BorderBrush="{StaticResource LineBrush}" BorderThickness="0 0 0 1">
+    <Border Height="74" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0 0 0 1">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="74">
             <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
                 <StackPanel>

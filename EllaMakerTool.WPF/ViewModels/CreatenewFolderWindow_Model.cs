@@ -215,7 +215,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
         public Dictionary<EnumDocStatusType, string> ComBoxItemSource { get; set; } = new Dictionary<EnumDocStatusType, string>()
         {
-            {EnumDocStatusType.Company, "公司"},
+            {EnumDocStatusType.Department, "公司"},
             {EnumDocStatusType.Share, "共享"},
             {EnumDocStatusType.Personal, "个人"},
 

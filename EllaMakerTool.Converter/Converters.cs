@@ -117,10 +117,7 @@ namespace EllaMakerTool.Converter
             get { return Singleton<DeleteButtonVisConverter>.Instance; }
         }
 
-        public static ChangeStatusEnableConverter ChangeStatusEnableConverter
-        {
-            get { return Singleton<ChangeStatusEnableConverter>.Instance; }
-        }
+
 
         public static GobackEnableVisConverter GobackEnableVisConverter
         {

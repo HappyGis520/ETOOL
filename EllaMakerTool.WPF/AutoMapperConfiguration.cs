@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using AutoMapper;
@@ -20,6 +21,7 @@ namespace EllaMakerTool.Models
                 cfg.CreateMap<EmployeeAndDeptNodelApiModel, PsAndDeptTreeNodeItem>();
                 cfg.CreateMap<BookItem, BookListItem>();
                 cfg.CreateMap<EbookItem, EBookListItem>();
+                cfg.CreateMap<FileInfo, FTPListItem>();
             });
             MapperUtil.Config(config.CreateMapper());
         }

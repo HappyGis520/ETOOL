@@ -50,5 +50,9 @@ namespace EllaMakerTool.WPF
             //            ckall.IsChecked = false;
             //        });
         }
+        private void LoadFTPExplorer(object sender, RoutedEventArgs e)
+        {
+            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "", "LoadFTPExplorerEventRouter");
+        }
     }
 }

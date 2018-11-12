@@ -40,7 +40,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 if (Global.CompanyDocEditRight && value)
                     ComBoxItemSource = new Dictionary<EnumDocStatusType, string>()
                     {
-                        {EnumDocStatusType.Company, "公司"},
+                        {EnumDocStatusType.Department, "公司"},
                         {EnumDocStatusType.Share, "共享"},
                         {EnumDocStatusType.Personal, "个人"},
 
@@ -48,7 +48,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 if (Global.CompanyFileEditRight && !value)
                     ComBoxItemSource = new Dictionary<EnumDocStatusType, string>()
                     {
-                        {EnumDocStatusType.Company, "公司"},
+                        {EnumDocStatusType.Department, "公司"},
                         {EnumDocStatusType.Share, "共享"},
                         {EnumDocStatusType.Personal, "个人"},
 

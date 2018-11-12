@@ -68,18 +68,10 @@ namespace EllaMakerTool.WPF
         public static List<EmployerApiModel> ComapnyList = new List<EmployerApiModel>();
         public static List<DocBaseInfoApiModel> UploadItems = new List<DocBaseInfoApiModel>();
 
-        public static bool hasSyncRight(DocumentsModel value)
+        public static bool hasSyncRight(FTPListItem value)
         {
-            if (value.CreatorId == Global.authToken.Profile.ProfileId) return true;
-            if (value.SynergyRange.departs == null) return false;
-            bool hasSyncRight =
-            (value.SynergyRange.departs.Select(p => p.DepartmentId).ToList().Intersect(Global.DepartId).Any() ||
-             value.SynergyRange.users.Select(p => p.ProfileId).ToList()
-                 .Intersect(new List<string>() {Global.authToken.Profile.ProfileId}).Any());
-            {
-                return true;
-            }
-            return false;
+            return true;
+            //暂时不作权限判断，目前是下载工具，登录用户肯定有下载权限 
 
         }
     }

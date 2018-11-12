@@ -14,14 +14,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MVVMSidekick.ViewModels;
 
-namespace EllaMakerTool.Message
+namespace EllaMakerTool.Models
 {
     /// <summary>
     /// 文件或文件夹描述信息
     /// </summary>
-    public class FTPFileInfo
-        {
+    public class FTPListItem:BindableBase<FTPListItem>
+    {
+            private bool isChecked;
+
             /// <summary>
             /// 文件夹/文件编号
             /// </summary>
@@ -38,6 +41,15 @@ namespace EllaMakerTool.Message
             /// 是否为文件
             /// </summary>
             private bool isFile;
+            /// <summary>
+            /// 是否选中
+            /// </summary>
+            public bool IsChecked
+            {
+                get { return isChecked; }
+                set { isChecked = value; }
+            }
+
             public  bool IsFile
             {
                 get
@@ -46,7 +58,7 @@ namespace EllaMakerTool.Message
                 }
             }
 
-
+           
             public  string ParentID
             {
                 get
@@ -73,7 +85,7 @@ namespace EllaMakerTool.Message
                 }
             }
 
-        internal FTPFileInfo(bool isFile, string parentID, string fileID, string fileName)
+        internal FTPListItem(bool isFile, string parentID, string fileID, string fileName)
             {
 
                 this.parentID = parentID;

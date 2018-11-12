@@ -202,6 +202,10 @@ namespace EllaMakerTool.WPF
             //显示动画书列表
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
                 .Where(p => p.EventName == Global.ShowEBookListMSG).Subscribe(LoadEBookData);
+
+            //加载FTP资源浏览器
+            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
+    .Where(p => p.EventName == Global.EBookBrowserMSG).Subscribe(LoadEBookBrowser);
         }
 
         private void LoadEBookData(RouterEventData<bool> param)
@@ -217,7 +221,7 @@ namespace EllaMakerTool.WPF
             }
             else
             {
-                grdDocker.Children.Add(_ucBookList);
+                grdDocker.Children.Add(_ucEBookList);
             }
             EBookListByPageParam _param = new EBookListByPageParam()
             {
@@ -228,6 +232,11 @@ namespace EllaMakerTool.WPF
             };
             EventRouter.Instance.RaiseEvent(this, _param, Global.RefreshEBookListData);
 
+        }
+
+        private void LoadEBookBrowser(RouterEventData<bool> param)
+        {
+            
         }
         private void ComChangeCbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

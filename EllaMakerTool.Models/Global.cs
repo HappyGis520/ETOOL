@@ -36,10 +36,16 @@ namespace EllaMakerTool.Models
         /// 加图书列表数据
         /// </summary>
         public const string RefreshEBookListData = "RefreshEBookListData";
+
+        public const string EBookBrowserMSG = "EBookBrowserMSG";
+
+        public const string LoadFTPExplorerMSG = "LoadFTPExplorer";
         /// <summary>
         /// 切换部门或公司
         /// </summary>
         public const string CompanySwitchEventRouter = "CompanySwitchEventRouter";
+
+       
 
         #endregion
     }

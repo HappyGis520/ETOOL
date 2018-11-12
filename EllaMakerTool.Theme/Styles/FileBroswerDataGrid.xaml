@@ -150,7 +150,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <!--行头部样式-->
     <Style x:Key="DefaultDataGridRowHeader" TargetType="{x:Type DataGridRowHeader}">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -183,7 +182,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <!--单元格样式-->
     <Style x:Key="DefaultDataGridCell"
            TargetType="{x:Type DataGridCell}">
@@ -217,7 +215,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <!--表格DataGrid样式-->
     <Style x:Key="FileBroswerDataGridStyle" TargetType="{x:Type DataGrid}">
         <Setter Property="MinRowHeight" Value="25" />
@@ -329,6 +326,12 @@
         <Style.Triggers>
             <Trigger Property="IsGrouping" Value="true">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+            </Trigger>
+            <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                <Setter Property="Background" Value="#1874CD" />
+            </Trigger>
+            <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                <Setter Property="Background" Value="#1C86EE" />
             </Trigger>
         </Style.Triggers>
     </Style>

@@ -12,10 +12,10 @@ namespace EllaMakerTool.Message
     public enum EnumDocStatusType
     {
         /// <summary>
-        /// 公司
+        /// 部门
         /// </summary>
-        [Description("公司")]
-        Company = 1,
+        [Description("部门")]
+        Department = 1,
         /// <summary>
         /// 共享
         /// </summary>

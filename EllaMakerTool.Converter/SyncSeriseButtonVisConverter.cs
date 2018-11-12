@@ -15,7 +15,7 @@ namespace EllaMakerTool.Converter
         {
             
             var para = (DocumentsModel)value;
-            if (para.StatusType ==EnumDocStatusType.Company)
+            if (para.StatusType ==EnumDocStatusType.Department)
             {
                 if (para.Type == EnumDocFileType.Folder)
                 {

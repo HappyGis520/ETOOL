@@ -3,22 +3,94 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EllaMakerTool.WPF"
              xmlns:converter="clr-namespace:EllaMakerTool.Converter;assembly=EllaMakerTool.Converter"
              xmlns:controls="http://www.ayjs.net/controls"
              xmlns:viewModels="clr-namespace:EllaMakerTool.WPF.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
     <UserControl.Resources>
         <converter:SvgToXamlConverter x:Key="SvgToXamlConverter" />
         <viewModels:MainWindow_Model x:Key="DesignVM" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="54"/>
+            <RowDefinition Height="74"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <local:MainToolBar></local:MainToolBar>
+        <Border Height="74" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0 0 0 1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="74">
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
+                    <StackPanel>
+                        <Grid>
+                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                           Source="Resources/pc_Button_goback_low.png" />
+                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                           Source="Resources/pc_Button_goback.png"
+                                           Visibility="{Binding indexnow,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
+
+                        </Grid>
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="后退" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoFront}" Width="74" Height="74" >
+                    <StackPanel>
+                        <Grid>
+                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                           Source="Resources/pc_Button_gofront_low.png" />
+                            <Image Width="25" Height="25" Stretch="Uniform"
+                                           Source="Resources/pc_Button_gofront.png"
+                                           Visibility="{Binding indexnow,Converter={x:Static converter:XConverter.GofrontEnableVisConverter}}" />
+
+                        </Grid>
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="前进" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandRefreshFiles}">
+                    <StackPanel>
+                        <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_refresh.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="刷新" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandUploadFileShow}"
+                                      Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                                      Width="74" Height="74">
+                    <StackPanel>
+                        <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_Uploadbar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="上传" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                        Width="74" Height="74" Command="{Binding CommandNewFolder}" Style="{DynamicResource DefaultAyImageButtonStyle}">
+                    <StackPanel>
+                        <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_NewFolderBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="新建文件夹" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}"
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarDeleteButtonVisConverter}}"
+                        Width="74" Height="74" Command="{Binding CommandDeletFiles}">
+                    <StackPanel>
+                        <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_DeleteBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="删除" />
+                    </StackPanel>
+                </controls:AyImageButton>
+                <controls:AyImageButton  Style="{DynamicResource DefaultAyImageButtonStyle}"
+                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
+                        Width="74" IsTabStop="False" Height="74"
+                        Command="{Binding CommandShowMoveDocWin}">
+                    <StackPanel>
+                        <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
+                                       Source="{Binding ConverterParameter=pc_Button_MoveBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                        <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="移动到" />
+                    </StackPanel>
+                </controls:AyImageButton>
+            </StackPanel>
+        </Border>
         <DataGrid x:Name="dgfileBrowser" Grid.Row="1" ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
@@ -28,17 +100,6 @@
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding CommandBrowserLeftDoubleClick}" />
             </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <!--ID-->
-                <DataGridTemplateColumn Visibility="Collapsed" Width="auto" MinWidth="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       HorizontalContentAlignment="Center" Content="{Binding Id}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <!--勾选框-->
                 <DataGridTemplateColumn Width="auto" MinWidth="30">
                     <DataGridTemplateColumn.Header>
@@ -59,8 +120,19 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <!--ID-->
+                <DataGridTemplateColumn Visibility="Visible" Width="auto" MinWidth="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Foreground="{DynamicResource BrowserFontSizeColor}"
+                                       HorizontalContentAlignment="Center" Content="{Binding Id}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <!--文件名-->
-                <DataGridTemplateColumn Width="*" MinWidth="200" Header="文件名">
+                <DataGridTemplateColumn Width="*" MinWidth="200" Header="名称">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
@@ -169,9 +241,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <controls:AyImageButton Style="{DynamicResource AyImageTransButtonStyle}"
-                                    IsEnabled="{Binding Converter={x:Static converter:XConverter.ChangeStatusEnableConverter}}"
-                                    Width="60"
+                                <controls:AyImageButton Style="{DynamicResource AyImageTransButtonStyle}" Width="60"
                                     Foreground="{DynamicResource BrowserFontSizeColor}"
                                     Command="{Binding CommandShowChangeStatus, Source={StaticResource DesignVM}}">
                                     <StackPanel Orientation="Horizontal">
@@ -219,7 +289,7 @@
                 <DataGridTemplateColumn Width="auto" MinWidth="120">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
-                            <Label MinWidth="50" BorderBrush="{DynamicResource LineBrush}" Content="上传者/创建者"
+                            <Label MinWidth="50" BorderBrush="{DynamicResource LineBrush}" Content="创建者"
                                    Foreground="{DynamicResource UserInfoForeground}"
                                    FontFamily="{DynamicResource FontFamily}" FontSize="13" />
                         </StackPanel>
@@ -256,5 +326,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>    </Grid>
+        </DataGrid>    
+    </Grid>
 </UserControl>

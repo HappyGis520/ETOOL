@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EllaMakerTool.Models;
 
 namespace EllaMakerTool.WPF
 {
@@ -23,7 +24,6 @@ namespace EllaMakerTool.WPF
         public ucEBookList()
         {
             InitializeComponent();
-            SubscribeCommand();
         }
         private void ckall_Checked(object sender, RoutedEventArgs e)
         {
@@ -34,8 +34,15 @@ namespace EllaMakerTool.WPF
         {
             MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "", "AllUnCheckedEventRouter");
         }
-        private void SubscribeCommand()
+
+
+        private void LoadFTPExplorer(object sender, RoutedEventArgs e)
         {
+            
+            var _Item = dgEBookList.SelectedItem as EBookListItem;
+            MessageBox.Show(_Item.bookname);
+
+            //MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "", Global.LoadFTPExplorerMSG);
         }
     }
 }

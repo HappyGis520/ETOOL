@@ -31,7 +31,7 @@ namespace EllaMakerTool.Converter
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             DocumentsModel myModel = (DocumentsModel)value;
-            if (myModel.StatusType == EnumDocStatusType.Company) return "公司";
+            if (myModel.StatusType == EnumDocStatusType.Department) return "公司";
             else if (myModel.StatusType == EnumDocStatusType.Personal) return "个人";
             if (myModel.ShareRange == null ) return "仅自己";
             if (myModel.ShareRange.departs == null)

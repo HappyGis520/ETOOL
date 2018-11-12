@@ -128,6 +128,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             System.Windows.MessageBox.Show(res.Message);
                         }
                     }).DisposeWith(this);
+
             //加载动画书列表数据
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<EBookListByPageParam>()
     .Where(x => x.EventName == Global.RefreshEBookListData).Subscribe(
@@ -157,7 +158,7 @@ namespace EllaMakerTool.WPF.ViewModels
                     async e =>
                     {
                         var para = e.EventData;
-                        var res = GlobalPara.webApis.AddSyncFile(DgSelectItem.Id, para, para, lastSize);
+                        var res = GlobalPara.webApis.AddSyncFile(DgSelectItem.FileID, para, para, lastSize);
                         if (res.Successful)
                         {
                             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -194,7 +195,7 @@ namespace EllaMakerTool.WPF.ViewModels
                     {
                         if (IsAllCheck) return;
                         IsAllCheck = !IsAllCheck;
-                        FileBroswerData.ForEach(p => p.isChecked = IsAllCheck);
+                        FileBroswerData.ForEach(p => p.IsChecked = IsAllCheck);
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
                     })
                 .DisposeWith(this);
@@ -205,7 +206,7 @@ namespace EllaMakerTool.WPF.ViewModels
                     {
                         if (!IsAllCheck) return;
                         IsAllCheck = !IsAllCheck;
-                        FileBroswerData.ForEach(p => p.isChecked = IsAllCheck);
+                        FileBroswerData.ForEach(p => p.IsChecked = IsAllCheck);
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
                     })
                 .DisposeWith(this);
@@ -368,114 +369,114 @@ namespace EllaMakerTool.WPF.ViewModels
 
                                 }
                                 break;
-                            case MesWinType.MoveWin:
-                                if (para.IsOk)
-                                {
-                                    string paras = (string)para.ResData;
-                                    var req = FileBroswerData.Where(p => p.isChecked == true).ToList();
-                                    if (req == null && req.Count < 1) return;
-                                    List<DocBaseInfoApiModel> Model = new List<DocBaseInfoApiModel>();
-                                    foreach (var item in req)
-                                    {
-                                        if (GlobalPara.rootTypeNow == 2)
-                                            if (!GlobalPara.hasSyncRight(item))
-                                            {
-                                                continue;
-                                            }
-                                        Model.Add(new DocBaseInfoApiModel()
-                                        {
-                                            sourceId = item.Id,
-                                            sourceName = item.Name,
-                                            type = item.Type == EnumDocFileType.Folder ? EnumDocType.Catalog : EnumDocType.File
-                                        });
-                                    }
+                            //case MesWinType.MoveWin:
+                            //    if (para.IsOk)
+                            //    {
+                            //        string paras = (string)para.ResData;
+                            //        var req = FileBroswerData.Where(p => p.IsChecked).ToList();
+                            //        if (req == null && req.Count < 1) return;
+                            //        List<DocBaseInfoApiModel> Model = new List<DocBaseInfoApiModel>();
+                            //        foreach (var item in req)
+                            //        {
+                            //            if (GlobalPara.rootTypeNow == 2)
+                            //                if (!GlobalPara.hasSyncRight(item))
+                            //                {
+                            //                    continue;
+                            //                }
+                            //            Model.Add(new DocBaseInfoApiModel()
+                            //            {
+                            //                sourceId = item.Id,
+                            //                sourceName = item.Name,
+                            //                type = item.Type == EnumDocFileType.Folder ? EnumDocType.Catalog : EnumDocType.File
+                            //            });
+                            //        }
 
-                                    List<CoverDocResultApiModel> cover = GetCoverNum(paras, Model);
-                                    foreach (var item in Model)
-                                    {
-                                        var now = cover.Where(p =>
-                                            p.baseInfo.sourceId == item.sourceId && p.baseInfo.type == item.type);
-                                        if (now.Any())
-                                        {
-                                            if (now.FirstOrDefault().IsNosyncCover)
-                                            {
-                                                if (CoverMessageBox.Show(null,
-                                                        $"正在 {item.sourceName} 从 {NowFolderName} 移动到……",
-                                                        $"目标包含同名文件(您没有权限修改)", "替换目标中的文件", "保存成新的文件", false, true) !=
-                                                    MessageBoxResult.None)
-                                                {
-                                                    if (GlobalPara.rootTypeNow == 2)
-                                                    {
-                                                        bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                                                        if (isOverRange)
-                                                        {
-                                                            if (CoverMessageBox.Show(null,
-                                                                    $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                                                                    $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                                                                MessageBoxResult.Cancel)
-                                                            {
-                                                                MainWinGetFocus();
-                                                                continue;
-                                                            }
-                                                        }
-                                                    }
-                                                    MoveDocs(item.sourceId, item.sourceName, paras, item.type, false, true);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (CoverMessageBox.Show(null,
-                                                        $"正在将 {item.sourceName} 从 {NowFolderName} 移动到……",
-                                                        $"目标包含同名文件", "替换目标中的文件", "保存成新的文件") ==
-                                                    MessageBoxResult.OK)
-                                                {
-                                                    if (GlobalPara.rootTypeNow == 2)
-                                                    {
-                                                        bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                                                        if (isOverRange)
-                                                        {
-                                                            if (CoverMessageBox.Show(null,
-                                                                    $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                                                                    $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                                                                MessageBoxResult.Cancel)
-                                                            {
-                                                                MainWinGetFocus();
-                                                                continue;
-                                                            }
-                                                        }
-                                                    }
-                                                    MoveDocs(item.sourceId, item.sourceName, paras, item.type,
-                                                        true, true);
-                                                }
-                                                else
-                                                {
-                                                    MoveDocs(item.sourceId, item.sourceName, paras, item.type, false);
-                                                }
-                                            }
-                                            MainWinGetFocus();
-                                        }
-                                        else
-                                        {
-                                            if (GlobalPara.rootTypeNow == 2)
-                                            {
-                                                bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                                                if (isOverRange)
-                                                {
-                                                    if (CoverMessageBox.Show(null, $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                                                            $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                                                        MessageBoxResult.Cancel)
-                                                    {
-                                                        continue;
-                                                    }
-                                                }
-                                            }
-                                            MoveDocs(item.sourceId, item.sourceName, paras, item.type, true, true);
-                                            MainWinGetFocus();
-                                        }
-                                    }
-                                    this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
-                                }
-                                break;
+                            //        List<CoverDocResultApiModel> cover = GetCoverNum(paras, Model);
+                            //        foreach (var item in Model)
+                            //        {
+                            //            var now = cover.Where(p =>
+                            //                p.baseInfo.sourceId == item.sourceId && p.baseInfo.type == item.type);
+                            //            if (now.Any())
+                            //            {
+                            //                if (now.FirstOrDefault().IsNosyncCover)
+                            //                {
+                            //                    if (CoverMessageBox.Show(null,
+                            //                            $"正在 {item.sourceName} 从 {NowFolderName} 移动到……",
+                            //                            $"目标包含同名文件(您没有权限修改)", "替换目标中的文件", "保存成新的文件", false, true) !=
+                            //                        MessageBoxResult.None)
+                            //                    {
+                            //                        if (GlobalPara.rootTypeNow == 2)
+                            //                        {
+                            //                            bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
+                            //                            if (isOverRange)
+                            //                            {
+                            //                                if (CoverMessageBox.Show(null,
+                            //                                        $"{item.sourceName} 的共享协同范围超过目标文件夹",
+                            //                                        $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
+                            //                                    MessageBoxResult.Cancel)
+                            //                                {
+                            //                                    MainWinGetFocus();
+                            //                                    continue;
+                            //                                }
+                            //                            }
+                            //                        }
+                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type, false, true);
+                            //                    }
+                            //                }
+                            //                else
+                            //                {
+                            //                    if (CoverMessageBox.Show(null,
+                            //                            $"正在将 {item.sourceName} 从 {NowFolderName} 移动到……",
+                            //                            $"目标包含同名文件", "替换目标中的文件", "保存成新的文件") ==
+                            //                        MessageBoxResult.OK)
+                            //                    {
+                            //                        if (GlobalPara.rootTypeNow == 2)
+                            //                        {
+                            //                            bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
+                            //                            if (isOverRange)
+                            //                            {
+                            //                                if (CoverMessageBox.Show(null,
+                            //                                        $"{item.sourceName} 的共享协同范围超过目标文件夹",
+                            //                                        $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
+                            //                                    MessageBoxResult.Cancel)
+                            //                                {
+                            //                                    MainWinGetFocus();
+                            //                                    continue;
+                            //                                }
+                            //                            }
+                            //                        }
+                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type,
+                            //                            true, true);
+                            //                    }
+                            //                    else
+                            //                    {
+                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type, false);
+                            //                    }
+                            //                }
+                            //                MainWinGetFocus();
+                            //            }
+                            //            else
+                            //            {
+                            //                if (GlobalPara.rootTypeNow == 2)
+                            //                {
+                            //                    bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
+                            //                    if (isOverRange)
+                            //                    {
+                            //                        if (CoverMessageBox.Show(null, $"{item.sourceName} 的共享协同范围超过目标文件夹",
+                            //                                $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
+                            //                            MessageBoxResult.Cancel)
+                            //                        {
+                            //                            continue;
+                            //                        }
+                            //                    }
+                            //                }
+                            //                MoveDocs(item.sourceId, item.sourceName, paras, item.type, true, true);
+                            //                MainWinGetFocus();
+                            //            }
+                            //        }
+                            //        this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
+                            //    }
+                            //    break;
                         }
 
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -491,6 +492,7 @@ namespace EllaMakerTool.WPF.ViewModels
         {
             BookListData.Clear();
             EBookListData.Clear();
+            FileBroswerData.Clear();
         }
 
 
@@ -539,29 +541,190 @@ namespace EllaMakerTool.WPF.ViewModels
         static Func<ObservableCollection<EBookListItem>> _EBookListDataDefaultValueFactory = () => new ObservableCollection<EBookListItem>();
         #endregion
 
-
-        public ObservableCollection<DocumentsModel> FileBroswerData
+        /// <summary>
+        /// FTP目录或文件列表
+        /// </summary>
+        public ObservableCollection<FTPListItem> FileBroswerData
         {
             get { return _FileBroswerDataLocator(this).Value; }
             set { _FileBroswerDataLocator(this).SetValueAndTryNotify(value); }
         }
         #region Property ObservableCollection<DocumentV1ApiModel> FileBroswerData Setup        
-        protected Property<ObservableCollection<DocumentsModel>> _FileBroswerData = new Property<ObservableCollection<DocumentsModel>> { LocatorFunc = _FileBroswerDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<DocumentsModel>>> _FileBroswerDataLocator = RegisterContainerLocator<ObservableCollection<DocumentsModel>>("FileBroswerData", model => model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator, _FileBroswerDataDefaultValueFactory));
-        static Func<ObservableCollection<DocumentsModel>> _FileBroswerDataDefaultValueFactory = () => new ObservableCollection<DocumentsModel>();
+        protected Property<ObservableCollection<FTPListItem>> _FileBroswerData = new Property<ObservableCollection<FTPListItem>> { LocatorFunc = _FileBroswerDataLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<FTPListItem>>> _FileBroswerDataLocator = RegisterContainerLocator<ObservableCollection<FTPListItem>>("FileBroswerData", model => model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator, _FileBroswerDataDefaultValueFactory));
+        static Func<ObservableCollection<FTPListItem>> _FileBroswerDataDefaultValueFactory = () => new ObservableCollection<FTPListItem>();
         #endregion
         #endregion
 
 
-        #region 命令处理
+        #region  命令处理
 
-        
+
+
+        public CommandModel<ReactiveCommand, String> CommandEBookBrowserLeftDoubleClick
+        {
+            get { return _CommandEBookBrowserLeftDoubleClickLocator(this).Value; }
+            set { _CommandEBookBrowserLeftDoubleClickLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandEBookBrowserLeftDoubleClick Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandEBookBrowserLeftDoubleClick = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandEBookBrowserLeftDoubleClickLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandEBookBrowserLeftDoubleClickLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandEBookBrowserLeftDoubleClick", model => model.Initialize("CommandEBookBrowserLeftDoubleClick", ref model._CommandEBookBrowserLeftDoubleClick, ref _CommandEBookBrowserLeftDoubleClickLocator, _CommandEBookBrowserLeftDoubleClickDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandEBookBrowserLeftDoubleClickDefaultValueFactory =
+            model =>
+            {
+                var state = Global.EBookBrowserMSG;           // Command state  
+                var commandId = Global.EBookBrowserMSG;
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                    vm,
+                    async e =>
+                    {
+                        vm.IsUIBusy = true;
+                        EBookListItem para = (EBookListItem)vm.dgSelectEBookItem;
+                        if (para != null && !string.IsNullOrEmpty(para.id))
+                        {
+                            vm.FillFilesFromFTPRoot(para.id, false, true);
+                        }
+                        vm.IsUIBusy = false;
+                        await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                    })
+                .DoNotifyDefaultEventRouter(vm, commandId)
+                .Subscribe()
+                .DisposeWith(vm);
+
+
+
+
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandLoadFTP
+        {
+            get { return _CommandLoadFTPLocator(this).Value; }
+            set { _CommandLoadFTPLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandLoadFTP Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandLoadFTP = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandLoadFTPLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandLoadFTPLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandLoadFTP", model => model.Initialize("CommandLoadFTP", ref model._CommandLoadFTP, ref _CommandLoadFTPLocator, _CommandLoadFTPDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandLoadFTPDefaultValueFactory =
+            model =>
+            {
+                var state = "CommandLoadFTP";           // Command state  
+                var commandId = "CommandLoadFTP";
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                        vm,
+                        async e =>
+                        {
+                            vm.IsUIBusy = true;
+                            //var req = new DownSavePathMesWindow_Model()
+                            //{
+                            //    FileName = vm.DgSelectItem.Name,
+                            //    SavePath = GlobalPara.DefaultSavePath,
+                            //    Size = vm.DgSelectItem.Size,
+                            //    URL = vm.DgSelectItem.Url
+                            //};
+                            //GlobalPara.lastDownSize = vm.DgSelectItem.Size;
+                            //if (req.FileName.Length > 10)
+                            //{
+                            //    req.FileName = req.FileName.Substring(0, 10) + "...";
+                            //}
+                            //req.FullFileName = vm.DgSelectItem.Name;
+                            //vm.lastFTPRootID = vm.DgSelectItem.Name;
+
+                            //await vm.StageManager.DefaultStage.Show(req);
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+        private string lastFTPRootID = "";
 
         #endregion
 
 
+        public CommandModel<ReactiveCommand, String> CommandDownload
+        {
+            get { return _CommandDownloadLocator(this).Value; }
+            set { _CommandDownloadLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandDownload Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandDownload = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandDownloadLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandDownloadLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandDownload", model => model.Initialize("CommandDownload", ref model._CommandDownload, ref _CommandDownloadLocator, _CommandDownloadDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandDownloadDefaultValueFactory =
+            model =>
+            {
+                var state = "CommandDownload";           // Command state  
+                var commandId = "CommandDownload";
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                        vm,
+                        async e =>
+                        {
+                            vm.IsUIBusy = true;
+                            //var req = new DownSavePathMesWindow_Model()
+                            //{
+                            //    FileName = vm.DgSelectItem.FileName,
+                            //    SavePath = GlobalPara.DefaultSavePath,
+                            //    Size = vm.DgSelectItem.Size,
+                            //    URL = vm.DgSelectItem.Url
+                            //};
+                            //GlobalPara.lastDownSize = vm.DgSelectItem;
+                            //if (req.FileName.Length > 10)
+                            //{
+                            //    req.FileName = req.FileName.Substring(0, 10) + "...";
+                            //}
+                            //req.FullFileName = vm.DgSelectItem.FileName;
+                            //vm.lastDownName = vm.DgSelectItem.FileName;
+
+                            //await vm.StageManager.DefaultStage.Show(req);
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+        private string lastDownName = "";
+
+        #endregion
 
 
+        #endregion
+
+        #region 事件处理
         /// <summary>
         /// 左侧导航栏选择改变
         /// </summary>
@@ -592,7 +755,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         if (!isLockTab) GetRootFile(2, 1, 2);
                         //BroswerPathStr = "共享资源";
                         TransVisibility = Visibility.Collapsed;
-                        GetUploadPath(2);
+                        GetUploadPath("");
                         break;
                     //私有资源
                     case 3:
@@ -600,7 +763,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         if (!isLockTab) GetRootFile(3, 1, 2);
                         //BroswerPathStr = "私有资源";
                         TransVisibility = Visibility.Collapsed;
-                        GetUploadPath(3);
+                        GetUploadPath("");
                         break;
                 }
             }
@@ -613,6 +776,131 @@ namespace EllaMakerTool.WPF.ViewModels
         static Func<int> _TabCotrolSelectIndexDefaultValueFactory = () => -1;
         #endregion
 
+
+        #endregion
+
+
+        /// <summary>
+        /// 获取指定ID下的文件
+        /// </summary>
+        ///<param name="CatalogId">文档ID</param>
+        /// <param name="rootType">目录类型</param>
+        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
+        private void GetFilesFromCatalogId(string CatalogId, int rootType, bool isInlist = true)
+        {
+            IsAllCheck = false;
+            var res = GlobalPara.webApis.GetListQuery(CatalogId, "", rootType, 1, 2);
+            if (res.Successful)
+            {
+                if (isInlist)
+                {
+                    inExcuList(new OpenFolderOptDataModel()
+                    {
+                        rootType = rootType,
+                        CatalogId = res.Data.CatelogId
+                    });
+                }
+
+                ConvertToPath(res.Data.pathInfo, 4);
+                GlobalPara.CatalogNow = res.Data;
+                try
+                {
+                    FileBroswerData.Clear();
+                    foreach (var item in res.Data.Records)
+                    {
+                        FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        /// <summary>
+        ///从FTP站点获取指定ID下的文件或文件夹
+        /// </summary>
+        ///<param name="CatalogId">文档ID</param>
+        /// <param name="rootType">目录类型</param>
+        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
+        private void FillFilesFromFTPRoot(string CatalogId, bool IsBook, bool IsInition)
+        {
+            IsAllCheck = false;
+            var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
+            if (res.Successful)
+            {
+                ClearData();
+                if (res.Data != null && res.Data.Count > 0)
+                {
+                    try
+                    {
+
+                        foreach (var item in res.Data)
+                        {
+                            FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
+                        }
+                        //显示资源管理器
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex + "");
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(res.Message);
+
+            }
+
+        }
+        /// <summary>
+        ///从FTP站点获取指定ID下的文件或文件夹
+        /// </summary>
+        ///<param name="CatalogId">文档ID</param>
+        /// <param name="rootType">目录类型</param>
+        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
+        private void FillFilesFromFTP(string CatalogId, bool IsBook,bool IsInition)
+        {
+            IsAllCheck = false;
+            var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
+            if (res.Successful)
+            {
+                ClearData();
+                //if (IsInition)
+                //{
+                //    inExcuList(new OpenFolderOptDataModel()
+                //    {
+                //        rootType = rootType,
+                //        CatalogId = res.Data.CatelogId
+                //    });
+                //}
+
+                //ConvertToPath(res.Data.pathInfo, 4);
+                //GlobalPara.CatalogNow = res.Data;
+                //try
+                //{
+                //    FileBroswerData.Clear();
+                //    foreach (var item in res.Data.Records)
+                //    {
+                //        FileBroswerData.Add(MapperUtil.Mapper.Map<DocumentsModel>(item));
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex + "");
+                //}
+
+            }
+            else
+            {
+                MessageBox.Show(res.Message);
+
+            }
+             
+        }
 
         public CommandModel<ReactiveCommand, String> CommandSyncFiles
         {
@@ -736,44 +1024,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        /// <summary>
-        /// 获取指定ID下的文件
-        /// </summary>
-        ///<param name="CatalogId">文档ID</param>
-        /// <param name="rootType">目录类型</param>
-        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void GetFilesFromCatalogId(string CatalogId, int rootType,bool isInlist=true)
-        {
-            IsAllCheck = false;
-            var res = GlobalPara.webApis.GetListQuery(CatalogId, "", rootType, 1, 2);
-            if (res.Successful)
-            {
-                if (isInlist)
-                {
-                    inExcuList(new OpenFolderOptDataModel()
-                    {
-                        rootType = rootType,
-                        CatalogId = res.Data.CatelogId
-                    });
-                }
-                
-                ConvertToPath(res.Data.pathInfo, 4);
-                GlobalPara.CatalogNow = res.Data;
-                try
-                {
-                    FileBroswerData.Clear();
-                    foreach (var item in res.Data.Records)
-                    {
-                        FileBroswerData.Add(MapperUtil.Mapper.Map<DocumentsModel>(item));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex + "");
-                }
 
-            }
-        }
 
 
         public string NowFolderName
@@ -862,7 +1113,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 FileBroswerData.Clear();
                 foreach (var item in res.Data.Records)
                 {
-                    FileBroswerData.Add(MapperUtil.Mapper.Map<DocumentsModel>(item));
+                    FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                 }
             }
         }
@@ -907,7 +1158,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 FileBroswerData.Clear();
                 foreach (var item in res.Data.Records)
                 {
-                    FileBroswerData.Add(MapperUtil.Mapper.Map<DocumentsModel>(item));
+                    FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                 }
             }
         }
@@ -963,9 +1214,9 @@ namespace EllaMakerTool.WPF.ViewModels
         /// 获取上传路径
         /// </summary>
         /// <param name="rootype">0：其他 1-公司；2-共享；3-个人</param>
-        public void GetUploadPath(int rootype)
+        public void GetUploadPath(string DirectID)
         {
-            var res = GlobalPara.webApis.GetUpaloadPath(rootype);
+            var res = GlobalPara.webApis.GetUpaloadPath(DirectID);
             if (res.Successful)
             {
                 GlobalPara.UploadPathNow = res.Data;
@@ -1029,8 +1280,8 @@ namespace EllaMakerTool.WPF.ViewModels
 
         private void SetNewStatus(EnumDocStatusType newStatus)
         {
-            var res = GlobalPara.webApis.SetNewStatus(DgSelectItem.Id,
-                DgSelectItem.Type == EnumDocFileType.Folder
+            var res = GlobalPara.webApis.SetNewStatus(DgSelectItem.FileID,
+                !DgSelectItem.IsFile
                     ? EnumDocType.Catalog
                     : EnumDocType.File, newStatus);
             if (res.Successful)
@@ -1047,8 +1298,8 @@ namespace EllaMakerTool.WPF.ViewModels
         {
             if (model.UserList == null) model.UserList = new List<string>();
             if (model.DeptList== null) model.DeptList = new List<string>();
-            var res = GlobalPara.webApis.setSynergyRange(DgSelectItem.Id,
-                DgSelectItem.Type == EnumDocFileType.Folder
+            var res = GlobalPara.webApis.setSynergyRange(DgSelectItem.FileID,
+                !DgSelectItem.IsFile
                     ? EnumDocType.Catalog
                     : EnumDocType.File, model);
         }
@@ -1057,8 +1308,8 @@ namespace EllaMakerTool.WPF.ViewModels
         {
             if (model.UserList == null) model.UserList = new List<string>();
             if (model.DeptList == null) model.DeptList = new List<string>();
-            var res = GlobalPara.webApis.setShareRange(DgSelectItem.Id,
-                DgSelectItem.Type ==EnumDocFileType.Folder
+            var res = GlobalPara.webApis.setShareRange(DgSelectItem.FileID,
+                !DgSelectItem.IsFile
                     ? EnumDocType.Catalog
                     : EnumDocType.File, model);
         }
@@ -1143,6 +1394,37 @@ namespace EllaMakerTool.WPF.ViewModels
             }
 
         }
+
+        public EBookListItem dgSelectEBookItem
+        {
+            get { return _dgSelectEBookItemLocator(this).Value; }
+            set
+            {
+                try
+                {
+                    _dgSelectEBookItemLocator(this).SetValueAndTryNotify(value);
+                    if (value != null)
+                    {
+                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id)  );
+                        //ent.isChecked = !ent.isChecked;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        #region Property DocumentsModel dgSelectEBookItem Setup        
+        protected Property<EBookListItem> _dgSelectEBookItem = new Property<EBookListItem> { LocatorFunc = _dgSelectEBookItemLocator };
+        static Func<BindableBase, ValueContainer<EBookListItem>> _dgSelectEBookItemLocator = RegisterContainerLocator<EBookListItem>("dgSelectEBookItem", model => model.Initialize("dgSelectEBookItem", ref model._dgSelectEBookItem, ref _dgSelectEBookItemLocator, _dgSelectEBookItemDefaultValueFactory));
+        static Func<EBookListItem> _dgSelectEBookItemDefaultValueFactory = () => default(EBookListItem);
+        #endregion
+
+
 
 
         public ObservableCollection<DownRecordModel> DownRecordList
@@ -1344,7 +1626,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public DocumentsModel DgSelectItem
+        public FTPListItem DgSelectItem
         {
             get { return _DgSelectItemLocator(this).Value; }
             set
@@ -1354,8 +1636,8 @@ namespace EllaMakerTool.WPF.ViewModels
                     _DgSelectItemLocator(this).SetValueAndTryNotify(value);
                     if (value != null)
                     {
-                        var ent = FileBroswerData.FirstOrDefault(p => p.Id == value.Id && p.Type == value.Type);
-                        ent.isChecked = !ent.isChecked;
+                        var ent = FileBroswerData.FirstOrDefault(p => p.FileID == value.FileID );
+                        ent.IsChecked = !ent.IsChecked;
                     }
                     
                     
@@ -1367,10 +1649,10 @@ namespace EllaMakerTool.WPF.ViewModels
                 
             }
         }
-        #region Property DocumentsModel DgSelectItem Setup        
-        protected Property<DocumentsModel> _DgSelectItem = new Property<DocumentsModel> { LocatorFunc = _DgSelectItemLocator };
-        static Func<BindableBase, ValueContainer<DocumentsModel>> _DgSelectItemLocator = RegisterContainerLocator<DocumentsModel>("DgSelectItem", model => model.Initialize("DgSelectItem", ref model._DgSelectItem, ref _DgSelectItemLocator, _DgSelectItemDefaultValueFactory));
-        static Func<DocumentsModel> _DgSelectItemDefaultValueFactory = () => default(DocumentsModel);
+        #region Property FTPListItem DgSelectItem Setup        
+        protected Property<FTPListItem> _DgSelectItem = new Property<FTPListItem> { LocatorFunc = _DgSelectItemLocator };
+        static Func<BindableBase, ValueContainer<FTPListItem>> _DgSelectItemLocator = RegisterContainerLocator<FTPListItem>("DgSelectItem", model => model.Initialize("DgSelectItem", ref model._DgSelectItem, ref _DgSelectItemLocator, _DgSelectItemDefaultValueFactory));
+        static Func<FTPListItem> _DgSelectItemDefaultValueFactory = () => default(FTPListItem);
         #endregion
 
 
@@ -1480,7 +1762,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                     return;
                                 }
                             }
-                            reqVm.StatusType = GlobalPara.rootTypeNow==1?EnumDocStatusType.Company:(GlobalPara.rootTypeNow == 2 ? EnumDocStatusType.Share:EnumDocStatusType.Personal);
+                            reqVm.StatusType = GlobalPara.rootTypeNow==1?EnumDocStatusType.Department:(GlobalPara.rootTypeNow == 2 ? EnumDocStatusType.Share:EnumDocStatusType.Personal);
 
                             vm.IsUIBusy = true;
                             await vm.StageManager.DefaultStage.Show(reqVm);
@@ -1659,11 +1941,11 @@ namespace EllaMakerTool.WPF.ViewModels
                         vm,
                         async e =>
                         {
-                            var req = vm.FileBroswerData.Where(p => p.isChecked == true).ToList();
+                            var req = vm.FileBroswerData.Where(p => p.IsChecked == true).ToList();
                             if (req == null || req.Count<1) return;
                             if (GlobalPara.rootTypeNow == 1)
                             {
-                                if (req.Any(p => p.Type != EnumDocFileType.Folder))
+                                if (req.Any(p => p.IsFile))
                                 {
                                     if (!Global.CompanyFileDeletRight)
                                     {
@@ -1671,26 +1953,18 @@ namespace EllaMakerTool.WPF.ViewModels
                                         return;
                                     }
                                 }
-                                if (req.Any(p => p.Type == EnumDocFileType.Folder))
+                                if (req.Any(p => !p.IsFile ))
                                 {
                                     if (!Global.CompanyDocDeletRight)
                                     {
-                                        vm._vm.ShowInformation($"没有删除公司文件夹的权限！");
+                                        vm._vm.ShowInformation($"没有删除部门文件夹的权限！");
                                         return;
                                     }
                                 }
                             }
-                            if (GlobalPara.rootTypeNow == 2)
-                            {
-                                var res = req.Where(item => !XConverter.ChangeStatusEnableConverter.getStatus(item)).ToList();
-                                if (res!=null&&res.Count>0)
-                                {
-                                    vm._vm.ShowInformation($"没有删除 {res.FirstOrDefault().Name} 等{res.Count}个文件（夹）的权限！");
-                                    return;
-                                }
-                            }
+   
 
-                            var filename = req.FirstOrDefault().Name;
+                            var filename = req.FirstOrDefault().FileName;
                             if (filename.Length > 8)
                             {
                                 filename = filename.Substring(0, 8) + "...";
@@ -1704,13 +1978,13 @@ namespace EllaMakerTool.WPF.ViewModels
                                     {
                                         return;
                                     }
-                                if (p.Type == 0)
+                                if (!p.IsFile)
                                 {
-                                    data.folderIds.Add(p.Id);
+                                    data.folderIds.Add(p.FileID);
                                 }
                                 else
                                 {
-                                    data.fileIds.Add(p.Id);
+                                    data.fileIds.Add(p.FileID);
                                 }
                             });
                             vm.IsUIBusy = true;
@@ -1796,11 +2070,11 @@ namespace EllaMakerTool.WPF.ViewModels
                         vm,
                         async e =>
                         {
-                            var req = vm.FileBroswerData.Where(p => p.isChecked == true).ToList();
+                            var req = vm.FileBroswerData.Where(p => p.IsChecked == true).ToList();
                             if (req == null || req.Count < 1) return;
                             if (GlobalPara.rootTypeNow == 1)
                             {
-                                if (req.Any(p => p.Type != EnumDocFileType.Folder))
+                                if (req.Any(p => p.IsFile ))
                                 {
                                     if (!Global.CompanyFileEditRight)
                                     {
@@ -1808,7 +2082,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                         return;
                                     }
                                 }
-                                if (req.Any(p => p.Type == EnumDocFileType.Folder))
+                                if (req.Any(p => !p.IsFile))
                                 {
                                     if (!Global.CompanyDocEditRight)
                                     {
@@ -1817,15 +2091,15 @@ namespace EllaMakerTool.WPF.ViewModels
                                     }
                                 }
                             }
-                            if (GlobalPara.rootTypeNow == 2)
-                            {
-                                var ret = req.Where(item => !XConverter.ChangeStatusEnableConverter.getStatus(item)).ToList();
-                                if (ret != null && ret.Count > 0)
-                                {
-                                    vm._vm.ShowInformation($"没有移动 {ret.FirstOrDefault().Name} 等{ret.Count}个文件（夹）的权限！");
-                                    return;
-                                }
-                            }
+                            //if (GlobalPara.rootTypeNow == 2)
+                            //{
+                            //    var ret = req.Where(item => !XConverter.ChangeStatusEnableConverter.getStatus(item)).ToList();
+                            //    if (ret != null && ret.Count > 0)
+                            //    {
+                            //        vm._vm.ShowInformation($"没有移动 {ret.FirstOrDefault().FileName} 等{ret.Count}个文件（夹）的权限！");
+                            //        return;
+                            //    }
+                            //}
                             var res = GlobalPara.webApis.GetRootDocTree(GlobalPara.rootTypeNow);
                             var reqvm = new MoveDocumentWindow_Model();
                             if (res.Successful)
@@ -1924,20 +2198,20 @@ namespace EllaMakerTool.WPF.ViewModels
                         async e =>
                         {
                             if (vm.DgSelectItem == null) return;
-                            var filename = vm.DgSelectItem.Name;
+                            var filename = vm.DgSelectItem.FileName;
                             if (filename.Length > 10)
                             {
                                 filename = filename.Substring(0, 10) + "...";
                             }
                             DelconfirmWindow_Model data =
                                 new DelconfirmWindow_Model {TipStr = $"确定要删除\"{filename}\"吗？"};
-                            if (vm.DgSelectItem.Type == 0)
+                            if (!vm.DgSelectItem.IsFile)
                             {
-                                data.folderIds.Add(vm.DgSelectItem.Id);
+                                data.folderIds.Add(vm.DgSelectItem.FileID);
                             }
                             else
                             {
-                                data.fileIds.Add(vm.DgSelectItem.Id);
+                                data.fileIds.Add(vm.DgSelectItem.FileID);
                             }
                             vm.IsUIBusy = true;
                             await vm.StageManager.DefaultStage.Show(data);
@@ -1981,15 +2255,15 @@ namespace EllaMakerTool.WPF.ViewModels
                         async e =>
                         {
                             if (vm.DgSelectItem == null) return;
-                            var filename = vm.DgSelectItem.Name;
+                            var filename = vm.DgSelectItem.FileName;
                             var extension = "";
-                            if (vm.DgSelectItem.Type != 0)
+                            if (vm.DgSelectItem.IsFile)
                             {
-                                filename = vm.DgSelectItem.Name.Substring(0, vm.DgSelectItem.Name.LastIndexOf("."));
-                                extension = vm.DgSelectItem.Name.Substring(vm.DgSelectItem.Name.LastIndexOf(".") + 1);
+                                filename = vm.DgSelectItem.FileName.Substring(0, vm.DgSelectItem.FileName.LastIndexOf("."));
+                                extension = vm.DgSelectItem.FileName.Substring(vm.DgSelectItem.FileName.LastIndexOf(".") + 1);
                             }
                             vm.IsUIBusy = true;
-                            await vm.StageManager.DefaultStage.Show(new RenameWindow_Model { OriginName= filename, DefalutName = filename,DocId= vm.DgSelectItem.Id,IsFolder= vm.DgSelectItem.Type==0,Extension=extension,CataLogId= vm.DgSelectItem .CatelogId});
+                            await vm.StageManager.DefaultStage.Show(new RenameWindow_Model { OriginName= filename, DefalutName = filename,DocId= vm.DgSelectItem.FileID,IsFolder= !vm.DgSelectItem.IsFile,Extension=extension,CataLogId= vm.DgSelectItem .FileID});
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                         })
                     .DoNotifyDefaultEventRouter(vm, commandId)
@@ -2032,109 +2306,109 @@ namespace EllaMakerTool.WPF.ViewModels
                         {
                             try
                             {
-                                if (vm.DgSelectItem == null) return;
-                                var ShareRange = vm.DgSelectItem.ShareRange;
-                                var SyncRange = vm.DgSelectItem.SynergyRange;
+                                //if (vm.DgSelectItem == null) return;
+                                ////var ShareRange = vm.DgSelectItem.ShareRange;
+                                ////var SyncRange = vm.DgSelectItem.SynergyRange;
                                 
-                                var reqVm = new ChangeStatusWindow_Model();
-                                if (vm.DgSelectItem.Type == 0)
-                                {
-                                    reqVm.IsFolder = true;
-                                }
-                                else
-                                {
-                                    reqVm.IsFolder = false;
-                                }
-                                reqVm.IsFromTopBar = false;
-                                if (ShareRange == null)
-                                {
-                                    ShareRange = new DocRangeItem();
-                                }
-                                if (SyncRange == null)
-                                {
-                                    SyncRange = new DocRangeItem();
-                                }
-                                if (ShareRange.departs == null)
-                                {
-                                    ShareRange.departs = new List<DepartmentApiModel>();
-                                }
-                                if (ShareRange.users == null)
-                                {
-                                    ShareRange.users = new List<ProfileApiModel>();
-                                }
-                                if (SyncRange.departs == null)
-                                {
-                                    SyncRange.departs = new List<DepartmentApiModel>();
-                                }
-                                if (SyncRange.users == null)
-                                {
-                                    SyncRange.users = new List<ProfileApiModel>();
-                                }
-                                foreach (var item in ShareRange.departs)
-                                {
-                                    if (GlobalPara.CatalogNow.pathInfo.Count == 1||GlobalPara.CatalogNow.ShareRange.departs.Any(p=>p.DepartmentId==item.DepartmentId)
-                                        )
-                                    {
-                                        SelectItemModel nowItem = new SelectItemModel()
-                                        {
-                                            Itemtype = PsAndDeptItemtype.Dept,
-                                            ItemId = item.DepartmentId,
-                                            Name = item.Title
-                                        };
-                                        reqVm.ShareRange.Add(nowItem);
-                                    }
-                                }
-                                foreach (var item in ShareRange.users)
-                                {
-                                    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.ShareRange.users.Any(p=>p.ProfileId==item.ProfileId)||GlobalPara.CatalogNow.Creator.ProfileId==item.ProfileId)
-                                    {
-                                        SelectItemModel nowItem = new SelectItemModel()
-                                        {
-                                            Itemtype = PsAndDeptItemtype.Person,
-                                            ItemId = item.ProfileId,
-                                            Name = item.Fullname
-                                        };
-                                        reqVm.ShareRange.Add(nowItem);
-                                    }
-                                }
-                                foreach (var item in SyncRange.departs)
-                                {
-                                    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.SynergyRange.departs.Any(p => p.DepartmentId == item.DepartmentId))
-                                    {
-                                        SelectItemModel nowItem = new SelectItemModel()
-                                        {
-                                            Itemtype = PsAndDeptItemtype.Dept,
-                                            ItemId = item.DepartmentId,
-                                            Name = item.Title
-                                        };
-                                        reqVm.SyncRange.Add(nowItem);
-                                    }
-                                }
-                                foreach (var item in SyncRange.users)
-                                {
-                                    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.SynergyRange.users.Any(p => p.ProfileId == item.ProfileId) || GlobalPara.CatalogNow.Creator.ProfileId == item.ProfileId)
-                                    {
-                                        SelectItemModel nowItem = new SelectItemModel()
-                                        {
-                                            Itemtype = PsAndDeptItemtype.Person,
-                                            ItemId = item.ProfileId,
-                                            Name = item.Fullname
-                                        };
-                                        reqVm.SyncRange.Add(nowItem);
-                                    }
-                                }
-                                reqVm.StatusType = vm.DgSelectItem.StatusType;
-                                if (SyncRange.departs.Count + SyncRange.users.Count > 0)
-                                {
-                                    reqVm.OpenSync = true;
-                                }
-                                reqVm.CanStatusChange = true;
-                                if (vm.BroswerPathStr.Split('>').ToList().Count > 1&&GlobalPara.rootTypeNow==2)
-                                {
-                                    reqVm.IsFromRoot = false;
-                                }
-                                vm.IsUIBusy = true;
-                                await vm.StageManager.DefaultStage.Show(reqVm);
+                                //var reqVm = new ChangeStatusWindow_Model();
+                                //if (!vm.DgSelectItem.IsFile)
+                                //{
+                                //    reqVm.IsFolder = true;
+                                //}
+                                //else
+                                //{
+                                //    reqVm.IsFolder = false;
+                                //}
+                                //reqVm.IsFromTopBar = false;
+                                //if (ShareRange == null)
+                                //{
+                                //    ShareRange = new DocRangeItem();
+                                //}
+                                //if (SyncRange == null)
+                                //{
+                                //    SyncRange = new DocRangeItem();
+                                //}
+                                //if (ShareRange.departs == null)
+                                //{
+                                //    ShareRange.departs = new List<DepartmentApiModel>();
+                                //}
+                                //if (ShareRange.users == null)
+                                //{
+                                //    ShareRange.users = new List<ProfileApiModel>();
+                                //}
+                                //if (SyncRange.departs == null)
+                                //{
+                                //    SyncRange.departs = new List<DepartmentApiModel>();
+                                //}
+                                //if (SyncRange.users == null)
+                                //{
+                                //    SyncRange.users = new List<ProfileApiModel>();
+                                //}
+                                //foreach (var item in ShareRange.departs)
+                                //{
+                                //    if (GlobalPara.CatalogNow.pathInfo.Count == 1||GlobalPara.CatalogNow.ShareRange.departs.Any(p=>p.DepartmentId==item.DepartmentId)
+                                //        )
+                                //    {
+                                //        SelectItemModel nowItem = new SelectItemModel()
+                                //        {
+                                //            Itemtype = PsAndDeptItemtype.Dept,
+                                //            ItemId = item.DepartmentId,
+                                //            Name = item.Title
+                                //        };
+                                //        reqVm.ShareRange.Add(nowItem);
+                                //    }
+                                //}
+                                //foreach (var item in ShareRange.users)
+                                //{
+                                //    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.ShareRange.users.Any(p=>p.ProfileId==item.ProfileId)||GlobalPara.CatalogNow.Creator.ProfileId==item.ProfileId)
+                                //    {
+                                //        SelectItemModel nowItem = new SelectItemModel()
+                                //        {
+                                //            Itemtype = PsAndDeptItemtype.Person,
+                                //            ItemId = item.ProfileId,
+                                //            Name = item.Fullname
+                                //        };
+                                //        reqVm.ShareRange.Add(nowItem);
+                                //    }
+                                //}
+                                //foreach (var item in SyncRange.departs)
+                                //{
+                                //    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.SynergyRange.departs.Any(p => p.DepartmentId == item.DepartmentId))
+                                //    {
+                                //        SelectItemModel nowItem = new SelectItemModel()
+                                //        {
+                                //            Itemtype = PsAndDeptItemtype.Dept,
+                                //            ItemId = item.DepartmentId,
+                                //            Name = item.Title
+                                //        };
+                                //        reqVm.SyncRange.Add(nowItem);
+                                //    }
+                                //}
+                                //foreach (var item in SyncRange.users)
+                                //{
+                                //    if (GlobalPara.CatalogNow.pathInfo.Count == 1 || GlobalPara.CatalogNow.SynergyRange.users.Any(p => p.ProfileId == item.ProfileId) || GlobalPara.CatalogNow.Creator.ProfileId == item.ProfileId)
+                                //    {
+                                //        SelectItemModel nowItem = new SelectItemModel()
+                                //        {
+                                //            Itemtype = PsAndDeptItemtype.Person,
+                                //            ItemId = item.ProfileId,
+                                //            Name = item.Fullname
+                                //        };
+                                //        reqVm.SyncRange.Add(nowItem);
+                                //    }
+                                //}
+                                //reqVm.StatusType = vm.DgSelectItem.StatusType;
+                                //if (SyncRange.departs.Count + SyncRange.users.Count > 0)
+                                //{
+                                //    reqVm.OpenSync = true;
+                                //}
+                                //reqVm.CanStatusChange = true;
+                                //if (vm.BroswerPathStr.Split('>').ToList().Count > 1&&GlobalPara.rootTypeNow==2)
+                                //{
+                                //    reqVm.IsFromRoot = false;
+                                //}
+                                //vm.IsUIBusy = true;
+                                //await vm.StageManager.DefaultStage.Show(reqVm);
                             }
                             catch (Exception ex)
                             {
@@ -2187,7 +2461,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                     newreq.Add(item);
                                 }
                                 vm.IsUIBusy = true;
-                                await vm.StageManager.DefaultStage.Show(new IrRecourdWindow_Model { IrData = newreq,FileNameStr=vm.DgSelectItem.Name });
+                                await vm.StageManager.DefaultStage.Show(new IrRecourdWindow_Model { IrData = newreq,FileNameStr=vm.DgSelectItem.FileName });
                             }
                             catch (Exception ex)
                             {
@@ -2274,11 +2548,11 @@ namespace EllaMakerTool.WPF.ViewModels
                         async e =>
                         {
                             vm.IsUIBusy = true;
-                            DocumentsModel para = (DocumentsModel)vm.DgSelectItem;
-                            if (para != null&&para.Type==EnumDocFileType.Folder)
+                            FTPListItem para = (FTPListItem)vm.DgSelectItem;
+                            if (para != null&&!para.IsFile)
                             {
-                                vm.GetFilesFromCatalogId(para.Id,(int)para.StatusType);
-                                vm.GetUploadPath((int)para.StatusType);
+                                vm.FillFilesFromFTPRoot(para.FileID,true,true);
+                                //vm.GetUploadPath(para.FileID);
                             }
                             vm.IsUIBusy = false;
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -2298,63 +2572,6 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-
-        public CommandModel<ReactiveCommand, String> CommandDownload
-        {
-            get { return _CommandDownloadLocator(this).Value; }
-            set { _CommandDownloadLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandDownload Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandDownload = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandDownloadLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandDownloadLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandDownload", model => model.Initialize("CommandDownload", ref model._CommandDownload, ref _CommandDownloadLocator, _CommandDownloadDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandDownloadDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandDownload";           // Command state  
-                var commandId = "CommandDownload";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            vm.IsUIBusy = true;
-                            var req = new DownSavePathMesWindow_Model()
-                            {
-                                FileName = vm.DgSelectItem.Name,
-                                SavePath = GlobalPara.DefaultSavePath,
-                                Size = vm.DgSelectItem.Size,
-                                URL = vm.DgSelectItem.Url
-                            };
-                            GlobalPara.lastDownSize = vm.DgSelectItem.Size;
-                            if (req.FileName.Length > 10)
-                            {
-                                req.FileName = req.FileName.Substring(0, 10) + "...";
-                            }
-                            req.FullFileName = vm.DgSelectItem.Name;
-                            vm.lastDownName = vm.DgSelectItem.Name;
-                            
-                            await vm.StageManager.DefaultStage.Show(req);
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-
-        private string lastDownName = "";
-
-        #endregion
 
 
         public DownRecordModel DownloadRecSelectItem
@@ -2413,12 +2630,6 @@ namespace EllaMakerTool.WPF.ViewModels
             };
 
         #endregion
-
-
-
-
-
-
 
 
         #region Life Time Event Handling
