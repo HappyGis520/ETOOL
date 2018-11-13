@@ -13,7 +13,7 @@ namespace EllaMakerTool.Converter
             
             int v = (int)value;
             if(v == 1)
-                if (Global.CompanyDocDeletRight || Global.CompanyFileDeletRight) return Visibility.Visible;
+                if (Global.ArrowDeleteFolder || Global.ArrowDeleteFile) return Visibility.Visible;
             switch (v)
             {
                 case 0:

@@ -287,7 +287,7 @@ namespace EllaMakerTool.WPF.Controls.UserControls
                 var root = I.Substring(0, I.LastIndexOf("\\") + 1);
                 if (IsDirectory(I))
                 {
-                    if (GlobalPara.rootTypeNow == 1&&!Global.CompanyDocEditRight)
+                    if (GlobalPara.rootTypeNow == 1&&!Global.ArrowEditFolder)
                     {
                         continue;
                     }
@@ -297,7 +297,7 @@ namespace EllaMakerTool.WPF.Controls.UserControls
                 }
                 else
                 {
-                    if (GlobalPara.rootTypeNow == 1 && !Global.CompanyFileEditRight)
+                    if (GlobalPara.rootTypeNow == 1 && !Global.ArrowEditFile)
                     {
                         continue;
                     }

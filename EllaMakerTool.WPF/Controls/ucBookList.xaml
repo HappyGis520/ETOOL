@@ -19,9 +19,9 @@
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
-                  SelectionMode="Extended" SelectedItem="{Binding DgSelectItem,Mode=TwoWay}">
+                  SelectionMode="Extended" SelectedItem="{Binding dgSelectBookItem,Mode=TwoWay}">
             <DataGrid.InputBindings>
-                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding CommandBrowserLeftDoubleClick}" />
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding CommandBookBrowserLeftDoubleClick}" />
             </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <!--ID-->

@@ -85,7 +85,11 @@ namespace EllaMakerTool.Models
                 }
             }
 
-        internal FTPListItem(bool isFile, string parentID, string fileID, string fileName)
+        public FTPListItem()
+        {
+            
+        }
+        public FTPListItem(bool isFile, string parentID, string fileID, string fileName)
             {
 
                 this.parentID = parentID;

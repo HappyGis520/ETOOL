@@ -187,9 +187,6 @@
     <Compile Include="Controls\MainToolBar.xaml.cs">
       <DependentUpon>MainToolBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MoveDocumentWindow.xaml.cs">
-      <DependentUpon>MoveDocumentWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -201,18 +198,13 @@
     <Compile Include="SelectDeptWindow.xaml.cs">
       <DependentUpon>SelectDeptWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectPersonWindow.xaml.cs">
-      <DependentUpon>SelectPersonWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Startups\ChangeStatusWindow.cs" />
     <Compile Include="Startups\CreatenewFolderWindow.cs" />
     <Compile Include="Startups\DelconfirmWindow.cs" />
     <Compile Include="Startups\DownSavePathMesWindow.cs" />
     <Compile Include="Startups\IrRecourdWindow.cs" />
-    <Compile Include="Startups\MoveDocumentWindow.cs" />
     <Compile Include="Startups\RenameWindow.cs" />
     <Compile Include="Startups\SelectDeptWindow.cs" />
-    <Compile Include="Startups\SelectPersonWindow.cs" />
     <Compile Include="Startups\ToastInstance.cs" />
     <Compile Include="Startups\UploadMesWindow.cs" />
     <Compile Include="Controls\TransFileList.xaml.cs">
@@ -227,10 +219,8 @@
     <Compile Include="ViewModels\DelconfirmWindow_Model.cs" />
     <Compile Include="ViewModels\DownSavePathMesWindow_Model.cs" />
     <Compile Include="ViewModels\IrRecourdWindow_Model.cs" />
-    <Compile Include="ViewModels\MoveDocumentWindow_Model.cs" />
     <Compile Include="ViewModels\RenameWindow_Model.cs" />
     <Compile Include="ViewModels\SelectDeptWindow_Model.cs" />
-    <Compile Include="ViewModels\SelectPersonWindow_Model.cs" />
     <Compile Include="ViewModels\UploadMesWindow_Model.cs" />
     <Page Include="ChangeStatusWindow.xaml">
       <SubType>Designer</SubType>
@@ -292,19 +282,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MoveDocumentWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="RenameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectDeptWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SelectPersonWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

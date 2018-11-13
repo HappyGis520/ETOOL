@@ -8,7 +8,7 @@ namespace EllaMakerTool.Models
     public class DelConfirmWinParaModel
     {
         /// <summary>
-        /// 文件夹ids，格式  [F9VU, F9VU]
+        /// 文件夹ids，
         /// </summary>
         public List<string> folderIds { get; set; } = new List<string>();
 

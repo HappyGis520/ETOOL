@@ -30,7 +30,7 @@ namespace EllaMakerTool.WPF.ViewModels
         {
             if (IsInDesignMode)
             {
-                
+
             }
             SubscribeCommand();
         }
@@ -50,33 +50,33 @@ namespace EllaMakerTool.WPF.ViewModels
                     {
                         var para = e.EventData;
                         EmployerApiModel NewItem = GlobalPara.ComapnyList.FirstOrDefault(p =>
-                            para.AddedItems != null && p.CompanyName == para.AddedItems[0].ToString());
+                                para.AddedItems != null && p.CompanyName == para.AddedItems[0].ToString());
                         var res = GlobalPara.webApis.SwitchCompany(NewItem.CompanyCode);
                         if (res.successful)
                         {
                             try
                             {
-                                this.Dispatcher.BeginInvoke((Action)GetCompanySotreStatus);
+                                this.Dispatcher.BeginInvoke((Action) GetCompanySotreStatus);
                                 var rigthItem = res.Data.FirstOrDefault(p => p.Name == "企业文档");
                                 if (rigthItem != null)
                                 {
-                                    Global.CompanyFileEditRight = rigthItem.FuncList
+                                    Global.ArrowEditFile = rigthItem.FuncList
                                         .Where(p => p.Name == "管理文件-上传、重命名、移动").Select(p => p.Enable).FirstOrDefault();
-                                    Global.CompanyDocEditRight = rigthItem.FuncList
+                                    Global.ArrowEditFolder = rigthItem.FuncList
                                         .Where(p => p.Name == "管理文件夹-新建文件夹、重命名、移动").Select(p => p.Enable)
                                         .FirstOrDefault();
-                                    Global.CompanyFileDeletRight = rigthItem.FuncList
+                                    Global.ArrowDeleteFile = rigthItem.FuncList
                                         .Where(p => p.Name == "管理文件-删除文件").Select(p => p.Enable).FirstOrDefault();
-                                    Global.CompanyDocDeletRight = rigthItem.FuncList
+                                    Global.ArrowDeleteFolder = rigthItem.FuncList
                                         .Where(p => p.Name == "管理文件夹-删除文件夹").Select(p => p.Enable).FirstOrDefault();
                                 }
                             }
                             catch
                             {
-                                Global.CompanyFileEditRight = false;
-                                Global.CompanyDocEditRight = false;
-                                Global.CompanyFileDeletRight = false;
-                                Global.CompanyDocDeletRight = false;
+                                Global.ArrowEditFile = false;
+                                Global.ArrowEditFolder = false;
+                                Global.ArrowDeleteFile = false;
+                                Global.ArrowDeleteFolder = false;
                             }
 
                             var resdept = GlobalPara.webApis.GetCompanyTree();
@@ -119,7 +119,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             BookListData.Clear();
                             foreach (var item in res.Data.Items)
                             {
-                                 BookListData.Add(MapperUtil.Mapper.Map<BookListItem>(item));
+                                BookListData.Add(MapperUtil.Mapper.Map<BookListItem>(item));
                             }
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                         }
@@ -131,27 +131,27 @@ namespace EllaMakerTool.WPF.ViewModels
 
             //加载动画书列表数据
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<EBookListByPageParam>()
-    .Where(x => x.EventName == Global.RefreshEBookListData).Subscribe(
-        async e =>
-        {
-            var Param = e.EventData;
-            var res = GlobalPara.webApis.AllEBookListByPage(Param);
-            if (res.Successful)
-            {
-                BroswerPathStr = "动画资源--动画书列表";
+                .Where(x => x.EventName == Global.RefreshEBookListData).Subscribe(
+                    async e =>
+                    {
+                        var Param = e.EventData;
+                        var res = GlobalPara.webApis.AllEBookListByPage(Param);
+                        if (res.Successful)
+                        {
+                            BroswerPathStr = "动画资源--动画书列表";
                             //GlobalPara.CatalogNow = res.Data;
-                EBookListData.Clear();
-                foreach (var item in res.Data)
-                {
-                    EBookListData.Add(MapperUtil.Mapper.Map<EBookListItem>(item));
-                }
-                await MVVMSidekick.Utilities.TaskExHelper.Yield();
-            }
-            else
-            {
-                System.Windows.MessageBox.Show(res.Message);
-            }
-        }).DisposeWith(this);
+                            EBookListData.Clear();
+                            foreach (var item in res.Data)
+                            {
+                                EBookListData.Add(MapperUtil.Mapper.Map<EBookListItem>(item));
+                            }
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        }
+                        else
+                        {
+                            System.Windows.MessageBox.Show(res.Message);
+                        }
+                    }).DisposeWith(this);
 
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<string>()
                 .Where(x => x.EventName == "AddSyncFileEventRouter").Subscribe(
@@ -165,7 +165,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 _vm.ShowInformation("上传完成");
                             }));
-                            this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
+                            this.Dispatcher.BeginInvoke((Action) RefreshFilesList);
                         }
                         else
                         {
@@ -183,7 +183,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 .Where(x => x.EventName == "RefreshFilesListEventRouter").Subscribe(
                     async e =>
                     {
-                        this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
+                        this.Dispatcher.BeginInvoke((Action) RefreshFilesList);
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
                     })
                 .DisposeWith(this);
@@ -216,48 +216,30 @@ namespace EllaMakerTool.WPF.ViewModels
                     async e =>
                     {
                         IsUIBusy = false;
-                        this.Dispatcher.BeginInvoke((Action)MainWinGetFocus);
+                        this.Dispatcher.BeginInvoke((Action) MainWinGetFocus);
                         var para = e.EventData;
                         switch (para.WinType)
                         {
                             case MesWinType.LoginWin:
                                 if (para.IsOk)
                                 {
-                                    //GetCompanyList();
-                                    //GetCompanySotreStatus();
                                     //获取权限 
                                     //var res = GlobalPara.webApis.GetFunc();
                                     //try
                                     //{
-                                    //    var rigthItem = res.Data.FirstOrDefault(p => p.Name == "企业文档");
-                                    //    if (rigthItem != null)
-                                    //    {
-                                    //        Global.CompanyFileEditRight = rigthItem.FuncList
-                                    //            .Where(p => p.Name == "管理文件-上传、重命名、移动").Select(p => p.Enable).FirstOrDefault();
-                                    //        Global.CompanyDocEditRight = rigthItem.FuncList
-                                    //            .Where(p => p.Name == "管理文件夹-新建文件夹、重命名、移动").Select(p => p.Enable)
-                                    //            .FirstOrDefault();
-                                    //        Global.CompanyFileDeletRight = rigthItem.FuncList
-                                    //            .Where(p => p.Name == "管理文件-删除文件").Select(p => p.Enable).FirstOrDefault();
-                                    //        Global.CompanyDocDeletRight = rigthItem.FuncList
-                                    //            .Where(p => p.Name == "管理文件夹-删除文件夹").Select(p => p.Enable).FirstOrDefault();
-                                    //    }
+        
                                     //}
                                     //catch
                                     //{
-                                    //    Global.CompanyFileEditRight = false;
-                                    //    Global.CompanyDocEditRight = false;
-                                    //    Global.CompanyFileDeletRight = false;
-                                    //    Global.CompanyDocDeletRight = false;
+        
                                     //}
-                                    //UserNick = Global.authToken.Profile.Nick;
+                                    //UserNick =;
                                     UserNick = Global.authToken.Username;
                                     //头像
                                     //HeadImageSource =
                                     //    $"{Global.ImageServerAdress}{string.Format(Global.authToken.Profile.FaceUrl, 40, 40, "c")}";
                                     //TabCotrolSelectIndex = 1;
-
-                                    //GetUploadPath(3);
+                                    //GetUploadPath();
                                 }
                                 break;
                             case MesWinType.UploadWin:
@@ -287,7 +269,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.CataLogAddWin:
                                 if (para.IsOk)
                                 {
-                                    CreatnewFolderWinPara paras = (CreatnewFolderWinPara)para.ResData;
+                                    CreatnewFolderWinPara paras = (CreatnewFolderWinPara) para.ResData;
                                     var res = CreateNewFolder(paras.newName);
                                     if (res.Successful)
                                     {
@@ -297,7 +279,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                             SetSyncRange(res.Data, paras.syncList, EnumDocType.Catalog);
                                         }
                                         SetNewStatus(res.Data, paras.newStatus);
-                                        this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
+                                        this.Dispatcher.BeginInvoke((Action) RefreshFilesList);
                                     }
 
                                 }
@@ -305,18 +287,20 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.DownSaveWin:
                                 if (para.IsOk)
                                 {
-                                    DownSaveWinParaModel paras = (DownSaveWinParaModel)para.ResData;
+                                    DownSaveWinParaModel paras = (DownSaveWinParaModel) para.ResData;
                                     FTPClient fTPClient = new FTPClient(GlobalPara.SourceServerAdress,
-                                        GlobalPara.SourceUserName, GlobalPara.SourcePwd, FTPModel.ASCII, Encoding.Default);
+                                        GlobalPara.SourceUserName, GlobalPara.SourcePwd, FTPModel.ASCII,
+                                        Encoding.Default);
                                     fTPClient.OnCompleted += FTPClient_OnDownloadCompleted;
                                     fTPClient.OnProgressChanged += FTPClient_OnDownloadProgressChanged;
-                                    fTPClient.Download(paras.Filepath, System.IO.Path.Combine(GlobalPara.SourceServerAdress, paras.Url));
+                                    fTPClient.Download(paras.Filepath,
+                                        System.IO.Path.Combine(GlobalPara.SourceServerAdress, paras.Url));
                                 }
                                 break;
                             case MesWinType.RenameWin:
                                 if (para.IsOk)
                                 {
-                                    RenameWinParaModel paras = (RenameWinParaModel)para.ResData;
+                                    RenameWinParaModel paras = (RenameWinParaModel) para.ResData;
                                     if (paras.IsFolder)
                                     {
                                         RenameFloder(paras.NewName, paras.CatalogId);
@@ -331,7 +315,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.DelConfirmWin:
                                 if (para.IsOk)
                                 {
-                                    DelConfirmWinParaModel paras = (DelConfirmWinParaModel)para.ResData;
+                                    DelConfirmWinParaModel paras = (DelConfirmWinParaModel) para.ResData;
                                     DocumentDeleteRequest req = new DocumentDeleteRequest
                                     {
                                         fileIds = paras.fileIds,
@@ -343,7 +327,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.StatusChangeWin:
                                 if (para.IsOk)
                                 {
-                                    ChangeStatusWinPara paras = (ChangeStatusWinPara)para.ResData;
+                                    ChangeStatusWinPara paras = (ChangeStatusWinPara) para.ResData;
                                     if (!paras.IsFromTopBar)
                                     {
                                         if (paras.newStatus == EnumDocStatusType.Share)
@@ -506,10 +490,19 @@ namespace EllaMakerTool.WPF.ViewModels
                     SetMainWinCkall();
             }
         }
+
         #region Property bool IsAllCheck Setup        
-        protected Property<bool> _IsAllCheck = new Property<bool> { LocatorFunc = _IsAllCheckLocator };
-        static Func<BindableBase, ValueContainer<bool>> _IsAllCheckLocator = RegisterContainerLocator<bool>("IsAllCheck", model => model.Initialize("IsAllCheck", ref model._IsAllCheck, ref _IsAllCheckLocator, _IsAllCheckDefaultValueFactory));
+
+        protected Property<bool> _IsAllCheck = new Property<bool> {LocatorFunc = _IsAllCheckLocator};
+
+        static Func<BindableBase, ValueContainer<bool>> _IsAllCheckLocator = RegisterContainerLocator<bool>(
+            "IsAllCheck",
+            model =>
+                model.Initialize("IsAllCheck", ref model._IsAllCheck, ref _IsAllCheckLocator,
+                    _IsAllCheckDefaultValueFactory));
+
         static Func<bool> _IsAllCheckDefaultValueFactory = () => false;
+
         #endregion
 
 
@@ -521,10 +514,21 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _BookListDataLocator(this).Value; }
             set { _BookListDataLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property ObservableCollection<DocumentV1ApiModel> BookListData Setup        
-        protected Property<ObservableCollection<BookListItem>> _BookListData = new Property<ObservableCollection<BookListItem>> { LocatorFunc = _BookListDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<BookListItem>>> _BookListDataLocator = RegisterContainerLocator<ObservableCollection<BookListItem>>("BookListData", model => model.Initialize("BookListData", ref model._BookListData, ref _BookListDataLocator, _BookListDataDefaultValueFactory));
-        static Func<ObservableCollection<BookListItem>> _BookListDataDefaultValueFactory = () => new ObservableCollection<BookListItem>();
+
+        protected Property<ObservableCollection<BookListItem>> _BookListData =
+            new Property<ObservableCollection<BookListItem>> {LocatorFunc = _BookListDataLocator};
+
+        static Func<BindableBase, ValueContainer<ObservableCollection<BookListItem>>> _BookListDataLocator =
+            RegisterContainerLocator<ObservableCollection<BookListItem>>("BookListData",
+                model =>
+                    model.Initialize("BookListData", ref model._BookListData, ref _BookListDataLocator,
+                        _BookListDataDefaultValueFactory));
+
+        static Func<ObservableCollection<BookListItem>> _BookListDataDefaultValueFactory =
+            () => new ObservableCollection<BookListItem>();
+
         #endregion
 
         /// <summary>
@@ -535,10 +539,21 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _EBookListDataLocator(this).Value; }
             set { _EBookListDataLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property ObservableCollection<DocumentV1ApiModel> EBookListData Setup        
-        protected Property<ObservableCollection<EBookListItem>> _EBookListData = new Property<ObservableCollection<EBookListItem>> { LocatorFunc = _EBookListDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<EBookListItem>>> _EBookListDataLocator = RegisterContainerLocator<ObservableCollection<EBookListItem>>("EBookListData", model => model.Initialize("EBookListData", ref model._EBookListData, ref _EBookListDataLocator, _EBookListDataDefaultValueFactory));
-        static Func<ObservableCollection<EBookListItem>> _EBookListDataDefaultValueFactory = () => new ObservableCollection<EBookListItem>();
+
+        protected Property<ObservableCollection<EBookListItem>> _EBookListData =
+            new Property<ObservableCollection<EBookListItem>> {LocatorFunc = _EBookListDataLocator};
+
+        static Func<BindableBase, ValueContainer<ObservableCollection<EBookListItem>>> _EBookListDataLocator =
+            RegisterContainerLocator<ObservableCollection<EBookListItem>>("EBookListData",
+                model =>
+                    model.Initialize("EBookListData", ref model._EBookListData, ref _EBookListDataLocator,
+                        _EBookListDataDefaultValueFactory));
+
+        static Func<ObservableCollection<EBookListItem>> _EBookListDataDefaultValueFactory =
+            () => new ObservableCollection<EBookListItem>();
+
         #endregion
 
         /// <summary>
@@ -549,11 +564,23 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _FileBroswerDataLocator(this).Value; }
             set { _FileBroswerDataLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property ObservableCollection<DocumentV1ApiModel> FileBroswerData Setup        
-        protected Property<ObservableCollection<FTPListItem>> _FileBroswerData = new Property<ObservableCollection<FTPListItem>> { LocatorFunc = _FileBroswerDataLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<FTPListItem>>> _FileBroswerDataLocator = RegisterContainerLocator<ObservableCollection<FTPListItem>>("FileBroswerData", model => model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator, _FileBroswerDataDefaultValueFactory));
-        static Func<ObservableCollection<FTPListItem>> _FileBroswerDataDefaultValueFactory = () => new ObservableCollection<FTPListItem>();
+
+        protected Property<ObservableCollection<FTPListItem>> _FileBroswerData =
+            new Property<ObservableCollection<FTPListItem>> {LocatorFunc = _FileBroswerDataLocator};
+
+        static Func<BindableBase, ValueContainer<ObservableCollection<FTPListItem>>> _FileBroswerDataLocator =
+            RegisterContainerLocator<ObservableCollection<FTPListItem>>("FileBroswerData",
+                model =>
+                    model.Initialize("FileBroswerData", ref model._FileBroswerData, ref _FileBroswerDataLocator,
+                        _FileBroswerDataDefaultValueFactory));
+
+        static Func<ObservableCollection<FTPListItem>> _FileBroswerDataDefaultValueFactory =
+            () => new ObservableCollection<FTPListItem>();
+
         #endregion
+
         #endregion
 
 
@@ -566,47 +593,125 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _CommandEBookBrowserLeftDoubleClickLocator(this).Value; }
             set { _CommandEBookBrowserLeftDoubleClickLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property CommandModel<ReactiveCommand, String> CommandEBookBrowserLeftDoubleClick Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandEBookBrowserLeftDoubleClick = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandEBookBrowserLeftDoubleClickLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandEBookBrowserLeftDoubleClickLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandEBookBrowserLeftDoubleClick", model => model.Initialize("CommandEBookBrowserLeftDoubleClick", ref model._CommandEBookBrowserLeftDoubleClick, ref _CommandEBookBrowserLeftDoubleClickLocator, _CommandEBookBrowserLeftDoubleClickDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandEBookBrowserLeftDoubleClickDefaultValueFactory =
-            model =>
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandEBookBrowserLeftDoubleClick =
+            new Property<CommandModel<ReactiveCommand, String>>
             {
-                var state = Global.EBookBrowserMSG;           // Command state  
-                var commandId = Global.EBookBrowserMSG;
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                    vm,
-                    async e =>
-                    {
-                        vm.IsUIBusy = true;
-                        EBookListItem para = (EBookListItem)vm.dgSelectEBookItem;
-                        if (para != null && !string.IsNullOrEmpty(para.id))
-                        {
-                            vm.FillFilesFromFTPRoot(para.id, false, true);
-                        }
-                        vm.IsUIBusy = false;
-                        await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                    })
-                .DoNotifyDefaultEventRouter(vm, commandId)
-                .Subscribe()
-                .DisposeWith(vm);
-
-
-
-
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
+                LocatorFunc = _CommandEBookBrowserLeftDoubleClickLocator
             };
+
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>>
+            _CommandEBookBrowserLeftDoubleClickLocator =
+                RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandEBookBrowserLeftDoubleClick",
+                    model =>
+                        model.Initialize("CommandEBookBrowserLeftDoubleClick",
+                            ref model._CommandEBookBrowserLeftDoubleClick,
+                            ref _CommandEBookBrowserLeftDoubleClickLocator,
+                            _CommandEBookBrowserLeftDoubleClickDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>>
+            _CommandEBookBrowserLeftDoubleClickDefaultValueFactory =
+                model =>
+                {
+                    var state = Global.EBookBrowserMSG; // Command state  
+                    var commandId = Global.EBookBrowserMSG;
+                    var vm = CastToCurrentType(model);
+                    var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
+
+                    cmd.DoExecuteUITask(
+                            vm,
+                            async e =>
+                            {
+                                vm.IsUIBusy = true;
+                                EBookListItem para = (EBookListItem) vm.dgSelectEBookItem;
+                                if (para != null && !string.IsNullOrEmpty(para.id))
+                                {
+                                    vm.FillFilesFromFTPRoot(para.id, false, true);
+                                }
+                                vm.IsUIBusy = false;
+                                await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                            })
+                        .DoNotifyDefaultEventRouter(vm, commandId)
+                        .Subscribe()
+                        .DisposeWith(vm);
+
+
+
+
+
+                    var cmdmdl = cmd.CreateCommandModel(state);
+
+                    cmdmdl.ListenToIsUIBusy(
+                        model: vm,
+                        canExecuteWhenBusy: false);
+                    return cmdmdl;
+                };
+
+        #endregion
+
+
+
+        public CommandModel<ReactiveCommand, String> CommandBookBrowserLeftDoubleClick
+        {
+            get { return _CommandBookBrowserLeftDoubleClickLocator(this).Value; }
+            set { _CommandBookBrowserLeftDoubleClickLocator(this).SetValueAndTryNotify(value); }
+        }
+
+        #region Property CommandModel<ReactiveCommand, String> CommandBookBrowserLeftDoubleClick Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandBookBrowserLeftDoubleClick =
+            new Property<CommandModel<ReactiveCommand, String>>
+            {
+                LocatorFunc = _CommandBookBrowserLeftDoubleClickLocator
+            };
+
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>>
+            _CommandBookBrowserLeftDoubleClickLocator =
+                RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandBookBrowserLeftDoubleClick",
+                    model =>
+                        model.Initialize("CommandBookBrowserLeftDoubleClick",
+                            ref model._CommandBookBrowserLeftDoubleClick, ref _CommandBookBrowserLeftDoubleClickLocator,
+                            _CommandBookBrowserLeftDoubleClickDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>>
+            _CommandBookBrowserLeftDoubleClickDefaultValueFactory =
+                model =>
+                {
+                    var state = Global.BookBrowserMSG; // Command state  
+                    var commandId = Global.BookBrowserMSG;
+                    var vm = CastToCurrentType(model);
+                    var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
+
+                    cmd.DoExecuteUITask(
+                            vm,
+                            async e =>
+                            {
+                                vm.IsUIBusy = true;
+                                BookListItem para = (BookListItem) vm.dgSelectBookItem;
+                                if (para != null && !string.IsNullOrEmpty(para.id))
+                                {
+                                    vm.FillFilesFromFTPRoot(para.id, true, true);
+                                }
+                                vm.IsUIBusy = false;
+                                await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                            })
+                        .DoNotifyDefaultEventRouter(vm, commandId)
+                        .Subscribe()
+                        .DisposeWith(vm);
+
+
+
+
+
+                    var cmdmdl = cmd.CreateCommandModel(state);
+
+                    cmdmdl.ListenToIsUIBusy(
+                        model: vm,
+                        canExecuteWhenBusy: false);
+                    return cmdmdl;
+                };
 
         #endregion
 
@@ -615,18 +720,25 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _CommandLoadFTPLocator(this).Value; }
             set { _CommandLoadFTPLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property CommandModel<ReactiveCommand, String> CommandLoadFTP Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandLoadFTP = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandLoadFTPLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandLoadFTPLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandLoadFTP", model => model.Initialize("CommandLoadFTP", ref model._CommandLoadFTP, ref _CommandLoadFTPLocator, _CommandLoadFTPDefaultValueFactory));
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandLoadFTP =
+            new Property<CommandModel<ReactiveCommand, String>> {LocatorFunc = _CommandLoadFTPLocator};
+
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandLoadFTPLocator =
+            RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandLoadFTP",
+                model =>
+                    model.Initialize("CommandLoadFTP", ref model._CommandLoadFTP, ref _CommandLoadFTPLocator,
+                        _CommandLoadFTPDefaultValueFactory));
 
         private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandLoadFTPDefaultValueFactory =
             model =>
             {
-                var state = "CommandLoadFTP";           // Command state  
+                var state = "CommandLoadFTP"; // Command state  
                 var commandId = "CommandLoadFTP";
                 var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+                var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
 
                 cmd.DoExecuteUITask(
                         vm,
@@ -661,6 +773,7 @@ namespace EllaMakerTool.WPF.ViewModels
                     canExecuteWhenBusy: false);
                 return cmdmdl;
             };
+
         private string lastFTPRootID = "";
 
         #endregion
@@ -671,18 +784,25 @@ namespace EllaMakerTool.WPF.ViewModels
             get { return _CommandDownloadLocator(this).Value; }
             set { _CommandDownloadLocator(this).SetValueAndTryNotify(value); }
         }
+
         #region Property CommandModel<ReactiveCommand, String> CommandDownload Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandDownload = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandDownloadLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandDownloadLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandDownload", model => model.Initialize("CommandDownload", ref model._CommandDownload, ref _CommandDownloadLocator, _CommandDownloadDefaultValueFactory));
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandDownload =
+            new Property<CommandModel<ReactiveCommand, String>> {LocatorFunc = _CommandDownloadLocator};
+
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandDownloadLocator =
+            RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandDownload",
+                model =>
+                    model.Initialize("CommandDownload", ref model._CommandDownload, ref _CommandDownloadLocator,
+                        _CommandDownloadDefaultValueFactory));
 
         private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandDownloadDefaultValueFactory =
             model =>
             {
-                var state = "CommandDownload";           // Command state  
+                var state = "CommandDownload"; // Command state  
                 var commandId = "CommandDownload";
                 var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+                var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
 
                 cmd.DoExecuteUITask(
                         vm,
@@ -717,6 +837,7 @@ namespace EllaMakerTool.WPF.ViewModels
                     canExecuteWhenBusy: false);
                 return cmdmdl;
             };
+
         private string lastDownName = "";
 
         #endregion
@@ -725,6 +846,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
         #region 事件处理
+
         /// <summary>
         /// 左侧导航栏选择改变
         /// </summary>
@@ -768,12 +890,18 @@ namespace EllaMakerTool.WPF.ViewModels
                 }
             }
         }
+
         #region Property int TabCotrolSelectIndex Setup        
-        protected Property<int> _TabCotrolSelectIndex = new Property<int> { LocatorFunc = _TabCotrolSelectIndexLocator };
+
+        protected Property<int> _TabCotrolSelectIndex = new Property<int> {LocatorFunc = _TabCotrolSelectIndexLocator};
+
         static Func<BindableBase, ValueContainer<int>> _TabCotrolSelectIndexLocator =
             RegisterContainerLocator<int>("TabCotrolSelectIndex", model =>
-            model.Initialize("TabCotrolSelectIndex", ref model._TabCotrolSelectIndex, ref _TabCotrolSelectIndexLocator, _TabCotrolSelectIndexDefaultValueFactory));
+                model.Initialize("TabCotrolSelectIndex", ref model._TabCotrolSelectIndex,
+                    ref _TabCotrolSelectIndexLocator, _TabCotrolSelectIndexDefaultValueFactory));
+
         static Func<int> _TabCotrolSelectIndexDefaultValueFactory = () => -1;
+
         #endregion
 
 
@@ -818,6 +946,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
             }
         }
+
         /// <summary>
         ///从FTP站点获取指定ID下的文件或文件夹
         /// </summary>
@@ -827,33 +956,52 @@ namespace EllaMakerTool.WPF.ViewModels
         private void FillFilesFromFTPRoot(string CatalogId, bool IsBook, bool IsInition)
         {
             IsAllCheck = false;
-            var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
-            if (res.Successful)
+            try
             {
-                ClearData();
-                if (res.Data != null && res.Data.Count > 0)
+                var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
+                if (res.Successful)
                 {
-                    try
+                    ClearData();
+                    if (res.Data != null && res.Data.Count > 0)
                     {
-
-                        foreach (var item in res.Data)
+                        try
                         {
-                            FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
+
+                            foreach (var item in res.Data)
+                            {
+                                FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
+                            }
+                            //显示资源管理器
                         }
-                        //显示资源管理器
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex + "");
+                        }
                     }
-                    catch (Exception ex)
+
+                }
+                else
+                {
+                    if (res.Code.Equals(Global.ERROR_TOKEN))
                     {
-                        MessageBox.Show(ex + "");
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "",
+                            Global.ReLoginMSG);
                     }
+                    else
+                    {
+                        MessageBox.Show(res.Message);
+                    }
+
+
                 }
 
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show(res.Message);
-
+                MessageBox.Show(ex.Message);
             }
+
+         
 
         }
         /// <summary>
@@ -989,14 +1137,14 @@ namespace EllaMakerTool.WPF.ViewModels
                         vm,
                         async e =>
                         {
-                            if (!Global.CompanyFileEditRight&&GlobalPara.rootTypeNow==1) return;
+                            if (!Global.ArrowEditFile&&GlobalPara.rootTypeNow==1) return;
                             if (GlobalPara.rootTypeNow == 2)
                             {
                                 if (GlobalPara.CatalogNow.pathInfo.Count < 2 ||
                                     (GlobalPara.CatalogNow.SynergyRange.departs.Any(p =>
                                          Global.DepartId.Contains(p.DepartmentId)) ||
                                      GlobalPara.CatalogNow.SynergyRange.users.Any(p =>
-                                         p.ProfileId == Global.authToken.Profile.ProfileId))||GlobalPara.CatalogNow.Creator.ProfileId == Global.authToken.Profile.ProfileId)
+                                         p.ProfileId == Global.authToken.ID))||GlobalPara.CatalogNow.Creator.ProfileId == Global.authToken.ID)
                                 {
 
                                 }
@@ -1080,7 +1228,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
         public void RefreshDownRec()
         {
-            var res = INIOperationHelper.INIGetAllItems(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist");
+            var res = INIOperationHelper.INIGetAllItems(GlobalPara.IniPath, Global.authToken.ID + "Downlist");
             DownRecordList.Clear();
             foreach (var item in res)
             {
@@ -1216,10 +1364,10 @@ namespace EllaMakerTool.WPF.ViewModels
         /// <param name="rootype">0：其他 1-公司；2-共享；3-个人</param>
         public void GetUploadPath(string DirectID)
         {
-            var res = GlobalPara.webApis.GetUpaloadPath(DirectID);
+            var res = GlobalPara.webApis.GetUpaloadPath(Global.authToken.Token, DirectID);
             if (res.Successful)
             {
-                GlobalPara.UploadPathNow = res.Data;
+                GlobalPara.UploadPathNow = $"{res.Data.ip}:{res.Data.port}/{res.Data.path}";
             }
         }
 
@@ -1383,7 +1531,7 @@ namespace EllaMakerTool.WPF.ViewModels
             };
             if (!string.IsNullOrEmpty(req.Name))
             {
-                INIOperationHelper.INIWriteValue(GlobalPara.IniPath, Global.authToken.Profile.ProfileId + "Downlist", sessionID, Newtonsoft.Json.JsonConvert.SerializeObject(req));
+                INIOperationHelper.INIWriteValue(GlobalPara.IniPath, Global.authToken.ID + "Downlist", sessionID, Newtonsoft.Json.JsonConvert.SerializeObject(req));
             }
             
             ProgressBarValue = 0;
@@ -1395,14 +1543,14 @@ namespace EllaMakerTool.WPF.ViewModels
 
         }
 
-        public EBookListItem dgSelectEBookItem
+        public BookListItem dgSelectBookItem
         {
-            get { return _dgSelectEBookItemLocator(this).Value; }
+            get { return _dgSelectBookItemLocator(this).Value; }
             set
             {
                 try
                 {
-                    _dgSelectEBookItemLocator(this).SetValueAndTryNotify(value);
+                    _dgSelectBookItemLocator(this).SetValueAndTryNotify(value);
                     if (value != null)
                     {
                         var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id)  );
@@ -1418,7 +1566,36 @@ namespace EllaMakerTool.WPF.ViewModels
 
             }
         }
-        #region Property DocumentsModel dgSelectEBookItem Setup        
+        #region Property BookListItem dgSelectBookItem Setup        
+        protected Property<BookListItem> _dgSelectBookItem = new Property<BookListItem> { LocatorFunc = _dgSelectBookItemLocator };
+        static Func<BindableBase, ValueContainer<BookListItem>> _dgSelectBookItemLocator = RegisterContainerLocator<BookListItem>("dgSelectBookItem", model => model.Initialize("dgSelectBookItem", ref model._dgSelectBookItem, ref _dgSelectBookItemLocator, _dgSelectBookItemDefaultValueFactory));
+        static Func<BookListItem> _dgSelectBookItemDefaultValueFactory = () => default(BookListItem);
+        #endregion
+
+        public EBookListItem dgSelectEBookItem
+        {
+            get { return _dgSelectEBookItemLocator(this).Value; }
+            set
+            {
+                try
+                {
+                    _dgSelectEBookItemLocator(this).SetValueAndTryNotify(value);
+                    if (value != null)
+                    {
+                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id));
+                        //ent.isChecked = !ent.isChecked;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        #region Property EBookListItem dgSelectEBookItem Setup        
         protected Property<EBookListItem> _dgSelectEBookItem = new Property<EBookListItem> { LocatorFunc = _dgSelectEBookItemLocator };
         static Func<BindableBase, ValueContainer<EBookListItem>> _dgSelectEBookItemLocator = RegisterContainerLocator<EBookListItem>("dgSelectEBookItem", model => model.Initialize("dgSelectEBookItem", ref model._dgSelectEBookItem, ref _dgSelectEBookItemLocator, _dgSelectEBookItemDefaultValueFactory));
         static Func<EBookListItem> _dgSelectEBookItemDefaultValueFactory = () => default(EBookListItem);
@@ -1745,7 +1922,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         vm,
                         async e =>
                         {
-                            if (!Global.CompanyDocEditRight && GlobalPara.rootTypeNow == 1) return;
+                            if (!Global.ArrowEditFolder && GlobalPara.rootTypeNow == 1) return;
                             ViewModels.CreatenewFolderWindow_Model reqVm = new CreatenewFolderWindow_Model();
                             reqVm.DefalutName = "新建文件夹";
                             reqVm.OpenSync = false;
@@ -1755,7 +1932,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                     (GlobalPara.CatalogNow.SynergyRange.departs.Any(p =>
                                          Global.DepartId.Contains(p.DepartmentId)) ||
                                      GlobalPara.CatalogNow.SynergyRange.users.Any(p =>
-                                         p.ProfileId == Global.authToken.Profile.ProfileId))||GlobalPara.CatalogNow.Creator.ProfileId == Global.authToken.Profile.ProfileId)
+                                         p.ProfileId == Global.authToken.ID))||GlobalPara.CatalogNow.Creator.ProfileId == Global.authToken.ID)
                                     reqVm.CanStatusChange = true;
                                 else
                                 {
@@ -1947,7 +2124,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 if (req.Any(p => p.IsFile))
                                 {
-                                    if (!Global.CompanyFileDeletRight)
+                                    if (!Global.ArrowDeleteFile)
                                     {
                                         vm._vm.ShowInformation($"没有删除公司文件的权限！");
                                         return;
@@ -1955,7 +2132,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                 }
                                 if (req.Any(p => !p.IsFile ))
                                 {
-                                    if (!Global.CompanyDocDeletRight)
+                                    if (!Global.ArrowDeleteFolder)
                                     {
                                         vm._vm.ShowInformation($"没有删除部门文件夹的权限！");
                                         return;
@@ -2048,84 +2225,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandShowMoveDocWin
-        {
-            get { return _CommandShowMoveDocWinLocator(this).Value; }
-            set { _CommandShowMoveDocWinLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandShowMoveDocWin Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowMoveDocWin = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowMoveDocWinLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowMoveDocWinLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandShowMoveDocWin", model => model.Initialize("CommandShowMoveDocWin", ref model._CommandShowMoveDocWin, ref _CommandShowMoveDocWinLocator, _CommandShowMoveDocWinDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowMoveDocWinDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandShowMoveDocWin";           // Command state  
-                var commandId = "CommandShowMoveDocWin";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            var req = vm.FileBroswerData.Where(p => p.IsChecked == true).ToList();
-                            if (req == null || req.Count < 1) return;
-                            if (GlobalPara.rootTypeNow == 1)
-                            {
-                                if (req.Any(p => p.IsFile ))
-                                {
-                                    if (!Global.CompanyFileEditRight)
-                                    {
-                                        vm._vm.ShowInformation($"没有移动公司文件的权限！");
-                                        return;
-                                    }
-                                }
-                                if (req.Any(p => !p.IsFile))
-                                {
-                                    if (!Global.CompanyDocEditRight)
-                                    {
-                                        vm._vm.ShowInformation($"没有移动公司文件夹的权限！");
-                                        return;
-                                    }
-                                }
-                            }
-                            //if (GlobalPara.rootTypeNow == 2)
-                            //{
-                            //    var ret = req.Where(item => !XConverter.ChangeStatusEnableConverter.getStatus(item)).ToList();
-                            //    if (ret != null && ret.Count > 0)
-                            //    {
-                            //        vm._vm.ShowInformation($"没有移动 {ret.FirstOrDefault().FileName} 等{ret.Count}个文件（夹）的权限！");
-                            //        return;
-                            //    }
-                            //}
-                            var res = GlobalPara.webApis.GetRootDocTree(GlobalPara.rootTypeNow);
-                            var reqvm = new MoveDocumentWindow_Model();
-                            if (res.Successful)
-                            {
-                                reqvm.TreeSource = new ObservableCollection<DocumentTreeNodelApiModel>()
-                                {
-                                    res.Data
-                                };
-                            }
-                            vm.IsUIBusy = true;
-                            await vm.StageManager.DefaultStage.Show(reqvm);
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
 
         public CommandModel<ReactiveCommand, String> CommandSearchFiles
@@ -2612,7 +2712,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             else
                             {
                                 var para = vm.DownloadRecSelectItem;
-                              INIOperationHelper.INIDeleteKey(GlobalPara.IniPath, Global.authToken.Profile.ProfileId+"Downlist", para.SessionId);
+                              INIOperationHelper.INIDeleteKey(GlobalPara.IniPath, Global.authToken.ID+"Downlist", para.SessionId);
                                 vm.RefreshDownRec();
                             }
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();

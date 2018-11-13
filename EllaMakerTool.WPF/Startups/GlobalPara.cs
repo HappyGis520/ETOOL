@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using AutoMapper;
-using EllaMakerTool.Core;
-using  EllaMakerTool.Message;
+﻿using EllaMakerTool.Core;
+using EllaMakerTool.Message;
 using EllaMakerTool.Models;
-using EllaMakerTool.WPF.Helper;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace EllaMakerTool.WPF
 {
@@ -37,7 +30,7 @@ namespace EllaMakerTool.WPF
             INIOperationHelper.INIGetStringValue(IniPath, "System", "DefaultSavePath", @"C:\");
         private static List<EmployeeAndDeptNodelApiModel> _deptTreesSource;
         private static List<EmployeeAndDeptNodelApiModel> _personTreesSource;
-        //public static bool CompanyDocDeletRight = false;
+        //public static bool ArrowDeleteFile = false;
         //public static bool CompanyFileDeletRight = false;
         //public static bool CompanyDocEditRight = false;
         //public static bool CompanyFileEditRight = false;

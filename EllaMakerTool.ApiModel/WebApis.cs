@@ -7,6 +7,7 @@ using System.Text;
 using EllaMakerTool.Message;
 using EllaMakerTool.Message.Data;
 using EllaMakerTool.Message.Param;
+using EllaMakerTool.Message.Request;
 
 namespace EllaMakerTool.Api
 {
@@ -24,6 +25,7 @@ namespace EllaMakerTool.Api
 
         private const string FTP = "FTP";
         private const string FTP_ROOT = "ListRoot";
+        private const string FTP_Site = "getFtpUpLoadInfo";
         #endregion
         public WebApis(string url)
         {
@@ -75,13 +77,13 @@ namespace EllaMakerTool.Api
         /// <summary>
         /// 获取上传路径
         /// </summary>
-        /// <param name="rootType">0：其他 1-公司；2-共享；3-个人</param>
+        /// <param name="Token"></param>
+        /// <param name="DirectID"></param>
         /// <returns></returns>
-        public ResponseModelBase<String> GetUpaloadPath(String DirectID)
+        public ResponseModelBase<UploadPath> GetUpaloadPath(string Token,string DirectID)
         {
-            var _result = new ResponseModelBase<string>("", "1", "", "");
-            return _result;
-            //return WebApiUtil.GetAPI<TheResult<string>>($"api/docV1/getuploadpath?Token={Token}&rootType={rootType}");
+            UploadPathParam param = new UploadPathParam(Token,DirectID);
+            return WebApiUtil.PostAPI<ResponseModelBase<UploadPath>>($"{FTP}/{FTP_Site}", param);
         }
         //------------------------------------------------------------------------------------
 

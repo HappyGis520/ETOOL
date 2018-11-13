@@ -37,7 +37,7 @@ namespace EllaMakerTool.WPF.ViewModels
             set
             {
                 _IsFolderLocator(this).SetValueAndTryNotify(value);
-                if (Global.CompanyDocEditRight && value)
+                if (Global.ArrowEditFolder && value)
                     ComBoxItemSource = new Dictionary<EnumDocStatusType, string>()
                     {
                         {EnumDocStatusType.Department, "公司"},
@@ -45,7 +45,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         {EnumDocStatusType.Personal, "个人"},
 
                     };
-                if (Global.CompanyFileEditRight && !value)
+                if (Global.ArrowEditFile && !value)
                     ComBoxItemSource = new Dictionary<EnumDocStatusType, string>()
                     {
                         {EnumDocStatusType.Department, "公司"},
@@ -429,82 +429,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandShowSyncPersonWin
-        {
-            get { return _CommandShowSyncPersonWinLocator(this).Value; }
-            set { _CommandShowSyncPersonWinLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandShowSyncPersonWin Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowSyncPersonWin = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowSyncPersonWinLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowSyncPersonWinLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandShowSyncPersonWin", model => model.Initialize("CommandShowSyncPersonWin", ref model._CommandShowSyncPersonWin, ref _CommandShowSyncPersonWinLocator, _CommandShowSyncPersonWinDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowSyncPersonWinDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandShowSyncPersonWin";           // Command state  
-                var commandId = "CommandShowSyncPersonWin";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            SelectPersonWindow_Model req = new SelectPersonWindow_Model();
-                            if (vm.IsFromRoot)
-                            {
-                                req.TreeSource = new ObservableCollection<PsAndDeptTreeNodeItem>()
-                                {
-                                    MapperUtil.Mapper.Map<PsAndDeptTreeNodeItem>(GlobalPara.PersonTreesSource.FirstOrDefault())
-
-                                };
-                            }
-                            else
-                            {
-                                var source = new ObservableCollection<PsAndDeptTreeNodeItem>();
-                                foreach (var item in GlobalPara.CatalogNow.SynergyRange.users)
-                                {
-                                    source.Add(new PsAndDeptTreeNodeItem()
-                                    {
-                                        IsChecked = false,
-                                        ItemType = PsAndDeptItemtype.Person,
-                                        HeadUrl = item.FaceUrl,
-                                        ItemId = item.ProfileId,
-                                        Name = item.Fullname
-                                    });
-                                }
-                                if (source.All(p => p.ItemId != GlobalPara.CatalogNow.Creator.ProfileId))
-                                {
-                                    source.Add(new PsAndDeptTreeNodeItem()
-                                    {
-                                        IsChecked = false,
-                                        ItemType = PsAndDeptItemtype.Person,
-                                        HeadUrl = GlobalPara.CatalogNow.Creator.FaceUrl,
-                                        ItemId = GlobalPara.CatalogNow.Creator.ProfileId,
-                                        Name = GlobalPara.CatalogNow.Creator.Fullname
-                                    });
-                                }
-                                
-                                req.TreeSource = source;
-                            }
-                            req.IsFromShare = false;
-                            await vm.StageManager.DefaultStage.Show(req);
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
 
 
@@ -573,82 +498,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandShowSharePersonWin
-        {
-            get { return _CommandShowSharePersonWinLocator(this).Value; }
-            set { _CommandShowSharePersonWinLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandShowSharePersonWin Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowSharePersonWin = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowSharePersonWinLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowSharePersonWinLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandShowSharePersonWin", model => model.Initialize("CommandShowSharePersonWin", ref model._CommandShowSharePersonWin, ref _CommandShowSharePersonWinLocator, _CommandShowSharePersonWinDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowSharePersonWinDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandShowSharePersonWin";           // Command state  
-                var commandId = "CommandShowSharePersonWin";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            SelectPersonWindow_Model req = new SelectPersonWindow_Model();
-                            if (vm.IsFromRoot)
-                            {
-                                req.TreeSource = new ObservableCollection<PsAndDeptTreeNodeItem>()
-                                {
-                                    MapperUtil.Mapper.Map<PsAndDeptTreeNodeItem>(GlobalPara.PersonTreesSource
-                                        .FirstOrDefault())
-                                };
-                            }
-                            else
-                            {
-                                var source = new ObservableCollection<PsAndDeptTreeNodeItem>();
-                                foreach (var item in GlobalPara.CatalogNow.ShareRange.users)
-                                {
-                                    source.Add(new PsAndDeptTreeNodeItem()
-                                    {
-                                        IsChecked = false,
-                                        ItemType = PsAndDeptItemtype.Person,
-                                        HeadUrl = item.FaceUrl,
-                                        ItemId = item.ProfileId,
-                                        Name = item.Fullname
-                                    });
-                                }
-                                if (source.All(p => p.ItemId != GlobalPara.CatalogNow.Creator.ProfileId))
-                                {
-                                    source.Add(new PsAndDeptTreeNodeItem()
-                                    {
-                                        IsChecked = false,
-                                        ItemType = PsAndDeptItemtype.Person,
-                                        HeadUrl = GlobalPara.CatalogNow.Creator.FaceUrl,
-                                        ItemId = GlobalPara.CatalogNow.Creator.ProfileId,
-                                        Name = GlobalPara.CatalogNow.Creator.Fullname
-                                    });
-                                }
-
-                                req.TreeSource = source;
-                            }
-                            req.IsFromShare = true;
-                            await vm.StageManager.DefaultStage.Show(req);
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
 
         public CommandModel<ReactiveCommand, String> CommandCloseWindow

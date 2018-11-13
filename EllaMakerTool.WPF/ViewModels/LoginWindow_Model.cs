@@ -122,7 +122,8 @@ namespace EllaMakerTool.WPF.ViewModels
                                 {
                                     Token = res.Data.token,
                                     Username = res.Data.name,
-                                    Profile = null
+                                    ID = res.Data.id,
+                                    FaceUri = res.Data.face
                                 };
                                 vm.GlobalEventRouter.GetEventChannel(typeof(MesWindowResModel)).RaiseEvent(vm,
                                     "MesWindowOptResEventRouter", new MesWindowResModel()

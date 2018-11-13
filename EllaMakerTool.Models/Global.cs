@@ -12,13 +12,19 @@ namespace EllaMakerTool.Models
      public class Global
     {
         public static string ImageServerAdress = DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("ImageServerAdress"));
-        public static bool CompanyDocDeletRight = false;
-        public static bool CompanyFileDeletRight = false;
-        public static bool CompanyDocEditRight = false;
-        public static bool CompanyFileEditRight = false;
+        public static bool ArrowDeleteFolder = false;
+        public static bool ArrowDeleteFile = false;
+        public static bool ArrowEditFolder = false;
+        public static bool ArrowEditFile = false;
         public static AuthToken authToken = new AuthToken();
         public static List<string> DepartId;
         public static List<OpenFolderOptDataModel> RecordList = new List<OpenFolderOptDataModel>();
+
+        #region ERROR Code
+
+        public const string ERROR_TOKEN = "0x0000001";
+
+        #endregion
         #region 事件消息
         /// <summary>
         /// 显示图书列表
@@ -39,7 +45,13 @@ namespace EllaMakerTool.Models
 
         public const string EBookBrowserMSG = "EBookBrowserMSG";
 
+        public const string BookBrowserMSG = "BookBrowserMSG";
+
         public const string LoadFTPExplorerMSG = "LoadFTPExplorer";
+        /// <summary>
+        ///重新登录 
+        /// </summary>
+        public const string ReLoginMSG = "ReLoginMSG";
         /// <summary>
         /// 切换部门或公司
         /// </summary>

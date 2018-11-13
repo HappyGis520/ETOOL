@@ -27,6 +27,16 @@ namespace  EllaMakerTool.Message
 			}
 		}
 
+	    public RequestModelBase()
+	    {
+	        
+	    }
+
+	    public RequestModelBase(string Token)
+	    {
+	        this._token = token;
+	    }
+
 
 	}
 

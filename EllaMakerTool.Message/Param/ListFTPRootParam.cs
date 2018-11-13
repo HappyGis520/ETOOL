@@ -32,7 +32,7 @@ namespace  EllaMakerTool.Message
             internal ListFTPRootParam(bool isBook,String BookID)
             {
                 this.book = isBook;
-                this.bookID = bookID;
+                this.bookID = BookID;
             }
         }
 

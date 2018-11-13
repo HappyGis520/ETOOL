@@ -49,6 +49,7 @@
     <Compile Include="Data\FTPFileInfo.cs" />
     <Compile Include="Data\ListByPage.cs" />
     <Compile Include="Data\LoginUser.cs" />
+    <Compile Include="Data\UploadPath.cs" />
     <Compile Include="Enum\EnumDocFileType.cs" />
     <Compile Include="Enum\EnumDocStatusType.cs" />
     <Compile Include="Enum\EnumDocType.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Request\DocumentDeleteRequest.cs" />
     <Compile Include="Request\DocumentV1Request.cs" />
     <Compile Include="Request\StatusList.cs" />
+    <Compile Include="Request\UploadPathParam.cs" />
     <Compile Include="Response\AuthToken.cs" />
     <Compile Include="Response\CompanyStoreStatusApiModel.cs" />
     <Compile Include="Response\CoverDocResultApiModel.cs" />

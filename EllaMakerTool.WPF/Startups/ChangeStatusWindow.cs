@@ -1,15 +1,18 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
-using MVVMSidekick.ViewModels;
-using MVVMSidekick.Views;
-using MVVMSidekick.Reactive;
-using MVVMSidekick.Services;
-using MVVMSidekick.Commands;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： ChangeStatusWindow.cs
+ * * 功   能：  
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-11-13 14:19:07
+ * * 修改记录： 
+ * * 日期时间： 2018-11-13 14:19:07  修改人：王建军  创建
+ * *******************************************************************/
 using EllaMakerTool.WPF;
 using EllaMakerTool.WPF.ViewModels;
+using MVVMSidekick.Views;
 using System;
-using System.Net;
-using System.Windows;
 
 
 namespace MVVMSidekick.Startups
