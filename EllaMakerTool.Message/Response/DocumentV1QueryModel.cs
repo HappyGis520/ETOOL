@@ -142,6 +142,13 @@ namespace EllaMakerTool.Message
         /// 文件夹相对层级越外层越小（最外层为1）
         /// </summary>
         public int Level { get; set; }
+
+        public CatalogSimpleModel(String Id, string Name,int Level)
+        {
+            this.Name = Name;
+            this.Id = Id;
+            this.Level = Level;
+        }
     }
 
     public class DocRangeItem

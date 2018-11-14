@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using EllaMakerTool.Message;
+using EllaMakerTool.Message.Data;
 using EllaMakerTool.Models;
 using MVVMSidekick.EventRouting;
 
@@ -27,6 +28,7 @@ namespace EllaMakerTool.WPF
         ucBookList _ucBookList = null;
         ucEBookList _ucEBookList = null;
         private ucFTPLIst _ucFTPList = null;
+
         public MainWindow()
         {
             InitializeComponent();

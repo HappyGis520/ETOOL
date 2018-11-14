@@ -10,11 +10,12 @@ namespace EllaMakerTool.Message.Request
     /// </summary>
     public class UploadPathParam:RequestModelBase
     {
-        public string DirectID { get;  }
+        public string id { get;  }
 
         public UploadPathParam(string Token, string DirID) : base(Token)
         {
-            DirectID = DirID;
+            id = DirID;
+            this.token = Token;
 
         }
     }

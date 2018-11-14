@@ -38,6 +38,7 @@ namespace  EllaMakerTool.Message
             fileInfoType = FileType.ToString();
             fileName = Searchar;
             resourceDirID = DirID;
+            token = Token;
 
         }
     }

@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 using EllaMakerTool.Message;
 using EllaMakerTool.Models;
 
@@ -37,8 +38,18 @@ namespace EllaMakerTool.WPF.ViewModels
 
         public long lastSize = 0;
         private ToastInstance _vm;
-        public bool IsFTPRoot = true;
-        public FTPListItem FTPItem = null;
+        /// <summary>
+        /// 是否为图书根目录下的资源
+        /// </summary>
+        public bool IsBookROOTResource = true;
+        /// <summary>
+        /// 图书或动画书名称
+        /// </summary>
+        public string BookRootName = string.Empty;
+        /// <summary>
+        /// 从动画书或图根目录开始的目录路径
+        /// </summary>
+        public Stack<FTPListItem> FTPDIRList = new Stack<FTPListItem>(100);
 
 
         /// <summary>
@@ -464,6 +475,17 @@ namespace EllaMakerTool.WPF.ViewModels
         static Func<FTPListItem> _DgSelectItemDefaultValueFactory = () => default(FTPListItem);
         #endregion
 
+
+        public string NowFolderName
+        {
+            get { return _NowFolderNameLocator(this).Value; }
+            set { _NowFolderNameLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property string NowFolderName Setup        
+        protected Property<string> _NowFolderName = new Property<string> { LocatorFunc = _NowFolderNameLocator };
+        static Func<BindableBase, ValueContainer<string>> _NowFolderNameLocator = RegisterContainerLocator<string>("NowFolderName", model => model.Initialize("NowFolderName", ref model._NowFolderName, ref _NowFolderNameLocator, _NowFolderNameDefaultValueFactory));
+        static Func<string> _NowFolderNameDefaultValueFactory = () => "";
+        #endregion
         #endregion
 
 
@@ -509,9 +531,11 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 vm.IsUIBusy = true;
                                 EBookListItem para = (EBookListItem) vm.dgSelectEBookItem;
+                                vm.BookRootName = para.bookname;
+                                vm.ClearData();
                                 if (para != null && !string.IsNullOrEmpty(para.id))
                                 {
-                                    vm.FillFilesFromFTPRoot(para.id, false, true);
+                                    vm.FillFilesFromFTPRoot(para.id, false);
                                 }
                                 vm.IsUIBusy = false;
                                 await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -568,9 +592,11 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 vm.IsUIBusy = true;
                                 BookListItem para = (BookListItem) vm.dgSelectBookItem;
+                                vm.BookRootName = para.Name;
+                                vm.ClearData();
                                 if (para != null && !string.IsNullOrEmpty(para.id))
                                 {
-                                    vm.FillFilesFromFTPRoot(para.id, true, true);
+                                    vm.FillFilesFromFTPRoot(para.id, false);
                                 }
                                 vm.IsUIBusy = false;
                                 await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -747,18 +773,19 @@ namespace EllaMakerTool.WPF.ViewModels
                     //共享资源
                     case 2:
                         IsNotAllTab = true;
-                        if (!isLockTab) GetRootFile(2, 1, 2);
+                        if (!isLockTab)
+
                         //BroswerPathStr = "共享资源";
                         TransVisibility = Visibility.Collapsed;
-                        GetUploadPath("");
+
                         break;
                     //私有资源
                     case 3:
                         IsNotAllTab = true;
-                        if (!isLockTab) GetRootFile(3, 1, 2);
+                        if (!isLockTab)
+
                         //BroswerPathStr = "私有资源";
                         TransVisibility = Visibility.Collapsed;
-                        GetUploadPath("");
                         break;
                 }
             }
@@ -782,60 +809,25 @@ namespace EllaMakerTool.WPF.ViewModels
 
 
         /// <summary>
-        /// 获取指定ID下的文件
-        /// </summary>
-        ///<param name="CatalogId">文档ID</param>
-        /// <param name="rootType">目录类型</param>
-        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void GetFilesFromCatalogId(string CatalogId, int rootType, bool isInlist = true)
-        {
-            IsAllCheck = false;
-            var res = GlobalPara.webApis.GetListQuery(CatalogId, "", rootType, 1, 2);
-            if (res.Successful)
-            {
-                if (isInlist)
-                {
-                    inExcuList(new OpenFolderOptDataModel()
-                    {
-                        rootType = rootType,
-                        CatalogId = res.Data.CatelogId
-                    });
-                }
-
-                ConvertToPath(res.Data.pathInfo, 4);
-                GlobalPara.CatalogNow = res.Data;
-                try
-                {
-                    FileBroswerData.Clear();
-                    foreach (var item in res.Data.Records)
-                    {
-                        FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex + "");
-                }
-
-            }
-        }
-
-        /// <summary>
-        ///从FTP站点获取指定ID下的文件或文件夹
+        ///从FTP站点获取指定图书或动画书ID下的文件或文件夹
         /// </summary>
         ///<param name="CatalogId">文档ID</param>
         /// <param name="IsBook">是否为图书资源</param>
         /// <param name="IsRootData">是否为根路径</param>
-        private void FillFilesFromFTPRoot(string CatalogId, bool IsBook, bool IsRootData)
+        private void FillFilesFromFTPRoot(string BookID, bool IsBook)
         {
             IsAllCheck = false;
-            IsFTPRoot = IsRootData;
+            IsBookROOTResource = true;
             try
             {
-                var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
+                ConvertToPath(FTPDIRList, 6);
+                if (FTPDIRList.Count>0)
+                    FTPDIRList.Clear();
+                var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, BookID, IsBook);
+
                 if (res.Successful)
                 {
-                    ClearData();
+                    FTPDIRList.Clear();
                     if (res.Data != null && res.Data.Count > 0)
                     {
                         try
@@ -845,7 +837,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                             }
-                            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, IsRootData, Global.LoadFTPExplorerMSG);
+                            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this,true, Global.LoadFTPExplorerMSG);
                         }
                         catch (Exception ex)
                         {
@@ -884,17 +876,21 @@ namespace EllaMakerTool.WPF.ViewModels
         ///<param name="CatalogId">文档ID</param>
         /// <param name="rootType">目录类型</param>
         /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void FillFilesFromFTP(string CatalogId, bool IsBook,bool IsRootData)
+        private void FillFilesFromFTP( FTPListItem Item,bool IsBook)
         {
 
             IsAllCheck = false;
-            IsFTPRoot = IsRootData;
+            IsBookROOTResource = false;
             try
             {
-                var res = GlobalPara.webApis.FTPList(Global.authToken.Token, EnumFileInfoType.ALL, "", CatalogId);
+                FileBroswerData.Clear();
+                FTPDIRList.Push(Item);
+                ConvertToPath(FTPDIRList, 6);
+                GetUploadPath(Item.FileID);
+                var res = GlobalPara.webApis.FTPList(Global.authToken.Token, EnumFileInfoType.ALL, "", Item.FileID);
                 if (res.Successful)
                 {
-                    ClearData();
+ 
                     if (res.Data != null && res.Data.Count > 0)
                     {
                         try
@@ -904,6 +900,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                             }
+                            FTPDIRList.Push(Item);
                             //MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, IsRootData, Global.LoadFTPExplorerMSG);
                         }
                         catch (Exception ex)
@@ -931,6 +928,31 @@ namespace EllaMakerTool.WPF.ViewModels
                 MessageBox.Show(ex.Message);
             }
              
+        }
+        /// <summary>
+        /// 获取上传路径
+        /// </summary>
+        /// <param name="DirectID"></param>
+        public void GetUploadPath(string DirectID)
+        {
+            
+            var res = GlobalPara.webApis.GetUpaloadPath(Global.authToken.Token, DirectID);
+            if (res.Successful)
+            {
+                GlobalPara.UploadPathNow = $"{res.Data.ip}:{res.Data.port}{res.Data.path}";
+            }
+            else
+            {
+                if (res.Code.Equals(Global.ERROR_TOKEN))
+                {
+                    MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "",
+                        Global.ReLoginMSG);
+                }
+                else
+                {
+                    MessageBox.Show(res.Message);
+                }
+            }
         }
 
         public CommandModel<ReactiveCommand, String> CommandSyncFiles
@@ -1057,56 +1079,40 @@ namespace EllaMakerTool.WPF.ViewModels
 
 
 
-
-        public string NowFolderName
-        {
-            get { return _NowFolderNameLocator(this).Value; }
-            set { _NowFolderNameLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property string NowFolderName Setup        
-        protected Property<string> _NowFolderName = new Property<string> { LocatorFunc = _NowFolderNameLocator };
-        static Func<BindableBase, ValueContainer<string>> _NowFolderNameLocator = RegisterContainerLocator<string>("NowFolderName", model => model.Initialize("NowFolderName", ref model._NowFolderName, ref _NowFolderNameLocator, _NowFolderNameDefaultValueFactory));
-        static Func<string> _NowFolderNameDefaultValueFactory = () => "";
-        #endregion
-
         /// <summary>
         /// 将路径转化为浏览路径
         /// </summary>
         /// <param name="pathInfo">路径信息</param>
         /// <param name="count">需要省略的阀值</param>
-        private void ConvertToPath(List<CatalogSimpleModel> pathInfo,int count)
+        private void ConvertToPath(Stack<FTPListItem> pathInfo,int count)
         {
-            StringBuilder sb = new StringBuilder();
-            var res= pathInfo.OrderBy(p => p.Level).ToList();
-            List<CatalogSimpleModel> tempt = new List<CatalogSimpleModel>();
-            foreach (var item in res)
+            string spliteChar = " > ";
+            string LastSpliteChar = " > ...";
+            StringBuilder sb = new StringBuilder(BookRootName + LastSpliteChar);
+            //var res= pathInfo.OrderBy(p => p.Level).ToList();
+            List<FTPListItem> tempt = new List<FTPListItem>();
+            foreach (var item in pathInfo)
             {
-                CatalogSimpleModel newitem = item;
-                if (item.Name.Length > 6)
-                {
-                    newitem.Name = item.Name.Substring(0, 6) + "...";
-                }
+                var Name = item.FileName.Length > 6 ? item.FileName.Substring(0, 6) + "..." : item.FileName;
+                FTPListItem newitem = new FTPListItem(item.IsFile, item.ParentID, item.FileID, Name);
                 tempt.Add(newitem);
             }
-            var temp = tempt.OrderBy(p => p.Level);
-            int count1 = temp.Count();
+            //var temp = tempt.OrderBy(p => p.Level);
+            int count1 = tempt.Count;
             if (count1 > count)
             {
-                var temp1 = temp.Take(1);
-                var temp2 = temp.Skip(temp.Count() - (count-1));
-                sb.Append(temp1.ToList()[0].Name + " > ...");
-                sb.Append(string.Join(" > ", temp2.Select(p => p.Name).ToArray()));
+                var temp1 = tempt.Take(1);
+                var temp2 = tempt.Skip(tempt.Count() - (count-1));
+                sb.Append(temp1.ToList()[0].FileName + LastSpliteChar);
+                sb.Append(string.Join(spliteChar, temp2.Select(p => p.FileName).ToArray()));
                 BroswerPathStr = sb.ToString();
                 return;
             }
 
-            sb.Append(string.Join(" > ", temp.Select(p => p.Name).ToArray()));
+            sb.Append(string.Join(spliteChar, tempt.Select(p => p.FileName).ToArray()));
             BroswerPathStr = sb.ToString();
-            if (GlobalPara.rootTypeNow == 0)
-            {
-                BroswerPathStr= "全部" + BroswerPathStr.Substring(2);
-            }
-            NowFolderName = pathInfo[0].Name;
+            if(pathInfo.Count>0)
+                NowFolderName = pathInfo.Last().FileName;
         }
 
         public void RefreshDownRec()
@@ -1161,38 +1167,6 @@ namespace EllaMakerTool.WPF.ViewModels
 
         private bool isfirst = true;
 
-        /// <summary>
-        /// 获取根目录文件
-        /// </summary>
-        /// <param name="rootType">1-公司；2-共享；3-个人</param>
-        /// <param name="ordertype">排序类型：1 时间，2文件名，3类型, 4大小</param>
-        /// <param name="isasc">排序类型：1 升序，2 降序</param>
-        private void GetRootFile(int rootType, int ordertype, int isasc)
-        {
-            IsAllCheck = false;
-            var res = GlobalPara.webApis.GetRoot(rootType, ordertype, isasc);
-            if (res.Successful)
-            {
-                inExcuList(new OpenFolderOptDataModel()
-                {
-                    rootType = rootType,
-                    CatalogId = res.Data.CatelogId
-                });
-                if (isfirst)
-                {
-                    indexnow = 0;
-                    isfirst = false;
-                }
-                ConvertToPath(res.Data.pathInfo, 4);
-                GlobalPara.rootTypeNow = rootType;
-                GlobalPara.CatalogNow = res.Data;
-                FileBroswerData.Clear();
-                foreach (var item in res.Data.Records)
-                {
-                    FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
-                }
-            }
-        }
 
         private void DeleteDoc(DocumentDeleteRequest ent)
         {
@@ -1241,18 +1215,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 StoreUseStatus = res.Data;
             }
         }
-        /// <summary>
-        /// 获取上传路径
-        /// </summary>
-        /// <param name="rootype">0：其他 1-公司；2-共享；3-个人</param>
-        public void GetUploadPath(string DirectID)
-        {
-            var res = GlobalPara.webApis.GetUpaloadPath(Global.authToken.Token, DirectID);
-            if (res.Successful)
-            {
-                GlobalPara.UploadPathNow = $"{res.Data.ip}:{res.Data.port}/{res.Data.path}";
-            }
-        }
+
 
         private Api.TheResult<string> CreateNewFolder(string name)
         {
@@ -1847,7 +1810,6 @@ namespace EllaMakerTool.WPF.ViewModels
                                 return; 
                             }
                             var newidex = vm.indexnow - 1;
-                            
                             var res = vm.GetOpenModel(newidex);
                             if (res == null)
                             {
@@ -1855,7 +1817,8 @@ namespace EllaMakerTool.WPF.ViewModels
                                 return;
                             }
                             vm.indexnow--;
-                            vm.GetFilesFromCatalogId(res.CatalogId, res.rootType, false);
+                            var CurDir =  vm.FTPDIRList.Pop();
+                            vm.FillFilesFromFTP(CurDir,vm.IsBookROOTResource);
                             
                             vm.TabCotrolSelectIndex = res.rootType;
                             vm.isLockTab = false;
@@ -1930,8 +1893,7 @@ namespace EllaMakerTool.WPF.ViewModels
                                 return;
                             }
                             vm.indexnow++;
-                            vm.GetFilesFromCatalogId(res.CatalogId, res.rootType, false);
-                            
+                            //vm.FillFilesFromFTP(CurDir, vm.IsBookROOTResource);
                             vm.TabCotrolSelectIndex = res.rootType;
                             vm.isLockTab = false;
                             vm.IsUIBusy = false;
@@ -2127,7 +2089,7 @@ namespace EllaMakerTool.WPF.ViewModels
         /// </summary>
         private void RefreshFilesList()
         {
-            GetFilesFromCatalogId(GlobalPara.CatalogNow.CatelogId,GlobalPara.rootTypeNow,false);
+            FillFilesFromFTP(FTPDIRList.Last(),IsBookROOTResource);
         }
 
 
@@ -2507,7 +2469,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             FTPListItem para = (FTPListItem)vm.DgSelectItem;
                             if (para != null&&!para.IsFile)
                             {
-                                vm.FillFilesFromFTP(para.FileID,true,false);
+                                vm.FillFilesFromFTP( para,true);
                                 //vm.GetUploadPath(para.FileID);
                             }
                             vm.IsUIBusy = false;

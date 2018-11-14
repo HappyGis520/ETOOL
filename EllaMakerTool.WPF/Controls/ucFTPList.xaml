@@ -19,19 +19,20 @@
         </Grid.RowDefinitions>
         <Border Height="74" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0 0 0 1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="74">
-                <!--<controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
                     <StackPanel>
                         <Grid>
                             <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
-                                           Source="Resources/pc_Button_goback_low.png" />
+                                           Source="Resources/pc_Button_goback_low.png" Visibility="Visible"/>
+                                   <!--Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />-->
                             <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
                                            Source="Resources/pc_Button_goback.png"
-                                           Visibility="{Binding IsFTPRoot,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
+                                           Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
 
                         </Grid>
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="后退" />
                     </StackPanel>
-                </controls:AyImageButton>-->
+                </controls:AyImageButton>
                 <!--<controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoFront}" Width="74" Height="74" >
                     <StackPanel>
                         <Grid>
