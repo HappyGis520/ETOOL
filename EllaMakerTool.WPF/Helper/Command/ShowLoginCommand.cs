@@ -14,7 +14,8 @@ namespace EllaMakerTool.WPF.Helper.Command
 
         public void Execute(object parameter)
         {
-            LoginWindow loginWindow = new LoginWindow();
+
+            LoginWindow loginWindow = new LoginWindow((bool)parameter);
             loginWindow.ShowDialog();
         }
     }

@@ -16,7 +16,7 @@
     <Grid>
         <DataGrid x:Name="dgfileBrowser" 
                   ItemsSource="{Binding BookListData,Mode=TwoWay}" CanUserResizeColumns="False"
-                  BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
+                  BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0" Background="Transparent"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
                   SelectionMode="Extended" SelectedItem="{Binding dgSelectBookItem,Mode=TwoWay}">

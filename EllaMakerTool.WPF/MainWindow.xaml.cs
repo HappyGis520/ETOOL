@@ -26,6 +26,7 @@ namespace EllaMakerTool.WPF
     {
         ucBookList _ucBookList = null;
         ucEBookList _ucEBookList = null;
+        private ucFTPLIst _ucFTPList = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +45,7 @@ namespace EllaMakerTool.WPF
             left = this.Left;
             top = this.Top;
             MaxBtnImage.Source = normalimge;
-            SubscribeCommand();
+            SubscribeEvent();
             this.SourceInitialized += delegate (object sender, EventArgs e)//执行拖拽
             {
                 this._HwndSource = PresentationSource.FromVisual((Visual)sender) as HwndSource;
@@ -155,60 +156,92 @@ namespace EllaMakerTool.WPF
         private void InitLoginShowCommand()
         {
             ShowLoginCommand showLoginCommand = new ShowLoginCommand();
-            showLoginCommand.Execute(null);
+            showLoginCommand.Execute(false);
         }
         //路由事件订阅，响应
-        private void SubscribeCommand()
+        private void SubscribeEvent()
         {
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
                 .Where(p => p.EventName == "MainGetFoucusEventRouter").Subscribe(
                     p =>
                     {
+                        this.Show();
                         this.Focus();
                     });
             //显示图书列表
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
-                .Where(p => p.EventName == Global.ShowBookListMSG).Subscribe(
-                    p =>
-                    {
-                        if (_ucBookList == null) _ucBookList = new ucBookList();
-                        if (grdDocker.Children.Count > 0)
-                        {
-                            if (!grdDocker.Children[0].GetType().Equals(typeof(ucBookList)))
-                            {
-                                grdDocker.Children.Clear();
-                                grdDocker.Children.Add(_ucBookList);
-                            }
-                        }
-                        else
-                        {
-                            grdDocker.Children.Add(_ucBookList);
-                        }
-                        BookListByPageParam param = new BookListByPageParam()
-                        {
-                            pageIndex = 0,
-                            pageSize = 10,
-                            SearchAuthorName = "",
-                            SearchBookSetName = "",
-                            SearchPublisherName = "",
-                            token = Global.authToken.Token
-
-                        };
-                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, param, Global.RefreshBookListData);
-
-
-                    });
+                .Where(p => p.EventName == Global.ShowBookListControlMSG).Subscribe(LoadBookListControl);
 
             //显示动画书列表
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
-                .Where(p => p.EventName == Global.ShowEBookListMSG).Subscribe(LoadEBookData);
+                .Where(p => p.EventName == Global.ShowEBookListControlMSG).Subscribe(LoadEBookListControl);
 
             //加载FTP资源浏览器
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
-    .Where(p => p.EventName == Global.EBookBrowserMSG).Subscribe(LoadEBookBrowser);
+                .Where(p => p.EventName == Global.LoadFTPExplorerMSG).Subscribe(LoadFTPExplorer);
+            //重登录 
+            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
+                .Where(p => p.EventName == Global.ReLoginMSG).Subscribe(ReLogin);
+           
         }
+        /// <summary>
+        /// 显示图书列表
+        /// </summary>
+        /// <param name="param"></param>
+        private void LoadBookListControl(RouterEventData<bool> param)
+        {
+            if (_ucBookList == null) _ucBookList = new ucBookList();
+            if (grdDocker.Children.Count > 0)
+            {
+                if (!grdDocker.Children[0].GetType().Equals(typeof(ucBookList)))
+                {
+                    grdDocker.Children.Clear();
+                    grdDocker.Children.Add(_ucBookList);
+                }
+            }
+            else
+            {
+                grdDocker.Children.Add(_ucBookList);
+            }
+            BookListByPageParam _param = new BookListByPageParam()
+            {
+                pageIndex = 0,
+                pageSize = 10,
+                SearchAuthorName = "",
+                SearchBookSetName = "",
+                SearchPublisherName = "",
+                token = Global.authToken.Token
 
-        private void LoadEBookData(RouterEventData<bool> param)
+            };
+            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, _param, Global.RefreshBookListData);
+        }
+        /// <summary>
+        /// 加载FTP资源浏览器
+        /// </summary>
+        /// <param name="param"></param>
+        private void LoadFTPExplorer(RouterEventData<bool> param)
+        {
+            bool _isRootData = (bool)param.EventData;
+            if (_ucFTPList == null) _ucFTPList = new ucFTPLIst();
+            if (grdDocker.Children.Count > 0)
+            {
+                if (!grdDocker.Children[0].GetType().Equals(typeof(ucFTPLIst)))
+                {
+                    grdDocker.Children.Clear();
+                    grdDocker.Children.Add(_ucFTPList);
+                }
+            }
+            else
+            {
+                grdDocker.Children.Add(_ucFTPList);
+            }
+
+        }
+        /// <summary>
+        /// 显示动画书列表
+        /// </summary>
+        /// <param name="param"></param>
+        private void LoadEBookListControl(RouterEventData<bool> param)
         {
             if (_ucEBookList == null) _ucEBookList = new ucEBookList();
             if (grdDocker.Children.Count > 0)
@@ -234,14 +267,18 @@ namespace EllaMakerTool.WPF
 
         }
 
-        private void LoadEBookBrowser(RouterEventData<bool> param)
+        /// <summary>
+        /// 重登录 
+        /// </summary>
+        /// <param name="param"></param>
+        private void ReLogin(RouterEventData<bool> param)
         {
-            
+            this.Hide();
+            ShowLoginCommand showLoginCommand = new ShowLoginCommand();
+            showLoginCommand.Execute(true);
         }
-        private void ComChangeCbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel(typeof(SelectionChangedEventArgs)).RaiseEvent("", Global.CompanySwitchEventRouter, e);
-        }
+
+
 
         private void FButton_Min_Click(object sender, RoutedEventArgs e)
         {

@@ -14,7 +14,7 @@
         <viewModels:MainWindow_Model x:Key="DesignVM" />
     </UserControl.Resources>
     <Grid>
-        <DataGrid x:Name="dgEBookList" VerticalGridLinesBrush="#FFBCC1BC" HorizontalGridLinesBrush="#FFBCC1BC"
+        <DataGrid x:Name="dgEBookList" VerticalGridLinesBrush="#FFBCC1BC" HorizontalGridLinesBrush="#FFBCC1BC"  Background="Transparent"
                   ItemsSource="{Binding EBookListData,Mode=TwoWay}" CanUserResizeColumns="False"
                   BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"

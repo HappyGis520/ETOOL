@@ -123,8 +123,7 @@
                                       Foreground="{DynamicResource UserInfoForeground}"
                                       Style="{DynamicResource ComboBoxStyle}" Background="Transparent"
                                       HorizontalContentAlignment="Right" IsReadOnly="True"
-                                      ItemsSource="{Binding CompanyList}"
-                                      SelectionChanged="ComChangeCbx_SelectionChanged" />
+                                      ItemsSource="{Binding CompanyList}"/>
                             <Label Grid.ColumnSpan="2" Background="{DynamicResource WindowBackground}"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
                                    Content="{Binding Text, ElementName=ComChangeCbx}" FontSize="12"

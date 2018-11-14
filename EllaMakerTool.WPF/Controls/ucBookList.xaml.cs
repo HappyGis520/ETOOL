@@ -36,12 +36,7 @@ namespace EllaMakerTool.WPF
         }
         private void SubscribeCommand()
         {
-            //MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
-            //    .Where(p => p.EventName == "MainGetFoucusEventRouter").Subscribe(
-            //        p =>
-            //        {
-            //            this.Focus();
-            //        });
+
 
             //MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
             //    .Where(p => p.EventName == "MainWinCkAllEventRouter").Subscribe(

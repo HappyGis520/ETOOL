@@ -21,7 +21,10 @@ namespace EllaMakerTool.Models
                 cfg.CreateMap<EmployeeAndDeptNodelApiModel, PsAndDeptTreeNodeItem>();
                 cfg.CreateMap<BookItem, BookListItem>();
                 cfg.CreateMap<EbookItem, EBookListItem>();
-                cfg.CreateMap<FileInfo, FTPListItem>();
+                cfg.CreateMap<FTPFileInfo, FTPListItem>();
+
+
+
             });
             MapperUtil.Config(config.CreateMapper());
         }

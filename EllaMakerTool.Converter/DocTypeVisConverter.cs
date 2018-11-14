@@ -10,14 +10,8 @@ namespace EllaMakerTool.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            EnumDocFileType v = (EnumDocFileType)value;
-            switch (v)
-            {
-                case EnumDocFileType.Folder:
-                    return Visibility.Collapsed;
-                default:
-                    return Visibility.Visible;
-            }
+            bool v = (bool)value;
+            return v;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -1,6 +1,7 @@
 ﻿using MVVMSidekick.Views;
 using System.Windows;
 using System.Windows.Input;
+using EllaMakerTool.WPF.ViewModels;
 
 namespace EllaMakerTool.WPF
 {
@@ -9,9 +10,10 @@ namespace EllaMakerTool.WPF
     /// </summary>
     public partial class LoginWindow : MVVMWindow
     {
-        public LoginWindow()	           
+        public LoginWindow(bool IsReload)	           
         {
             InitializeComponent();
+            LoginWindow_Model.IsReload = IsReload;
         }
 
         private void FButton_Click(object sender, RoutedEventArgs e)

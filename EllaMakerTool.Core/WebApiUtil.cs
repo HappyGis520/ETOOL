@@ -101,6 +101,7 @@ namespace EllaMakerTool
                 }
                 var res = JsonConvert.DeserializeObject<T>(strValue,jsonSetting);
                 Reader.Close();
+                
                 return res;
 
         }

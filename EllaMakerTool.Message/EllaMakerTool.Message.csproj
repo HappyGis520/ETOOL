@@ -54,11 +54,13 @@
     <Compile Include="Enum\EnumDocStatusType.cs" />
     <Compile Include="Enum\EnumDocType.cs" />
     <Compile Include="Enum\EnumEmployeeRoleType.cs" />
+    <Compile Include="Enum\EnumFileInfoType.cs" />
     <Compile Include="Enum\EnumPsAndDeptItemtype.cs" />
     <Compile Include="Param\BookListByPageParam.cs" />
     <Compile Include="Enum\EnumFileResourceType.cs" />
     <Compile Include="Enum\EnumFTPFileInfoType.cs" />
     <Compile Include="Param\EBookListByPageParam.cs" />
+    <Compile Include="Param\ListFTPParam.cs" />
     <Compile Include="Param\ListFTPRootParam.cs" />
     <Compile Include="Param\ListByPageParam.cs" />
     <Compile Include="Param\UserLoginParam.cs" />

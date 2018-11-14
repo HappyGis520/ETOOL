@@ -32,78 +32,21 @@ namespace EllaMakerTool.WPF.ViewModels
             {
 
             }
-            SubscribeCommand();
+            SubscribeEventHandle();
         }
 
         public long lastSize = 0;
         private ToastInstance _vm;
+        public bool IsFTPRoot = true;
+        public FTPListItem FTPItem = null;
+
 
         /// <summary>
         /// 订阅事件
         /// </summary>
-        private void SubscribeCommand()
+        private void SubscribeEventHandle()
         {
             //注册全局事件路由
-            MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<SelectionChangedEventArgs>()
-                .Where(x => x.EventName == Global.CompanySwitchEventRouter).Subscribe(
-                    async e =>
-                    {
-                        var para = e.EventData;
-                        EmployerApiModel NewItem = GlobalPara.ComapnyList.FirstOrDefault(p =>
-                                para.AddedItems != null && p.CompanyName == para.AddedItems[0].ToString());
-                        var res = GlobalPara.webApis.SwitchCompany(NewItem.CompanyCode);
-                        if (res.successful)
-                        {
-                            try
-                            {
-                                this.Dispatcher.BeginInvoke((Action) GetCompanySotreStatus);
-                                var rigthItem = res.Data.FirstOrDefault(p => p.Name == "企业文档");
-                                if (rigthItem != null)
-                                {
-                                    Global.ArrowEditFile = rigthItem.FuncList
-                                        .Where(p => p.Name == "管理文件-上传、重命名、移动").Select(p => p.Enable).FirstOrDefault();
-                                    Global.ArrowEditFolder = rigthItem.FuncList
-                                        .Where(p => p.Name == "管理文件夹-新建文件夹、重命名、移动").Select(p => p.Enable)
-                                        .FirstOrDefault();
-                                    Global.ArrowDeleteFile = rigthItem.FuncList
-                                        .Where(p => p.Name == "管理文件-删除文件").Select(p => p.Enable).FirstOrDefault();
-                                    Global.ArrowDeleteFolder = rigthItem.FuncList
-                                        .Where(p => p.Name == "管理文件夹-删除文件夹").Select(p => p.Enable).FirstOrDefault();
-                                }
-                            }
-                            catch
-                            {
-                                Global.ArrowEditFile = false;
-                                Global.ArrowEditFolder = false;
-                                Global.ArrowDeleteFile = false;
-                                Global.ArrowDeleteFolder = false;
-                            }
-
-                            var resdept = GlobalPara.webApis.GetCompanyTree();
-                            var resperson = GlobalPara.webApis.GetCompanyTree("", true);
-                            GlobalPara.SetDeptTreesSource(new List<EmployeeAndDeptNodelApiModel>()
-                            {
-                                resdept.Data
-                            });
-                            GlobalPara.SetPersonTreesSource(new List<EmployeeAndDeptNodelApiModel>()
-                            {
-                                resperson.Data
-                            });
-                            var res1 = GlobalPara.webApis.GetJoblist();
-                            if (res1.successful)
-                            {
-                                Global.DepartId = res1.Data.Select(p => p.DepartmentId).ToList();
-                            }
-                            isfirst = true;
-                            Global.RecordList.Clear();
-                            indexnow = 0;
-                            GetRootFile(GlobalPara.rootTypeNow, 1, 2);
-
-
-                        }
-                        await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                    })
-                .DisposeWith(this);
 
             //加载图书列表数据
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<BookListByPageParam>()
@@ -116,7 +59,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         {
                             BroswerPathStr = "图书资源--图书列表";
                             //GlobalPara.CatalogNow = res.Data;
-                            BookListData.Clear();
+                             ClearData();
                             foreach (var item in res.Data.Items)
                             {
                                 BookListData.Add(MapperUtil.Mapper.Map<BookListItem>(item));
@@ -125,7 +68,18 @@ namespace EllaMakerTool.WPF.ViewModels
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show(res.Message);
+                            if (res.Code.Equals(Global.ERROR_TOKEN))
+                            {
+                                MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "",
+                                    Global.ReLoginMSG);
+                            }
+                            else
+                            {
+                                this.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    _vm.ShowError(res.Message);
+                                }));
+                            }
                         }
                     }).DisposeWith(this);
 
@@ -140,7 +94,7 @@ namespace EllaMakerTool.WPF.ViewModels
                         {
                             BroswerPathStr = "动画资源--动画书列表";
                             //GlobalPara.CatalogNow = res.Data;
-                            EBookListData.Clear();
+                            ClearData();
                             foreach (var item in res.Data)
                             {
                                 EBookListData.Add(MapperUtil.Mapper.Map<EBookListItem>(item));
@@ -149,7 +103,18 @@ namespace EllaMakerTool.WPF.ViewModels
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show(res.Message);
+                            if (res.Code.Equals(Global.ERROR_TOKEN))
+                            {
+                                MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<bool>(null,true,
+                                    Global.ReLoginMSG);
+                            }
+                            else
+                            {
+                                this.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    _vm.ShowError(res.Message);
+                                }));
+                            }
                         }
                     }).DisposeWith(this);
 
@@ -169,16 +134,25 @@ namespace EllaMakerTool.WPF.ViewModels
                         }
                         else
                         {
+                            //if (res.Code.Equals(Global.ERROR_TOKEN))
+                            //{
+                            //    MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "",
+                            //        Global.ReLoginMSG);
+                            //}
+                            //else
+                            //{
+                                this.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    _vm.ShowError(res.Message);
+                                }));
+                            //}
 
-                            this.Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                _vm.ShowError(res.Message);
-                            }));
+
                         }
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
                     })
                 .DisposeWith(this);
-
+            //
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<bool>()
                 .Where(x => x.EventName == "RefreshFilesListEventRouter").Subscribe(
                     async e =>
@@ -223,23 +197,11 @@ namespace EllaMakerTool.WPF.ViewModels
                             case MesWinType.LoginWin:
                                 if (para.IsOk)
                                 {
-                                    //获取权限 
-                                    //var res = GlobalPara.webApis.GetFunc();
-                                    //try
-                                    //{
-        
-                                    //}
-                                    //catch
-                                    //{
-        
-                                    //}
-                                    //UserNick =;
+                                    if(para.ResData.Equals("true"))
                                     UserNick = Global.authToken.Username;
                                     //头像
                                     //HeadImageSource =
                                     //    $"{Global.ImageServerAdress}{string.Format(Global.authToken.Profile.FaceUrl, 40, 40, "c")}";
-                                    //TabCotrolSelectIndex = 1;
-                                    //GetUploadPath();
                                 }
                                 break;
                             case MesWinType.UploadWin:
@@ -353,114 +315,6 @@ namespace EllaMakerTool.WPF.ViewModels
 
                                 }
                                 break;
-                            //case MesWinType.MoveWin:
-                            //    if (para.IsOk)
-                            //    {
-                            //        string paras = (string)para.ResData;
-                            //        var req = FileBroswerData.Where(p => p.IsChecked).ToList();
-                            //        if (req == null && req.Count < 1) return;
-                            //        List<DocBaseInfoApiModel> Model = new List<DocBaseInfoApiModel>();
-                            //        foreach (var item in req)
-                            //        {
-                            //            if (GlobalPara.rootTypeNow == 2)
-                            //                if (!GlobalPara.hasSyncRight(item))
-                            //                {
-                            //                    continue;
-                            //                }
-                            //            Model.Add(new DocBaseInfoApiModel()
-                            //            {
-                            //                sourceId = item.Id,
-                            //                sourceName = item.Name,
-                            //                type = item.Type == EnumDocFileType.Folder ? EnumDocType.Catalog : EnumDocType.File
-                            //            });
-                            //        }
-
-                            //        List<CoverDocResultApiModel> cover = GetCoverNum(paras, Model);
-                            //        foreach (var item in Model)
-                            //        {
-                            //            var now = cover.Where(p =>
-                            //                p.baseInfo.sourceId == item.sourceId && p.baseInfo.type == item.type);
-                            //            if (now.Any())
-                            //            {
-                            //                if (now.FirstOrDefault().IsNosyncCover)
-                            //                {
-                            //                    if (CoverMessageBox.Show(null,
-                            //                            $"正在 {item.sourceName} 从 {NowFolderName} 移动到……",
-                            //                            $"目标包含同名文件(您没有权限修改)", "替换目标中的文件", "保存成新的文件", false, true) !=
-                            //                        MessageBoxResult.None)
-                            //                    {
-                            //                        if (GlobalPara.rootTypeNow == 2)
-                            //                        {
-                            //                            bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                            //                            if (isOverRange)
-                            //                            {
-                            //                                if (CoverMessageBox.Show(null,
-                            //                                        $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                            //                                        $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                            //                                    MessageBoxResult.Cancel)
-                            //                                {
-                            //                                    MainWinGetFocus();
-                            //                                    continue;
-                            //                                }
-                            //                            }
-                            //                        }
-                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type, false, true);
-                            //                    }
-                            //                }
-                            //                else
-                            //                {
-                            //                    if (CoverMessageBox.Show(null,
-                            //                            $"正在将 {item.sourceName} 从 {NowFolderName} 移动到……",
-                            //                            $"目标包含同名文件", "替换目标中的文件", "保存成新的文件") ==
-                            //                        MessageBoxResult.OK)
-                            //                    {
-                            //                        if (GlobalPara.rootTypeNow == 2)
-                            //                        {
-                            //                            bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                            //                            if (isOverRange)
-                            //                            {
-                            //                                if (CoverMessageBox.Show(null,
-                            //                                        $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                            //                                        $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                            //                                    MessageBoxResult.Cancel)
-                            //                                {
-                            //                                    MainWinGetFocus();
-                            //                                    continue;
-                            //                                }
-                            //                            }
-                            //                        }
-                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type,
-                            //                            true, true);
-                            //                    }
-                            //                    else
-                            //                    {
-                            //                        MoveDocs(item.sourceId, item.sourceName, paras, item.type, false);
-                            //                    }
-                            //                }
-                            //                MainWinGetFocus();
-                            //            }
-                            //            else
-                            //            {
-                            //                if (GlobalPara.rootTypeNow == 2)
-                            //                {
-                            //                    bool isOverRange = IsOverRange(item.sourceId, paras, item.type);
-                            //                    if (isOverRange)
-                            //                    {
-                            //                        if (CoverMessageBox.Show(null, $"{item.sourceName} 的共享协同范围超过目标文件夹",
-                            //                                $"移动将清空共享和协作范围", "确认移动", "放弃移动") ==
-                            //                            MessageBoxResult.Cancel)
-                            //                        {
-                            //                            continue;
-                            //                        }
-                            //                    }
-                            //                }
-                            //                MoveDocs(item.sourceId, item.sourceName, paras, item.type, true, true);
-                            //                MainWinGetFocus();
-                            //            }
-                            //        }
-                            //        this.Dispatcher.BeginInvoke((Action)RefreshFilesList);
-                            //    }
-                            //    break;
                         }
 
                         await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -515,7 +369,7 @@ namespace EllaMakerTool.WPF.ViewModels
             set { _BookListDataLocator(this).SetValueAndTryNotify(value); }
         }
 
-        #region Property ObservableCollection<DocumentV1ApiModel> BookListData Setup        
+        #region Property ObservableCollection<BookListItem> BookListData Setup        
 
         protected Property<ObservableCollection<BookListItem>> _BookListData =
             new Property<ObservableCollection<BookListItem>> {LocatorFunc = _BookListDataLocator};
@@ -540,7 +394,7 @@ namespace EllaMakerTool.WPF.ViewModels
             set { _EBookListDataLocator(this).SetValueAndTryNotify(value); }
         }
 
-        #region Property ObservableCollection<DocumentV1ApiModel> EBookListData Setup        
+        #region Property ObservableCollection<EBookListItem> EBookListData Setup        
 
         protected Property<ObservableCollection<EBookListItem>> _EBookListData =
             new Property<ObservableCollection<EBookListItem>> {LocatorFunc = _EBookListDataLocator};
@@ -581,13 +435,42 @@ namespace EllaMakerTool.WPF.ViewModels
 
         #endregion
 
+        public FTPListItem DgSelectItem
+        {
+            get { return _DgSelectItemLocator(this).Value; }
+            set
+            {
+                try
+                {
+                    _DgSelectItemLocator(this).SetValueAndTryNotify(value);
+                    if (value != null)
+                    {
+                        var ent = FileBroswerData.FirstOrDefault(p => p.FileID == value.FileID);
+                        ent.IsChecked = !ent.IsChecked;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        #region Property FTPListItem DgSelectItem Setup        
+        protected Property<FTPListItem> _DgSelectItem = new Property<FTPListItem> { LocatorFunc = _DgSelectItemLocator };
+        static Func<BindableBase, ValueContainer<FTPListItem>> _DgSelectItemLocator = RegisterContainerLocator<FTPListItem>("DgSelectItem", model => model.Initialize("DgSelectItem", ref model._DgSelectItem, ref _DgSelectItemLocator, _DgSelectItemDefaultValueFactory));
+        static Func<FTPListItem> _DgSelectItemDefaultValueFactory = () => default(FTPListItem);
+        #endregion
+
         #endregion
 
 
-        #region  命令处理
+        #region  命令
 
 
-
+        //动画书列表中双击某一行
         public CommandModel<ReactiveCommand, String> CommandEBookBrowserLeftDoubleClick
         {
             get { return _CommandEBookBrowserLeftDoubleClickLocator(this).Value; }
@@ -615,8 +498,8 @@ namespace EllaMakerTool.WPF.ViewModels
             _CommandEBookBrowserLeftDoubleClickDefaultValueFactory =
                 model =>
                 {
-                    var state = Global.EBookBrowserMSG; // Command state  
-                    var commandId = Global.EBookBrowserMSG;
+                    var state = Global.LoadFTPExplorerMSG; // Command state  
+                    var commandId = Global.LoadFTPExplorerMSG;
                     var vm = CastToCurrentType(model);
                     var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
 
@@ -636,11 +519,6 @@ namespace EllaMakerTool.WPF.ViewModels
                         .DoNotifyDefaultEventRouter(vm, commandId)
                         .Subscribe()
                         .DisposeWith(vm);
-
-
-
-
-
                     var cmdmdl = cmd.CreateCommandModel(state);
 
                     cmdmdl.ListenToIsUIBusy(
@@ -652,7 +530,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-
+        //图书列表中双击某一行
         public CommandModel<ReactiveCommand, String> CommandBookBrowserLeftDoubleClick
         {
             get { return _CommandBookBrowserLeftDoubleClickLocator(this).Value; }
@@ -679,8 +557,8 @@ namespace EllaMakerTool.WPF.ViewModels
             _CommandBookBrowserLeftDoubleClickDefaultValueFactory =
                 model =>
                 {
-                    var state = Global.BookBrowserMSG; // Command state  
-                    var commandId = Global.BookBrowserMSG;
+                    var state = Global.LoadFTPExplorerMSG; // Command state  
+                    var commandId = Global.LoadFTPExplorerMSG;
                     var vm = CastToCurrentType(model);
                     var cmd = new ReactiveCommand(canExecute: true) {ViewModel = model}; //New Command Core
 
@@ -700,11 +578,6 @@ namespace EllaMakerTool.WPF.ViewModels
                         .DoNotifyDefaultEventRouter(vm, commandId)
                         .Subscribe()
                         .DisposeWith(vm);
-
-
-
-
-
                     var cmdmdl = cmd.CreateCommandModel(state);
 
                     cmdmdl.ListenToIsUIBusy(
@@ -863,13 +736,13 @@ namespace EllaMakerTool.WPF.ViewModels
                     case 0:
                         //BroswerPathStr = "图书资源";
                         TransVisibility = System.Windows.Visibility.Collapsed;
-                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowBookListMSG);
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowBookListControlMSG);
                         break;
                     //动画书资源
                     case 1:
                         //BroswerPathStr = "图书资源";
                         TransVisibility = System.Windows.Visibility.Collapsed;
-                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowEBookListMSG);
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, Global.ShowEBookListControlMSG);
                         break;
                     //共享资源
                     case 2:
@@ -951,11 +824,12 @@ namespace EllaMakerTool.WPF.ViewModels
         ///从FTP站点获取指定ID下的文件或文件夹
         /// </summary>
         ///<param name="CatalogId">文档ID</param>
-        /// <param name="rootType">目录类型</param>
-        /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void FillFilesFromFTPRoot(string CatalogId, bool IsBook, bool IsInition)
+        /// <param name="IsBook">是否为图书资源</param>
+        /// <param name="IsRootData">是否为根路径</param>
+        private void FillFilesFromFTPRoot(string CatalogId, bool IsBook, bool IsRootData)
         {
             IsAllCheck = false;
+            IsFTPRoot = IsRootData;
             try
             {
                 var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
@@ -971,7 +845,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                             }
-                            //显示资源管理器
+                            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, IsRootData, Global.LoadFTPExplorerMSG);
                         }
                         catch (Exception ex)
                         {
@@ -1010,42 +884,51 @@ namespace EllaMakerTool.WPF.ViewModels
         ///<param name="CatalogId">文档ID</param>
         /// <param name="rootType">目录类型</param>
         /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void FillFilesFromFTP(string CatalogId, bool IsBook,bool IsInition)
+        private void FillFilesFromFTP(string CatalogId, bool IsBook,bool IsRootData)
         {
-            IsAllCheck = false;
-            var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, CatalogId, IsBook);
-            if (res.Successful)
-            {
-                ClearData();
-                //if (IsInition)
-                //{
-                //    inExcuList(new OpenFolderOptDataModel()
-                //    {
-                //        rootType = rootType,
-                //        CatalogId = res.Data.CatelogId
-                //    });
-                //}
 
-                //ConvertToPath(res.Data.pathInfo, 4);
-                //GlobalPara.CatalogNow = res.Data;
-                //try
-                //{
-                //    FileBroswerData.Clear();
-                //    foreach (var item in res.Data.Records)
-                //    {
-                //        FileBroswerData.Add(MapperUtil.Mapper.Map<DocumentsModel>(item));
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(ex + "");
-                //}
+            IsAllCheck = false;
+            IsFTPRoot = IsRootData;
+            try
+            {
+                var res = GlobalPara.webApis.FTPList(Global.authToken.Token, EnumFileInfoType.ALL, "", CatalogId);
+                if (res.Successful)
+                {
+                    ClearData();
+                    if (res.Data != null && res.Data.Count > 0)
+                    {
+                        try
+                        {
+
+                            foreach (var item in res.Data)
+                            {
+                                FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
+                            }
+                            //MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, IsRootData, Global.LoadFTPExplorerMSG);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex + "");
+                        }
+                    }
+                }
+                else
+                {
+                    if (res.Code.Equals(Global.ERROR_TOKEN))
+                    {
+                        MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent<string>(null, "",
+                            Global.ReLoginMSG);
+                    }
+                    else
+                    {
+                        MessageBox.Show(res.Message);
+                    }
+                }
 
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show(res.Message);
-
+                MessageBox.Show(ex.Message);
             }
              
         }
@@ -1803,34 +1686,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public FTPListItem DgSelectItem
-        {
-            get { return _DgSelectItemLocator(this).Value; }
-            set
-            {
-                try
-                {
-                    _DgSelectItemLocator(this).SetValueAndTryNotify(value);
-                    if (value != null)
-                    {
-                        var ent = FileBroswerData.FirstOrDefault(p => p.FileID == value.FileID );
-                        ent.IsChecked = !ent.IsChecked;
-                    }
-                    
-                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex + "");
-                }
-                
-            }
-        }
-        #region Property FTPListItem DgSelectItem Setup        
-        protected Property<FTPListItem> _DgSelectItem = new Property<FTPListItem> { LocatorFunc = _DgSelectItemLocator };
-        static Func<BindableBase, ValueContainer<FTPListItem>> _DgSelectItemLocator = RegisterContainerLocator<FTPListItem>("DgSelectItem", model => model.Initialize("DgSelectItem", ref model._DgSelectItem, ref _DgSelectItemLocator, _DgSelectItemDefaultValueFactory));
-        static Func<FTPListItem> _DgSelectItemDefaultValueFactory = () => default(FTPListItem);
-        #endregion
+
 
 
 
@@ -2651,7 +2507,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             FTPListItem para = (FTPListItem)vm.DgSelectItem;
                             if (para != null&&!para.IsFile)
                             {
-                                vm.FillFilesFromFTPRoot(para.FileID,true,true);
+                                vm.FillFilesFromFTP(para.FileID,true,false);
                                 //vm.GetUploadPath(para.FileID);
                             }
                             vm.IsUIBusy = false;

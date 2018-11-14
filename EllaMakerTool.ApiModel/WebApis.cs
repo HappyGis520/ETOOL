@@ -25,6 +25,7 @@ namespace EllaMakerTool.Api
 
         private const string FTP = "FTP";
         private const string FTP_ROOT = "ListRoot";
+        private const string FTP_LIST = "List";
         private const string FTP_Site = "getFtpUpLoadInfo";
         #endregion
         public WebApis(string url)
@@ -72,8 +73,24 @@ namespace EllaMakerTool.Api
             ListFTPRootParam param = new ListFTPRootParam(IsBook, BookID);
             param.token = Token;
             var obj = WebApiUtil.PostAPI<ResponseModelBase<List<FTPFileInfo>>>($"{FTP}/{FTP_ROOT}", param);
+            return  obj;
+        }
+        /// <summary>
+        /// 获取图书或动画非根目录资源
+        /// </summary>
+        /// <param name="param"></param>
+        internal ResponseModelBase<List<FTPFileInfo>> FTPList(string Token, EnumFileInfoType FileType, string Searchar, string DirID)
+        {
+            ListFTPParam Param   = new ListFTPParam(Token,FileType,Searchar,DirID);
+            var obj = WebApiUtil.PostAPI<ResponseModelBase<List<FTPFileInfo>>>($"{FTP}/{FTP_LIST}", Param);
             return obj;
         }
+
+
+
+
+
+
         /// <summary>
         /// 获取上传路径
         /// </summary>

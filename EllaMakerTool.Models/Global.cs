@@ -27,26 +27,24 @@ namespace EllaMakerTool.Models
         #endregion
         #region 事件消息
         /// <summary>
-        /// 显示图书列表
+        /// 显示图书列表控件
         /// </summary>
-        public const string ShowBookListMSG = "MainBookListEventRouter";
+        public const string ShowBookListControlMSG = "LoadBookListControlEventRouter";
         /// <summary>
         /// 加图书列表数据
         /// </summary>
         public const string RefreshBookListData = "RefreshBookListData";
         /// <summary>
-        /// 显示图书列表
+        /// 显示动画书列表控件
         /// </summary>
-        public const string ShowEBookListMSG = "MainEBookListEventRouter";
+        public const string ShowEBookListControlMSG = "ShowEBookListControlMSG";
         /// <summary>
         /// 加图书列表数据
         /// </summary>
         public const string RefreshEBookListData = "RefreshEBookListData";
 
-        public const string EBookBrowserMSG = "EBookBrowserMSG";
 
-        public const string BookBrowserMSG = "BookBrowserMSG";
-
+        //加载FTP资源管理器
         public const string LoadFTPExplorerMSG = "LoadFTPExplorer";
         /// <summary>
         ///重新登录 

@@ -25,6 +25,7 @@ namespace EllaMakerTool.Message
             /// <summary>
             /// 文件夹/文件编号
             /// </summary>
+            
             private string fileID;
             /// <summary>
             /// 上级文件夹编号
@@ -44,6 +45,7 @@ namespace EllaMakerTool.Message
                 {
                     return isFile;
                 }
+            set { isFile = value; }
             }
 
 
@@ -53,6 +55,7 @@ namespace EllaMakerTool.Message
                 {
                     return parentID;
                 }
+                set { parentID = value; }
             }
 
             public  string FileID
@@ -62,7 +65,8 @@ namespace EllaMakerTool.Message
 
                     return fileID;
                 }
-            }
+            set { fileID = value; }
+        }
 
             public  string FileName
             {
@@ -71,9 +75,15 @@ namespace EllaMakerTool.Message
 
                     return fileName;
                 }
+            set { fileName = value; }
+        }
+
+            public FTPFileInfo()
+            {
+                
             }
 
-        internal FTPFileInfo(bool isFile, string parentID, string fileID, string fileName)
+        public FTPFileInfo(bool isFile, string parentID, string fileID, string fileName)
             {
 
                 this.parentID = parentID;

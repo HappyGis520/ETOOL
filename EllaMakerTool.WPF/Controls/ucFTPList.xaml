@@ -19,20 +19,20 @@
         </Grid.RowDefinitions>
         <Border Height="74" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0 0 0 1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="74">
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
+                <!--<controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
                     <StackPanel>
                         <Grid>
                             <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
                                            Source="Resources/pc_Button_goback_low.png" />
                             <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
                                            Source="Resources/pc_Button_goback.png"
-                                           Visibility="{Binding indexnow,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
+                                           Visibility="{Binding IsFTPRoot,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
 
                         </Grid>
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="后退" />
                     </StackPanel>
-                </controls:AyImageButton>
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoFront}" Width="74" Height="74" >
+                </controls:AyImageButton>-->
+                <!--<controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoFront}" Width="74" Height="74" >
                     <StackPanel>
                         <Grid>
                             <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
@@ -44,7 +44,7 @@
                         </Grid>
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="前进" />
                     </StackPanel>
-                </controls:AyImageButton>
+                </controls:AyImageButton>-->
                 <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandRefreshFiles}">
                     <StackPanel>
                         <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
@@ -52,37 +52,32 @@
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="刷新" />
                     </StackPanel>
                 </controls:AyImageButton>
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandUploadFileShow}"
-                                      Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
-                                      Width="74" Height="74">
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandUploadFileShow}" Width="74" Height="74">
+                    <!--Visibility="{Binding IsFTPRoot,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"-->
                     <StackPanel>
                         <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
                                        Source="{Binding ConverterParameter=pc_Button_Uploadbar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="上传" />
                     </StackPanel>
                 </controls:AyImageButton>
-                <controls:AyImageButton
-                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
-                        Width="74" Height="74" Command="{Binding CommandNewFolder}" Style="{DynamicResource DefaultAyImageButtonStyle}">
+                <controls:AyImageButton Width="74" Height="74" Command="{Binding CommandNewFolder}" Style="{DynamicResource DefaultAyImageButtonStyle}">
+                    <!--Visibility="{Binding IsFTPRoot,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"-->
                     <StackPanel>
                         <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
                                        Source="{Binding ConverterParameter=pc_Button_NewFolderBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="新建文件夹" />
                     </StackPanel>
                 </controls:AyImageButton>
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}"
-                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarDeleteButtonVisConverter}}"
-                        Width="74" Height="74" Command="{Binding CommandDeletFiles}">
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandDeletFiles}">
+                    <!--Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarDeleteButtonVisConverter}}"-->
                     <StackPanel>
                         <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
                                        Source="{Binding ConverterParameter=pc_Button_DeleteBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="删除" />
                     </StackPanel>
                 </controls:AyImageButton>
-                <controls:AyImageButton  Style="{DynamicResource DefaultAyImageButtonStyle}"
-                        Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"
-                        Width="74" IsTabStop="False" Height="74"
-                        Command="{Binding CommandShowMoveDocWin}">
+                <controls:AyImageButton  Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" IsTabStop="False" Height="74" Command="{Binding CommandShowMoveDocWin}">
+                    <!--Visibility="{Binding TabCotrolSelectIndex,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"-->
                     <StackPanel>
                         <Image Width="25" Margin="0 5 0 0" Height="25" Stretch="Uniform"
                                        Source="{Binding ConverterParameter=pc_Button_MoveBar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
@@ -92,7 +87,7 @@
             </StackPanel>
         </Border>
         <DataGrid x:Name="dgfileBrowser" Grid.Row="1" ItemsSource="{Binding FileBroswerData,Mode=TwoWay}" CanUserResizeColumns="False"
-                  BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"
+                  BorderBrush="Transparent" CanUserAddRows="False" BorderThickness="0"  Background="Transparent"
                   Style="{DynamicResource FileBroswerDataGridStyle}" HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible" GridLinesVisibility="Horizontal" MinRowHeight="44"
                   SelectionMode="Extended" SelectedItem="{Binding DgSelectItem,Mode=TwoWay}">
@@ -126,7 +121,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <Label Foreground="{DynamicResource BrowserFontSizeColor}"
-                                       HorizontalContentAlignment="Center" Content="{Binding Id}" />
+                                       HorizontalContentAlignment="Center" Content="{Binding FileID}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -136,10 +131,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        HorizontalAlignment="Left" ToolTip="{Binding Name}">
+                                        HorizontalAlignment="Left" ToolTip="{Binding FileName}">
                                 <Image Width="28" Height="28"
-                                       Source="{Binding Name,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
-                                <Label MinWidth="200" Content="{Binding Name}" HorizontalContentAlignment="Left" />
+                                       Source="{Binding fileName,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
+                                <Label MinWidth="200" Content="{Binding FileName}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -156,24 +151,22 @@
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0 0 42 0"
                                         Visibility="{Binding IsMouseOver,RelativeSource={RelativeSource AncestorType=DataGridRow},Converter={x:Static converter:XConverter.BooleanToVisibilityConverter}}">
                                 <controls:AyImageButton Height="40"  Style="{DynamicResource DefaultAyImageButtonStyle}"
-                                    Command="{Binding CommandDownload, Source={DynamicResource DesignVM}}" Width="40"
-                                    Visibility="{Binding Type,Converter={x:Static converter:XConverter.DocTypeVisConverter}}">
+                                    Command="{Binding CommandDownload, Source={StaticResource DesignVM}}" Width="40"
+                                    Visibility="{Binding IsFile,Converter={x:Static converter:XConverter.DocTypeVisConverter}}">
                                     <Image Width="15" Stretch="Uniform"
-                                               Source="{Binding ConverterParameter=pc_Button_Download.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                                               Source="{Binding  ConverterParameter=pc_Button_Download.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
                                 <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Height="40"  Visibility="Collapsed" Width="40">
-                                    <Image Width="15" Stretch="Uniform"
-                                               Source="{Binding ConverterParameter=pc_Button_share.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                                    <Image Width="15" Stretch="Uniform" Source="{Binding ConverterParameter=pc_Button_share.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
                                 <controls:AyImageButton Height="40" Style="{DynamicResource DefaultAyImageButtonStyle}" 
-                                    Command="{Binding CommandShowRenameWin, Source={StaticResource DesignVM}}"
-                                    Width="40" Visibility="{Binding Converter={x:Static converter:XConverter.SyncSeriseButtonVisConverter}}">
+                                    Command="{Binding CommandShowRenameWin, Source={StaticResource DesignVM}}" Width="40" >
                                     <Image Width="15" Stretch="Uniform"
                                                Source="{Binding ConverterParameter=pc_Button_formedit.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
                                 <controls:AyImageButton Width="40" Height="40"  Style="{DynamicResource DefaultAyImageButtonStyle}"
                                                   Command="{Binding CommandDeleteFile, Source={StaticResource DesignVM}}"
-                                                  Visibility="{Binding Converter={x:Static converter:XConverter.DeleteButtonVisConverter}}">
+                                                  Visibility="{Binding  Converter={x:Static converter:XConverter.DeleteButtonVisConverter}}">
                                     <Image Width="15" Stretch="Uniform"
                                                Source="{Binding ConverterParameter=pc_Button_close.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                                 </controls:AyImageButton>
@@ -188,7 +181,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--更新时间-->
+                <!--更新时间--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="200">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -228,7 +221,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--状态-->
+                --><!--状态--><!--
                 <DataGridTemplateColumn Width="80" MinWidth="80">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -264,7 +257,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--下载次数-->
+                --><!--下载次数--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="80">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -284,8 +277,8 @@
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--上传者/创建者-->
+                </DataGridTemplateColumn>-->
+                <!--上传者/创建者--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="120">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -304,8 +297,8 @@
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!--大小-->
+                </DataGridTemplateColumn>-->
+                <!--大小--><!--
                 <DataGridTemplateColumn Width="auto" MinWidth="100">
                     <DataGridTemplateColumn.Header>
                         <StackPanel>
@@ -324,7 +317,7 @@
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>    
     </Grid>

@@ -10,8 +10,8 @@ namespace EllaMakerTool.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
-            int index = (int)value;
-            if (index > 0)
+            var IsFTPRoot = (bool)value;
+            if (!IsFTPRoot)
             {
                 return Visibility.Visible;
             }
