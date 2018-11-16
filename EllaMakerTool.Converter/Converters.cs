@@ -123,7 +123,10 @@ namespace EllaMakerTool.Converter
         {
             get { return Singleton<GobackEnableVisConverter>.Instance; }
         }
-
+        public static GobacklowEnableVisConverter GobacklowEnableVisConverter
+        {
+            get { return Singleton<GobacklowEnableVisConverter>.Instance; }
+        }
         public static GofrontEnableVisConverter GofrontEnableVisConverter
         {
             get { return Singleton<GofrontEnableVisConverter>.Instance; }

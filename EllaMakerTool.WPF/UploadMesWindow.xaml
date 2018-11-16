@@ -10,7 +10,7 @@
                  Title="上传文件"
                  AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Background="Transparent"
                  WindowStartupLocation="CenterOwner"
-                 Width="440" Height="360" Style="{StaticResource Window_style}">
+                 Width="440" Height="360" Style="{DynamicResource Window_style}">
     <FrameworkElement.Resources>
         <vm:UploadMesWindow_Model x:Key="DesignVM" />
     </FrameworkElement.Resources>
@@ -35,15 +35,15 @@
                             Orientation="Horizontal">
                     <Grid>
                         <controls:FButton x:Name="startBtn" Margin="0 0 30 0" Width="80"
-                                          Style="{StaticResource FButton_Transparency}" Content="开始上传"
+                                          Style="{DynamicResource FButton_Transparency}" Content="开始上传"
                                           Click="startBtn_Click" Foreground="#FFFFFF" />
-                        <controls:FButton x:Name="closeBtn" Style="{StaticResource FButton_Transparency}"
-                                          Foreground="{StaticResource NormalBtnBg}"
-                                          Background="{StaticResource WindowBackground}" Margin="0 0 -65 0" Width="80"
+                        <controls:FButton x:Name="closeBtn" Style="{DynamicResource FButton_Transparency}"
+                                          Foreground="{DynamicResource NormalBtnBg}"
+                                          Background="{DynamicResource WindowBackground}" Margin="0 0 -65 0" Width="80"
                                           Command="{Binding CommandCloseWindow}" Content="确定" />
                     </Grid>
 
-                    <controls:FButton x:Name="calBtn" Width="80" Height="30" Style="{StaticResource FButton_Transparency}" Foreground="{StaticResource NormalBtnBg}" Background="{StaticResource WindowBackground}" Command="{Binding CommandCloseWindow}"  CommandParameter="0" Content="取消"/>
+                    <controls:FButton x:Name="calBtn" Width="80" Height="30" Style="{DynamicResource FButton_Transparency}" Foreground="{DynamicResource NormalBtnBg}" Background="{DynamicResource WindowBackground}" Command="{Binding CommandCloseWindow}"  CommandParameter="0" Content="取消"/>
                 </StackPanel>
             </StackPanel>
         </Border>

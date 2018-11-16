@@ -1,14 +1,23 @@
-﻿using EllaMakerTool.Models;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： UploadMesWindow_Model.cs
+ * * 功   能：  Describet
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-11-15 14:48:56
+ * * 修改记录： 
+ * * 日期时间： 2018-11-15 14:48:56  修改人：王建军  创建
+ * *******************************************************************/
+using EllaMakerTool.Models;
 using MVVMSidekick.Reactive;
 using MVVMSidekick.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using EllaMakerTool.Message;
 
 namespace EllaMakerTool.WPF.ViewModels
 {
-
     public class UploadMesWindow_Model : ViewModelBase<UploadMesWindow_Model>
     {
         // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property propcmd for command
@@ -22,27 +31,16 @@ namespace EllaMakerTool.WPF.ViewModels
             }
             GlobalPara.UploadItems = new List<DocBaseInfoApiModel>();
         }
-
-
         //propvm tab tab string tab Title
-
-
-
-
-
         #region Life Time Event Handling
-
-
         public CommandModel<ReactiveCommand, String> CommandCloseWindow
         {
             get { return _CommandCloseWindowLocator(this).Value; }
             set { _CommandCloseWindowLocator(this).SetValueAndTryNotify(value); }
         }
         #region Property CommandModel<ReactiveCommand, String> CommandCloseWindow Setup        
-
         protected Property<CommandModel<ReactiveCommand, String>> _CommandCloseWindow = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandCloseWindowLocator };
         static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandCloseWindowLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandCloseWindow", model => model.Initialize("CommandCloseWindow", ref model._CommandCloseWindow, ref _CommandCloseWindowLocator, _CommandCloseWindowDefaultValueFactory));
-
         private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandCloseWindowDefaultValueFactory =
             model =>
             {

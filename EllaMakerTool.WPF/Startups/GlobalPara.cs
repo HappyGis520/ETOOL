@@ -14,12 +14,12 @@ namespace EllaMakerTool.WPF
         public static string UserName= INIOperationHelper.INIGetStringValue(AppDomain.CurrentDomain.BaseDirectory + "DownloadRec.ini", "User","Name","");
         public static string UserPwd = DESEncryptHelper.Decrypt(INIOperationHelper.INIGetStringValue(AppDomain.CurrentDomain.BaseDirectory + "DownloadRec.ini", "User","Pwd", ""));
         public static bool Remember = INIOperationHelper.INIGetStringValue(AppDomain.CurrentDomain.BaseDirectory + "DownloadRec.ini", "User", "Remember", "0") != "0";
-        public static string SourceServerAdress =
-            DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceServerAdress"));
-        public static string SourceUserName =
-            DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceUserName"));
-        public static string SourcePwd =
-            DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourcePwd"));
+        //public static string SourceServerAdress =
+        //    DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceServerAdress"));
+        //public static string SourceUserName =
+        //    DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceUserName"));
+        //public static string SourcePwd =
+        //    DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourcePwd"));
         public static DocumentV1QueryModel CatalogNow = new DocumentV1QueryModel();
         public static int rootTypeNow = 3;
         public static string UploadPathNow = "";

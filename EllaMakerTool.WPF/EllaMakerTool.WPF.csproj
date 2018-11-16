@@ -184,9 +184,6 @@
     <Compile Include="IrRecourdWindow.xaml.cs">
       <DependentUpon>IrRecourdWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainToolBar.xaml.cs">
-      <DependentUpon>MainToolBar.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -238,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\UserControls\FtpUploadItemControl.xaml">
+    <Page Include="Controls\FtpUploadItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -254,7 +251,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\UserControls\UploadUserControl.xaml">
+    <Page Include="Controls\UploadUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -278,10 +275,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainToolBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="RenameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -298,10 +291,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\UserControls\FtpUploadItemControl.xaml.cs">
+    <Compile Include="Controls\FtpUploadItemControl.xaml.cs">
       <DependentUpon>FtpUploadItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UserControls\UploadUserControl.xaml.cs">
+    <Compile Include="Controls\UploadUserControl.xaml.cs">
       <DependentUpon>UploadUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\Command\ShowLoginCommand.cs" />

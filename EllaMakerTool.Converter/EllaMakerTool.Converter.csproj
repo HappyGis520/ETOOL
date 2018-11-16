@@ -113,6 +113,7 @@
     <Compile Include="EnumDocStatusTypeToVisibilityConverter.cs" />
     <Compile Include="FilenameToTypeIconConverter.cs" />
     <Compile Include="GetNetImageConverter.cs" />
+    <Compile Include="GobacklowEnableVisConverter.cs" />
     <Compile Include="GobackEnableVisConverter.cs" />
     <Compile Include="GofrontEnableVisConverter.cs" />
     <Compile Include="NumChangeConverter.cs" />

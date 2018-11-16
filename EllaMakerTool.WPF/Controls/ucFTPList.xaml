@@ -22,12 +22,10 @@
                 <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandGoBack}" Margin="20 0 0 0" Width="74" Height="74">
                     <StackPanel>
                         <Grid>
-                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
-                                           Source="Resources/pc_Button_goback_low.png" Visibility="Visible"/>
-                                   <!--Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />-->
-                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
-                                           Source="Resources/pc_Button_goback.png"
-                                           Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
+                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform" Source="/EllaMakerTool.WPF;component/Resources/pc_Button_goback_low.png"
+                                    Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobacklowEnableVisConverter}}" />
+                            <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform" Source="/EllaMakerTool.WPF;component/Resources/pc_Button_goback.png"
+                                    Visibility="{Binding IsBookROOTResource,Converter={x:Static converter:XConverter.GobackEnableVisConverter}}" />
 
                         </Grid>
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="后退" />
@@ -46,18 +44,18 @@
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="前进" />
                     </StackPanel>
                 </controls:AyImageButton>-->
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandRefreshFiles}">
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Width="74" Height="74" Command="{Binding CommandRefreshFiles}"  >
                     <StackPanel>
                         <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
                                        Source="{Binding ConverterParameter=pc_Button_refresh.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="刷新" />
                     </StackPanel>
                 </controls:AyImageButton>
-                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding CommandUploadFileShow}" Width="74" Height="74">
-                    <!--Visibility="{Binding IsFTPRoot,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}"-->
+                <controls:AyImageButton Style="{DynamicResource DefaultAyImageButtonStyle}" Command="{Binding  CommandUploadFileShow  }" CommandParameter="Upload" Width="74" Height="74"
+                    Visibility="{Binding FTPDIRList,Converter={x:Static converter:XConverter.BarEditButtonVisConverter}}">
                     <StackPanel>
                         <Image Width="25" Height="25" Margin="0 5 0 0" Stretch="Uniform"
-                                       Source="{Binding ConverterParameter=pc_Button_Uploadbar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}" />
+                                       Source="{Binding ConverterParameter=pc_Button_Uploadbar.svg, Converter={StaticResource SvgToXamlConverter}, Mode=OneWay}"  />
                         <Label Margin="0 5 0 0" FontSize="12" Foreground="Black" Content="上传" />
                     </StackPanel>
                 </controls:AyImageButton>
@@ -134,7 +132,7 @@
                             <StackPanel Margin="5 0 0 0" Orientation="Horizontal" VerticalAlignment="Center"
                                         HorizontalAlignment="Left" ToolTip="{Binding FileName}">
                                 <Image Width="28" Height="28"
-                                       Source="{Binding fileName,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
+                                       Source="{Binding FileExten,Converter={x:Static converter:XConverter.FilenameToTypeIconConverter}}" />
                                 <Label MinWidth="200" Content="{Binding FileName}" HorizontalContentAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>

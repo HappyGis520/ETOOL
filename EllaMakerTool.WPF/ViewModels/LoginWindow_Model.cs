@@ -1,14 +1,22 @@
-﻿using EllaMakerTool.Models;
-using EllaMakerTool.WPF.Helper;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： LoginWindow_Model.cs
+ * * 功   能：  
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-11-13 14:50:14
+ * * 修改记录： 
+ * * 日期时间： 2018-11-13 14:50:14  修改人：王建军  创建
+ * *******************************************************************/
+using EllaMakerTool.Core;
+using EllaMakerTool.Message;
+using EllaMakerTool.Models;
 using MVVMSidekick.Reactive;
 using MVVMSidekick.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using EllaMakerTool.Core;
-using EllaMakerTool.Message;
 
 namespace EllaMakerTool.WPF.ViewModels
 {

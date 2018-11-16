@@ -68,29 +68,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DESEncryptHelper.cs" />
-    <Compile Include="FTP\Common\FileTransfer.cs" />
-    <Compile Include="FTP\Common\FTPHelper.cs" />
-    <Compile Include="FTP\Entity\FTPItem.cs" />
-    <Compile Include="FTP\Entity\FTPRunState.cs" />
     <Compile Include="FTP\FTPClient.cs" />
-    <Compile Include="FTP\FTPClient.Execute.cs" />
-    <Compile Include="HTMLUtility.cs" />
-    <Compile Include="ImageUtil.cs" />
-    <Compile Include="Extended.cs" />
+    <Compile Include="FTP\Entity\FTPTransListItem.cs" />
+    <Compile Include="FTP\Entity\FTPRunState.cs" />
+    <Compile Include="FTP\FTPClientWrapper.cs" />
+    <Compile Include="FTP\FTPClientWrapper.Execute.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="INIOperationHelper.cs" />
-    <Compile Include="MapCommon.cs" />
     <Compile Include="SharpZip.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="MapperUtil.cs" />
-    <Compile Include="Socket\Model\C2S\H001ReqHeartBeats.cs" />
-    <Compile Include="Socket\Model\S2C\A003ReqAddNewEmp.cs" />
-    <Compile Include="Socket\SocketHelper.cs" />
-    <Compile Include="Socket\Model\SocketRequestBase.cs" />
-    <Compile Include="Socket\Model\SocketResponseBase.cs" />
-    <Compile Include="SqlQuery.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="Number62.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiUtil.cs" />
   </ItemGroup>

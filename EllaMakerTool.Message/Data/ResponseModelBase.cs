@@ -119,6 +119,14 @@ namespace EllaMakerTool.Message
 			this.data = data;
 		}
 
+	    public ResponseModelBase(T data)
+	    {
+	        this.code = "0x0000000";
+	        this.status = "1";
+	        this.message = "";
+	        this.remark = "";
+	        this.data = data;
+	    }
 
         public bool Successful
         {

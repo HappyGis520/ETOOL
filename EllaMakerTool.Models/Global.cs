@@ -19,6 +19,21 @@ namespace EllaMakerTool.Models
         public static AuthToken authToken = new AuthToken();
         public static List<string> DepartId;
         public static List<OpenFolderOptDataModel> RecordList = new List<OpenFolderOptDataModel>();
+        /// <summary>
+        /// FTP地址
+        /// </summary>
+        public static string SourceServerAdress =
+    DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceServerAdress"));
+        /// <summary>
+        /// 账户名称
+        /// </summary>
+        public static string SourceUserName =
+            DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourceUserName"));
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public static string SourcePwd =
+            DESEncryptHelper.Decrypt(ConfigurationManager.AppSettings.Get("SourcePwd"));
 
         #region ERROR Code
 

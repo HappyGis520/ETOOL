@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -10,16 +11,10 @@ namespace EllaMakerTool.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int v = (int)value;
-            if (v == 1)
-                if (Global.ArrowDeleteFolder || Global.ArrowDeleteFile) return Visibility.Visible;
-            switch (v)
-            {
-                case 0:
-                    return Visibility.Collapsed;
-                default:
-                    return Visibility.Visible;
-            }
+            var v = (Stack<FTPListItem>)value;
+            if (v.Count>0)
+                return Visibility.Visible;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

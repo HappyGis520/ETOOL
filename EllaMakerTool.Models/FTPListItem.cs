@@ -42,6 +42,22 @@ namespace EllaMakerTool.Models
             /// </summary>
             private bool isFile;
             /// <summary>
+            /// 文件扩展名
+            /// </summary>
+            public string fileExten;
+            /// <summary>
+            /// 创建时间
+            /// </summary>
+            private string createTime;
+            /// <summary>
+            /// 创建者名称
+            /// </summary>
+            private string creatorName;
+            /// <summary>
+            /// 资源大小
+            /// </summary>
+            private long size;
+            /// <summary>
             /// 是否选中
             /// </summary>
             public bool IsChecked
@@ -49,7 +65,6 @@ namespace EllaMakerTool.Models
                 get { return isChecked; }
                 set { isChecked = value; }
             }
-
             public  bool IsFile
             {
                 get
@@ -57,8 +72,6 @@ namespace EllaMakerTool.Models
                     return isFile;
                 }
             }
-
-           
             public  string ParentID
             {
                 get
@@ -66,7 +79,6 @@ namespace EllaMakerTool.Models
                     return parentID;
                 }
             }
-
             public  string FileID
             {
                 get
@@ -75,7 +87,6 @@ namespace EllaMakerTool.Models
                     return fileID;
                 }
             }
-
             public  string FileName
             {
                 get
@@ -83,6 +94,41 @@ namespace EllaMakerTool.Models
 
                     return fileName;
                 }
+            }
+            /// <summary>
+            /// 文件扩展名
+            /// </summary>
+            public string FileExten
+            {
+                get { return fileExten; }
+                set { fileExten = value; }
+            }
+
+            /// <summary>
+            /// 创建时间
+            /// </summary>
+            private String CreateTime
+            {
+                get { return createTime; }
+                set { createTime = value; }
+            }
+
+            /// <summary>
+            /// 创建者名称
+            /// </summary>
+            private String CreatorName
+            {
+                get { return creatorName; }
+                set { creatorName = value; }
+            }
+
+            /// <summary>
+            /// 资源大小
+            /// </summary>
+            private long Size
+            {
+                get { return size; }
+                set { size = value; }
             }
 
         public FTPListItem()

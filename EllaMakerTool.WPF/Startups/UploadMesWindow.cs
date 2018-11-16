@@ -13,13 +13,7 @@ namespace MVVMSidekick.Startups
 
         public static void ConfigUploadMesWindow()
         {
-            ViewModelLocator<UploadMesWindow_Model>
-                .Instance
-                .Register(context =>
-                    new UploadMesWindow_Model())
-                .GetViewMapper()
-                .MapToDefault<UploadMesWindow>();
-
+            ViewModelLocator<UploadMesWindow_Model>.Instance.Register(context => new UploadMesWindow_Model()).GetViewMapper().MapToDefault<UploadMesWindow>();
         }
     }
 }

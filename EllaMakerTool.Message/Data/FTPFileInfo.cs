@@ -39,7 +39,25 @@ namespace EllaMakerTool.Message
             /// 是否为文件
             /// </summary>
             private bool isFile;
-            public  bool IsFile
+            /// <summary>
+            /// 文件扩展名
+            /// </summary>
+            public string fileExten;
+            /// <summary>
+            /// 创建时间
+            /// </summary>
+            private string createTime;
+            /// <summary>
+            /// 创建者名称
+            /// </summary>
+            private string creatorName;
+            /// <summary>
+            /// 资源大小
+            /// </summary>
+            private long size;
+
+
+           public  bool IsFile
             {
                 get
                 {
@@ -75,21 +93,49 @@ namespace EllaMakerTool.Message
 
                     return fileName;
                 }
-            set { fileName = value; }
+                set { fileName = value; }
         }
+
+
+            /// <summary>
+            /// 文件扩展名
+            /// </summary>
+            public string FileExten
+            {
+                get { return fileExten; }
+                set { fileExten = value; }
+            }
+
+            /// <summary>
+            /// 创建时间
+            /// </summary>
+            private String CreateTime
+            {
+                get { return createTime; }
+                set { createTime = value; }
+            }
+
+            /// <summary>
+            /// 创建者名称
+            /// </summary>
+            private String CreatorName
+            {
+                get { return creatorName; }
+                set { creatorName = value; }
+            }
+
+            /// <summary>
+            /// 资源大小
+            /// </summary>
+            private long Size
+            {
+                get { return size; }
+                set { size = value; }
+            }
 
             public FTPFileInfo()
             {
                 
-            }
-
-        public FTPFileInfo(bool isFile, string parentID, string fileID, string fileName)
-            {
-
-                this.parentID = parentID;
-                this.fileID = fileID;
-                this.fileName = fileName;
-                this.isFile = isFile;
             }
 
         }

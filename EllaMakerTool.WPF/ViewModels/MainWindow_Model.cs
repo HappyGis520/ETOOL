@@ -1,7 +1,18 @@
-﻿using EllaMakerTool.Core;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： MainWindow_Model.cs
+ * * 功   能：  
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-10-14 14:49:47
+ * * 修改记录： 
+ * * 日期时间： 2018-10-14 14:49:47  修改人：王建军  创建
+ * *******************************************************************/
+using EllaMakerTool.Core;
 using EllaMakerTool.Core.FTP;
-using EllaMakerTool.WPF.Controls.UserControls;
-using EllaMakerTool.Converter;
+using EllaMakerTool.Message;
+using EllaMakerTool.Models;
 using EllaMakerTool.WPF.Startups;
 using MVVMSidekick.Reactive;
 using MVVMSidekick.ViewModels;
@@ -14,10 +25,6 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms.VisualStyles;
-using EllaMakerTool.Message;
-using EllaMakerTool.Models;
 
 namespace EllaMakerTool.WPF.ViewModels
 {
@@ -128,7 +135,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             }
                         }
                     }).DisposeWith(this);
-
+            //数据库中同步已上传成功的文件
             MVVMSidekick.EventRouting.EventRouter.Instance.GetEventChannel<string>()
                 .Where(x => x.EventName == "AddSyncFileEventRouter").Subscribe(
                     async e =>
@@ -261,13 +268,13 @@ namespace EllaMakerTool.WPF.ViewModels
                                 if (para.IsOk)
                                 {
                                     DownSaveWinParaModel paras = (DownSaveWinParaModel) para.ResData;
-                                    FTPClient fTPClient = new FTPClient(GlobalPara.SourceServerAdress,
-                                        GlobalPara.SourceUserName, GlobalPara.SourcePwd, FTPModel.ASCII,
+                                    FTPClientWrapper fTPClient = new FTPClientWrapper(Global.SourceServerAdress,
+                                        Global.SourceUserName, Global.SourcePwd, FTPModel.ASCII,
                                         Encoding.Default);
                                     fTPClient.OnCompleted += FTPClient_OnDownloadCompleted;
                                     fTPClient.OnProgressChanged += FTPClient_OnDownloadProgressChanged;
                                     fTPClient.Download(paras.Filepath,
-                                        System.IO.Path.Combine(GlobalPara.SourceServerAdress, paras.Url));
+                                        System.IO.Path.Combine(Global.SourceServerAdress, paras.Url));
                                 }
                                 break;
                             case MesWinType.RenameWin:
@@ -333,8 +340,6 @@ namespace EllaMakerTool.WPF.ViewModels
                 .DisposeWith(this);
 
         }
-
-
         #region 绑定数据
 
         private void ClearData()
@@ -486,8 +491,66 @@ namespace EllaMakerTool.WPF.ViewModels
         static Func<BindableBase, ValueContainer<string>> _NowFolderNameLocator = RegisterContainerLocator<string>("NowFolderName", model => model.Initialize("NowFolderName", ref model._NowFolderName, ref _NowFolderNameLocator, _NowFolderNameDefaultValueFactory));
         static Func<string> _NowFolderNameDefaultValueFactory = () => "";
         #endregion
+
+
+        public BookListItem dgSelectBookItem
+        {
+            get { return _dgSelectBookItemLocator(this).Value; }
+            set
+            {
+                try
+                {
+                    _dgSelectBookItemLocator(this).SetValueAndTryNotify(value);
+                    if (value != null)
+                    {
+                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id));
+                        //ent.isChecked = !ent.isChecked;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        #region Property BookListItem dgSelectBookItem Setup        
+        protected Property<BookListItem> _dgSelectBookItem = new Property<BookListItem> { LocatorFunc = _dgSelectBookItemLocator };
+        static Func<BindableBase, ValueContainer<BookListItem>> _dgSelectBookItemLocator = RegisterContainerLocator<BookListItem>("dgSelectBookItem", model => model.Initialize("dgSelectBookItem", ref model._dgSelectBookItem, ref _dgSelectBookItemLocator, _dgSelectBookItemDefaultValueFactory));
+        static Func<BookListItem> _dgSelectBookItemDefaultValueFactory = () => default(BookListItem);
         #endregion
 
+        public EBookListItem dgSelectEBookItem
+        {
+            get { return _dgSelectEBookItemLocator(this).Value; }
+            set
+            {
+                try
+                {
+                    _dgSelectEBookItemLocator(this).SetValueAndTryNotify(value);
+                    if (value != null)
+                    {
+                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id));
+                        //ent.isChecked = !ent.isChecked;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex + "");
+                }
+
+            }
+        }
+        #region Property EBookListItem dgSelectEBookItem Setup        
+        protected Property<EBookListItem> _dgSelectEBookItem = new Property<EBookListItem> { LocatorFunc = _dgSelectEBookItemLocator };
+        static Func<BindableBase, ValueContainer<EBookListItem>> _dgSelectEBookItemLocator = RegisterContainerLocator<EBookListItem>("dgSelectEBookItem", model => model.Initialize("dgSelectEBookItem", ref model._dgSelectEBookItem, ref _dgSelectEBookItemLocator, _dgSelectEBookItemDefaultValueFactory));
+        static Func<EBookListItem> _dgSelectEBookItemDefaultValueFactory = () => default(EBookListItem);
+        #endregion
+        #endregion
 
         #region  命令
 
@@ -742,6 +805,153 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
+        /// <summary>
+        /// FTP上传命令
+        /// </summary>
+        public CommandModel<ReactiveCommand, String> CommandUploadFileShow
+        {
+            get { return _CommandUploadFileShowLocator(this).Value; }
+            set { _CommandUploadFileShowLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandUploadFileShow Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandUploadFileShow = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandUploadFileShowLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandUploadFileShowLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandUploadFileShow", model => model.Initialize("CommandUploadFileShow", ref model._CommandUploadFileShow, ref _CommandUploadFileShowLocator, _CommandUploadFileShowDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandUploadFileShowDefaultValueFactory =
+            model =>
+            {
+                var state = "CommandUploadFileShow";           // Command state  
+                var commandId = "CommandUploadFileShow";
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                        vm,
+                        async e =>
+                        {
+                            vm.IsUIBusy = true;
+                            await vm.StageManager.DefaultStage.Show(new UploadMesWindow_Model());
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandBrowserLeftDoubleClick
+        {
+            get { return _CommandBrowserLeftDoubleClickLocator(this).Value; }
+            set { _CommandBrowserLeftDoubleClickLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandBrowserLeftDoubleClick Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandBrowserLeftDoubleClick = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandBrowserLeftDoubleClickLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandBrowserLeftDoubleClickLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandBrowserLeftDoubleClick", model => model.Initialize("CommandBrowserLeftDoubleClick", ref model._CommandBrowserLeftDoubleClick, ref _CommandBrowserLeftDoubleClickLocator, _CommandBrowserLeftDoubleClickDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandBrowserLeftDoubleClickDefaultValueFactory =
+            model =>
+            {
+                var state = "CommandBrowserLeftDoubleClick";           // Command state  
+                var commandId = "CommandBrowserLeftDoubleClick";
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                        vm,
+                        async e =>
+                        {
+                            vm.IsUIBusy = true;
+                            FTPListItem para = (FTPListItem)vm.DgSelectItem;
+                            if (para != null && !para.IsFile)
+                            {
+                                vm.FillFilesFromFTP(para, true);
+                                //vm.GetUploadPath(para.FileID);
+                            }
+                            vm.IsUIBusy = false;
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandGoBack
+        {
+            get { return _CommandGoBackLocator(this).Value; }
+            set { _CommandGoBackLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandGoBack Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandGoBack = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGoBackLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGoBackLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandGoBack", model => model.Initialize("CommandGoBack", ref model._CommandGoBack, ref _CommandGoBackLocator, _CommandGoBackDefaultValueFactory));
+
+        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGoBackDefaultValueFactory =
+            model =>
+            {
+                var state = "CommandGoBack";           // Command state  
+                var commandId = "CommandGoBack";
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUITask(
+                        vm,
+                        async e =>
+                        {
+                            vm.IsUIBusy = true;
+                            vm.isLockTab = true;
+                            if (vm.indexnow == 0)
+                            {
+                                vm.isLockTab = false;
+                                vm.IsUIBusy = false;
+                                return;
+                            }
+                            var newidex = vm.indexnow - 1;
+                            var res = vm.GetOpenModel(newidex);
+                            if (res == null)
+                            {
+                                vm.isLockTab = false;
+                                return;
+                            }
+                            vm.indexnow--;
+                            var CurDir = vm.FTPDIRList.Pop();
+                            vm.FillFilesFromFTP(CurDir, vm.IsBookROOTResource);
+
+                            vm.TabCotrolSelectIndex = res.rootType;
+                            vm.isLockTab = false;
+                            vm.IsUIBusy = false;
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+        #endregion
         #endregion
 
         #region 事件处理
@@ -807,7 +1017,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
         #endregion
 
-
+        #region  私有方法
         /// <summary>
         ///从FTP站点获取指定图书或动画书ID下的文件或文件夹
         /// </summary>
@@ -821,7 +1031,7 @@ namespace EllaMakerTool.WPF.ViewModels
             try
             {
                 ConvertToPath(FTPDIRList, 6);
-                if (FTPDIRList.Count>0)
+                if (FTPDIRList.Count > 0)
                     FTPDIRList.Clear();
                 var res = GlobalPara.webApis.FTPRoot(Global.authToken.Token, BookID, IsBook);
 
@@ -837,7 +1047,7 @@ namespace EllaMakerTool.WPF.ViewModels
                             {
                                 FileBroswerData.Add(MapperUtil.Mapper.Map<FTPListItem>(item));
                             }
-                            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this,true, Global.LoadFTPExplorerMSG);
+                            MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(this, true, Global.LoadFTPExplorerMSG);
                         }
                         catch (Exception ex)
                         {
@@ -867,7 +1077,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-         
+
 
         }
         /// <summary>
@@ -876,7 +1086,7 @@ namespace EllaMakerTool.WPF.ViewModels
         ///<param name="CatalogId">文档ID</param>
         /// <param name="rootType">目录类型</param>
         /// <param name="isInlist">是否插入队列中（上一步下一步操作时，不需要插入）</param>
-        private void FillFilesFromFTP( FTPListItem Item,bool IsBook)
+        private void FillFilesFromFTP(FTPListItem Item, bool IsBook)
         {
 
             IsAllCheck = false;
@@ -890,7 +1100,7 @@ namespace EllaMakerTool.WPF.ViewModels
                 var res = GlobalPara.webApis.FTPList(Global.authToken.Token, EnumFileInfoType.ALL, "", Item.FileID);
                 if (res.Successful)
                 {
- 
+
                     if (res.Data != null && res.Data.Count > 0)
                     {
                         try
@@ -927,7 +1137,7 @@ namespace EllaMakerTool.WPF.ViewModels
             {
                 MessageBox.Show(ex.Message);
             }
-             
+
         }
         /// <summary>
         /// 获取上传路径
@@ -935,11 +1145,14 @@ namespace EllaMakerTool.WPF.ViewModels
         /// <param name="DirectID"></param>
         public void GetUploadPath(string DirectID)
         {
-            
+
             var res = GlobalPara.webApis.GetUpaloadPath(Global.authToken.Token, DirectID);
             if (res.Successful)
             {
-                GlobalPara.UploadPathNow = $"{res.Data.ip}:{res.Data.port}{res.Data.path}";
+
+                //GlobalPara.UploadPathNow = $"{res.Data.ip}:{res.Data.port}{res.Data.path}";
+                GlobalPara.UploadPathNow =
+                    $"/RS201811131616059221/RS201811131616051756/";
             }
             else
             {
@@ -954,6 +1167,57 @@ namespace EllaMakerTool.WPF.ViewModels
                 }
             }
         }
+
+
+        /// <summary>
+        /// 将路径转化为浏览路径
+        /// </summary>
+        /// <param name="pathInfo">路径信息</param>
+        /// <param name="count">需要省略的阀值</param>
+        private void ConvertToPath(Stack<FTPListItem> pathInfo, int count)
+        {
+            string spliteChar = " > ";
+            string LastSpliteChar = " > ...";
+            StringBuilder sb = new StringBuilder(BookRootName + LastSpliteChar);
+            //var res= pathInfo.OrderBy(p => p.Level).ToList();
+            List<FTPListItem> tempt = new List<FTPListItem>();
+            foreach (var item in pathInfo)
+            {
+                var Name = item.FileName.Length > 6 ? item.FileName.Substring(0, 6) + "..." : item.FileName;
+                FTPListItem newitem = new FTPListItem(item.IsFile, item.ParentID, item.FileID, Name);
+                tempt.Add(newitem);
+            }
+            //var temp = tempt.OrderBy(p => p.Level);
+            int count1 = tempt.Count;
+            if (count1 > count)
+            {
+                var temp1 = tempt.Take(1);
+                var temp2 = tempt.Skip(tempt.Count() - (count - 1));
+                sb.Append(temp1.ToList()[0].FileName + LastSpliteChar);
+                sb.Append(string.Join(spliteChar, temp2.Select(p => p.FileName).ToArray()));
+                BroswerPathStr = sb.ToString();
+                return;
+            }
+
+            sb.Append(string.Join(spliteChar, tempt.Select(p => p.FileName).ToArray()));
+            BroswerPathStr = sb.ToString();
+            if (pathInfo.Count > 0)
+                NowFolderName = pathInfo.Last().FileName;
+        }
+
+        /// <summary>
+        /// 获取存储情况
+        /// </summary>
+        private void GetCompanySotreStatus()
+        {
+            var res = GlobalPara.webApis.getCompanyStoreStatus();
+            if (res.Successful)
+            {
+                StoreUseStatus = res.Data;
+            }
+        }
+        #endregion
+
 
         public CommandModel<ReactiveCommand, String> CommandSyncFiles
         {
@@ -987,10 +1251,10 @@ namespace EllaMakerTool.WPF.ViewModels
                                 
                                 vm.lastSize = Convert.ToInt32(fileInfo.Length / 1024.00);
                                 if (vm.lastSize == 0) vm.lastSize = 1;
-                                FTPClient fTPClient = new FTPClient(GlobalPara.SourceServerAdress,
-                                GlobalPara.SourceUserName, GlobalPara.SourcePwd, FTPModel.ASCII, Encoding.Default);
+                                FTPClientWrapper fTPClient = new FTPClientWrapper(Global.SourceServerAdress,
+                                Global.SourceUserName, Global.SourcePwd, FTPModel.ASCII, Encoding.Default);
                                 fTPClient.OnCompleted += FTPClient_OnCompleted;
-                                fTPClient.Upload(filename, GlobalPara.SourceServerAdress, GlobalPara.UploadPathNow);
+                                fTPClient.Upload(filename, Global.SourceServerAdress, GlobalPara.UploadPathNow);
                                 
                             }
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -1019,102 +1283,6 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
         public bool isUiLoack = false;
-
-        public CommandModel<ReactiveCommand, String> CommandUploadFileShow
-        {
-            get { return _CommandUploadFileShowLocator(this).Value; }
-            set { _CommandUploadFileShowLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandUploadFileShow Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandUploadFileShow = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandUploadFileShowLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandUploadFileShowLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandUploadFileShow", model => model.Initialize("CommandUploadFileShow", ref model._CommandUploadFileShow, ref _CommandUploadFileShowLocator, _CommandUploadFileShowDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandUploadFileShowDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandUploadFileShow";           // Command state  
-                var commandId = "CommandUploadFileShow";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            if (!Global.ArrowEditFile&&GlobalPara.rootTypeNow==1) return;
-                            if (GlobalPara.rootTypeNow == 2)
-                            {
-                                if (GlobalPara.CatalogNow.pathInfo.Count < 2 ||
-                                    (GlobalPara.CatalogNow.SynergyRange.departs.Any(p =>
-                                         Global.DepartId.Contains(p.DepartmentId)) ||
-                                     GlobalPara.CatalogNow.SynergyRange.users.Any(p =>
-                                         p.ProfileId == Global.authToken.ID))||GlobalPara.CatalogNow.Creator.ProfileId == Global.authToken.ID)
-                                {
-
-                                }
-                                else
-                                {
-                                    return;
-                                }
-                            }
-                            vm.IsUIBusy = true;
-                            await vm.StageManager.DefaultStage.Show(new UploadMesWindow_Model());
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
-
-
-
-
-        /// <summary>
-        /// 将路径转化为浏览路径
-        /// </summary>
-        /// <param name="pathInfo">路径信息</param>
-        /// <param name="count">需要省略的阀值</param>
-        private void ConvertToPath(Stack<FTPListItem> pathInfo,int count)
-        {
-            string spliteChar = " > ";
-            string LastSpliteChar = " > ...";
-            StringBuilder sb = new StringBuilder(BookRootName + LastSpliteChar);
-            //var res= pathInfo.OrderBy(p => p.Level).ToList();
-            List<FTPListItem> tempt = new List<FTPListItem>();
-            foreach (var item in pathInfo)
-            {
-                var Name = item.FileName.Length > 6 ? item.FileName.Substring(0, 6) + "..." : item.FileName;
-                FTPListItem newitem = new FTPListItem(item.IsFile, item.ParentID, item.FileID, Name);
-                tempt.Add(newitem);
-            }
-            //var temp = tempt.OrderBy(p => p.Level);
-            int count1 = tempt.Count;
-            if (count1 > count)
-            {
-                var temp1 = tempt.Take(1);
-                var temp2 = tempt.Skip(tempt.Count() - (count-1));
-                sb.Append(temp1.ToList()[0].FileName + LastSpliteChar);
-                sb.Append(string.Join(spliteChar, temp2.Select(p => p.FileName).ToArray()));
-                BroswerPathStr = sb.ToString();
-                return;
-            }
-
-            sb.Append(string.Join(spliteChar, tempt.Select(p => p.FileName).ToArray()));
-            BroswerPathStr = sb.ToString();
-            if(pathInfo.Count>0)
-                NowFolderName = pathInfo.Last().FileName;
-        }
-
         public void RefreshDownRec()
         {
             var res = INIOperationHelper.INIGetAllItems(GlobalPara.IniPath, Global.authToken.ID + "Downlist");
@@ -1204,19 +1372,6 @@ namespace EllaMakerTool.WPF.ViewModels
             }
         }
 
-        /// <summary>
-        /// 获取存储情况
-        /// </summary>
-        private void GetCompanySotreStatus()
-        {
-            var res = GlobalPara.webApis.getCompanyStoreStatus();
-            if (res.Successful)
-            {
-                StoreUseStatus = res.Data;
-            }
-        }
-
-
         private Api.TheResult<string> CreateNewFolder(string name)
         {
             var res = GlobalPara.webApis.CreateDCatalog(GlobalPara.rootTypeNow,
@@ -1227,15 +1382,10 @@ namespace EllaMakerTool.WPF.ViewModels
                 });
             return res;
         }
-
-
-
-
         private void SetMainWinCkall()
         {
             MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, "MainWinCkAllEventRouter");
         }
-
         private void MainWinGetFocus()
         {
             MVVMSidekick.EventRouting.EventRouter.Instance.RaiseEvent(null, true, "MainGetFoucusEventRouter");
@@ -1357,6 +1507,8 @@ namespace EllaMakerTool.WPF.ViewModels
                 item.type, model);
         }
 
+
+
         private void FTPClient_OnDownloadProgressChanged(string sessionID, double progress)
         {
             ProgressBarValue = progress;
@@ -1389,63 +1541,7 @@ namespace EllaMakerTool.WPF.ViewModels
 
         }
 
-        public BookListItem dgSelectBookItem
-        {
-            get { return _dgSelectBookItemLocator(this).Value; }
-            set
-            {
-                try
-                {
-                    _dgSelectBookItemLocator(this).SetValueAndTryNotify(value);
-                    if (value != null)
-                    {
-                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id)  );
-                        //ent.isChecked = !ent.isChecked;
-                    }
 
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex + "");
-                }
-
-            }
-        }
-        #region Property BookListItem dgSelectBookItem Setup        
-        protected Property<BookListItem> _dgSelectBookItem = new Property<BookListItem> { LocatorFunc = _dgSelectBookItemLocator };
-        static Func<BindableBase, ValueContainer<BookListItem>> _dgSelectBookItemLocator = RegisterContainerLocator<BookListItem>("dgSelectBookItem", model => model.Initialize("dgSelectBookItem", ref model._dgSelectBookItem, ref _dgSelectBookItemLocator, _dgSelectBookItemDefaultValueFactory));
-        static Func<BookListItem> _dgSelectBookItemDefaultValueFactory = () => default(BookListItem);
-        #endregion
-
-        public EBookListItem dgSelectEBookItem
-        {
-            get { return _dgSelectEBookItemLocator(this).Value; }
-            set
-            {
-                try
-                {
-                    _dgSelectEBookItemLocator(this).SetValueAndTryNotify(value);
-                    if (value != null)
-                    {
-                        var ent = EBookListData.FirstOrDefault(p => p.id.Equals(value.id));
-                        //ent.isChecked = !ent.isChecked;
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex + "");
-                }
-
-            }
-        }
-        #region Property EBookListItem dgSelectEBookItem Setup        
-        protected Property<EBookListItem> _dgSelectEBookItem = new Property<EBookListItem> { LocatorFunc = _dgSelectEBookItemLocator };
-        static Func<BindableBase, ValueContainer<EBookListItem>> _dgSelectEBookItemLocator = RegisterContainerLocator<EBookListItem>("dgSelectEBookItem", model => model.Initialize("dgSelectEBookItem", ref model._dgSelectEBookItem, ref _dgSelectEBookItemLocator, _dgSelectEBookItemDefaultValueFactory));
-        static Func<EBookListItem> _dgSelectEBookItemDefaultValueFactory = () => default(EBookListItem);
-        #endregion
 
 
 
@@ -1478,78 +1574,19 @@ namespace EllaMakerTool.WPF.ViewModels
 
 
 
-        public CommandModel<ReactiveCommand, String> CommandSwitchTransVis
-        {
-            get { return _CommandSwitchTransVisLocator(this).Value; }
-            set { _CommandSwitchTransVisLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandSwitchTransVis Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandSwitchTransVis = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandSwitchTransVisLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandSwitchTransVisLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandSwitchTransVis", model => model.Initialize("CommandSwitchTransVis", ref model._CommandSwitchTransVis, ref _CommandSwitchTransVisLocator, _CommandSwitchTransVisDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandSwitchTransVisDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandSwitchTransVis";           // Command state  
-                var commandId = "CommandSwitchTransVis";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-           
-                            switch(vm.TransVisibility)
-                            {
-                                case Visibility.Collapsed:
-                                    vm.TransVisibility = Visibility.Visible;
-                                    vm.RefreshDownRec();
-                                    break;
-                                case Visibility.Visible:
-                                    vm.TransVisibility = Visibility.Collapsed;
-                                    break;
-                            }
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
 
 
-        public List<string> CompanyList
-        {
-            get { return _CompanyListLocator(this).Value; }
-            set { _CompanyListLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property List<string> CompanyList Setup        
-        protected Property<List<string>> _CompanyList = new Property<List<string>> { LocatorFunc = _CompanyListLocator };
-        static Func<BindableBase, ValueContainer<List<string>>> _CompanyListLocator = RegisterContainerLocator<List<string>>("CompanyList", model => model.Initialize("CompanyList", ref model._CompanyList, ref _CompanyListLocator, _CompanyListDefaultValueFactory));
-        static Func<List<string>> _CompanyListDefaultValueFactory = () => new List<string>();
-        #endregion
 
-
-        public CompanyStoreStatusApiModel StoreUseStatus
+        public UserStoreStatusApiModel StoreUseStatus
         {
             get { return _StoreUseStatusLocator(this).Value; }
             set { _StoreUseStatusLocator(this).SetValueAndTryNotify(value); }
         }
         #region Property CompanyStoreStatusApiModel StoreUseStatus Setup        
-        protected Property<CompanyStoreStatusApiModel> _StoreUseStatus = new Property<CompanyStoreStatusApiModel> { LocatorFunc = _StoreUseStatusLocator };
-        static Func<BindableBase, ValueContainer<CompanyStoreStatusApiModel>> _StoreUseStatusLocator = RegisterContainerLocator<CompanyStoreStatusApiModel>("StoreUseStatus", model => model.Initialize("StoreUseStatus", ref model._StoreUseStatus, ref _StoreUseStatusLocator, _StoreUseStatusDefaultValueFactory));
-        static Func<CompanyStoreStatusApiModel> _StoreUseStatusDefaultValueFactory = () => new CompanyStoreStatusApiModel(){DocumentsSize=500,UsedDocumentsSize=0,OtherSize=500,UsedOtherSize=0};
+        protected Property<UserStoreStatusApiModel> _StoreUseStatus = new Property<UserStoreStatusApiModel> { LocatorFunc = _StoreUseStatusLocator };
+        static Func<BindableBase, ValueContainer<UserStoreStatusApiModel>> _StoreUseStatusLocator = RegisterContainerLocator<UserStoreStatusApiModel>("StoreUseStatus", model => model.Initialize("StoreUseStatus", ref model._StoreUseStatus, ref _StoreUseStatusLocator, _StoreUseStatusDefaultValueFactory));
+        static Func<UserStoreStatusApiModel> _StoreUseStatusDefaultValueFactory = () => new UserStoreStatusApiModel(){DocumentsSize=500,UsedDocumentsSize=0,OtherSize=500,UsedOtherSize=0};
         #endregion
 
 
@@ -1779,64 +1816,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandGoBack
-        {
-            get { return _CommandGoBackLocator(this).Value; }
-            set { _CommandGoBackLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandGoBack Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandGoBack = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGoBackLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGoBackLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandGoBack", model => model.Initialize("CommandGoBack", ref model._CommandGoBack, ref _CommandGoBackLocator, _CommandGoBackDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGoBackDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandGoBack";           // Command state  
-                var commandId = "CommandGoBack";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            vm.IsUIBusy = true;
-                            vm.isLockTab = true;
-                            if (vm.indexnow == 0)
-                            {
-                                vm.isLockTab = false;
-                                vm.IsUIBusy = false;
-                                return; 
-                            }
-                            var newidex = vm.indexnow - 1;
-                            var res = vm.GetOpenModel(newidex);
-                            if (res == null)
-                            {
-                                vm.isLockTab = false;
-                                return;
-                            }
-                            vm.indexnow--;
-                            var CurDir =  vm.FTPDIRList.Pop();
-                            vm.FillFilesFromFTP(CurDir,vm.IsBookROOTResource);
-                            
-                            vm.TabCotrolSelectIndex = res.rootType;
-                            vm.isLockTab = false;
-                            vm.IsUIBusy = false;
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-        #endregion
 
 
         public int indexnow
@@ -2089,7 +2069,8 @@ namespace EllaMakerTool.WPF.ViewModels
         /// </summary>
         private void RefreshFilesList()
         {
-            FillFilesFromFTP(FTPDIRList.Last(),IsBookROOTResource);
+            if(FTPDIRList.Count>0)
+                FillFilesFromFTP(FTPDIRList.Last(),IsBookROOTResource);
         }
 
 
@@ -2443,51 +2424,7 @@ namespace EllaMakerTool.WPF.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandBrowserLeftDoubleClick
-        {
-            get { return _CommandBrowserLeftDoubleClickLocator(this).Value; }
-            set { _CommandBrowserLeftDoubleClickLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandBrowserLeftDoubleClick Setup        
 
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandBrowserLeftDoubleClick = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandBrowserLeftDoubleClickLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandBrowserLeftDoubleClickLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>("CommandBrowserLeftDoubleClick", model => model.Initialize("CommandBrowserLeftDoubleClick", ref model._CommandBrowserLeftDoubleClick, ref _CommandBrowserLeftDoubleClickLocator, _CommandBrowserLeftDoubleClickDefaultValueFactory));
-
-        private static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandBrowserLeftDoubleClickDefaultValueFactory =
-            model =>
-            {
-                var state = "CommandBrowserLeftDoubleClick";           // Command state  
-                var commandId = "CommandBrowserLeftDoubleClick";
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUITask(
-                        vm,
-                        async e =>
-                        {
-                            vm.IsUIBusy = true;
-                            FTPListItem para = (FTPListItem)vm.DgSelectItem;
-                            if (para != null&&!para.IsFile)
-                            {
-                                vm.FillFilesFromFTP( para,true);
-                                //vm.GetUploadPath(para.FileID);
-                            }
-                            vm.IsUIBusy = false;
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(state);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
 
 

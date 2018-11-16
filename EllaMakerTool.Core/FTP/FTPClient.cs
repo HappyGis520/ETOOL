@@ -1,432 +1,749 @@
-﻿using EllaMakerTool.Core.FTP.Common;
-using EllaMakerTool.Core.FTP.Entity;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： FileTransfer.cs
+ * * 功   能：  
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-11-16 14:06:21
+ * * 修改记录： 
+ * * 日期时间： 2018-11-16 14:06:21  修改人：王建军  创建
+ * *******************************************************************/
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace EllaMakerTool.Core.FTP
 {
     /// <summary>
-    /// FTP客户端
+    /// FTP 文件传输的摘要说明。
     /// </summary>
-    public partial class FTPClient
+    public class FTPClient
     {
+        #region  连接FTP文件传输基本参数
+        private string strRemoteHost;
+        private int strRemotePort;
+        private string strRemotePath;
+        private string strRemoteUser;
+        private string strRemotePass;
+        private Boolean bConnected;
         /// <summary>
-        /// 完成事件
+        /// FTP服务器IP地址
         /// </summary>
-        /// <param name="sessionID">ID</param>
-        public delegate void CompleteHandler(string sessionID,string Url);
-        /// <summary>
-        /// 完成事件
-        /// </summary>
-        /// <param name="sessionID">ID</param>
-        public event CompleteHandler OnCompleted;
-
-        /// <summary>
-        /// 进度通知
-        /// </summary>
-        /// <param name="sessionID">ID</param>
-        /// <param name="progress">进度</param>
-        public delegate void ProgressHandler(string sessionID, double progress);
-        /// <summary>
-        /// 进度通知
-        /// </summary>
-        /// <param name="sessionID">ID</param>
-        /// <param name="progress">进度</param>
-        public event ProgressHandler OnProgressChanged;
-
-        /// <summary>
-        /// 失败事件
-        /// </summary>
-        /// <param name="sessionID">ID</param>
-        /// <param name="errorID">失败信息</param>
-        public delegate void FailedHandler(string sessionID, int errorID);
-        /// <summary>
-        /// 失败事件
-        /// </summary>
-        /// <param name="sessionID">ID</param>
-        /// <param name="errorID">失败信息</param>
-        public event FailedHandler OnFailed;
-
-        /// <summary>
-        /// 并发线程数目
-        /// </summary>
-        public static int ThreadsCount = 2;
-
-        /// <summary>
-        /// Ftp服务器IP
-        /// </summary>
-        public string IP { get; set; }
-        /// <summary>
-        /// Ftp服务器端口
-        /// </summary>
-        public int Port { get; set; }
-        /// <summary>
-        /// ftp用户名
-        /// </summary>
-        public string FTPUser { get; set; }
-        /// <summary>
-        /// FTP密码
-        /// </summary>
-        public string FTPPassword { get; set; }
-
-        private FTPModel _ftpModel = FTPModel.Binary;
-
-        /// <summary>
-        /// FTP模式
-        /// </summary>
-        public FTPModel FTPModel
+        public string RemoteHost
         {
             get
             {
-                return _ftpModel;
+                return strRemoteHost;
             }
             set
             {
-                _ftpModel = value;
+                strRemoteHost = value;
             }
         }
-
         /// <summary>
-        /// FTP编码
+        /// FTP服务器端口
         /// </summary>
-        public Encoding FTPEncoding
+        public int RemotePort
         {
-            get;
-            set;
+            get
+            {
+                return strRemotePort;
+            }
+            set
+            {
+                strRemotePort = value;
+            }
         }
+        /// <summary>
+        /// 当前服务器目录
+        /// </summary>
+        public string RemotePath
+        {
+            get
+            {
+                return strRemotePath;
+            }
+            set
+            {
+                strRemotePath = value;
+            }
+        }
+        /// <summary>
+        /// 登录用户账号
+        /// </summary>
+        public string RemoteUser
+        {
+            get
+            {
+                return strRemoteUser;
+            }
+            set
+            {
+                strRemoteUser = value;
+            }
+        }
+        /// <summary>
+        /// 用户登录密码
+        /// </summary>
+        public string RemotePass
+        {
+            get
+            {
+                return strRemotePass;
+            }
+            set
+            {
+                strRemotePass = value;
+            }
+        }
+        /// <summary>
+        /// 是否登录
+        /// </summary>
+        public bool Connected
+        {
+            get
+            {
+                return bConnected;
+            }
+        }
+        #endregion
+
+        #region 内部变量 FTP传输基本数据信息
+        /// <summary>
+        /// 服务器返回的应答信息(包含应答码)
+        /// </summary>
+        private string strMsg;
+        /// <summary>
+        /// 服务器返回的应答信息(包含应答码)
+        /// </summary>
+        private string strReply;
+        /// <summary>
+        /// 服务器返回的应答码
+        /// </summary>
+        private int iReplyCode;
+        /// <summary>
+        /// 进行控制连接的socket
+        /// </summary>
+        private Socket socketControl;
 
         /// <summary>
-        /// 正在上传文件列表
+        /// 传输模式
         /// </summary>
-        ConcurrentDictionary<string, FTPItem> UploadFileList = new ConcurrentDictionary<string, FTPItem>();
+        public EnumTransferType TransferType { get;private set; }
+        /// <summary>
+        /// 接收和发送数据的缓冲区大小
+        /// </summary>
+        private static int BLOCK_SIZE = 512;
+        Byte[] buffer = new Byte[BLOCK_SIZE];
+        /// <summary>
+        /// 编码方式
+        /// </summary>
+        public Encoding ASCII = Encoding.Default;
+        #endregion
+        #region 构造函数
+        /// <summary>
+        /// 缺省构造函数
+        /// </summary>
+        public FTPClient()
+        {
+            strRemoteHost = "";
+            strRemotePath = "";
+            strRemoteUser = "";
+            strRemotePass = "";
+            strRemotePort = 21;
+            bConnected = false;
+        }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
-        /// <param name="model"></param>
-        /// <param name="encoding"></param>
-        public FTPClient(string serAddress, string user, string password, FTPModel model, Encoding encoding)
+        /// <param name="remoteHost">Ftp地址</param>
+        /// <param name="remotePath">目录</param>
+        /// <param name="remoteUser">用户名</param>
+        /// <param name="remotePass">密码</param>
+        /// <param name="remotePort">端口</param>
+        public FTPClient(string remoteHost, string remotePath, string remoteUser, string remotePass, int remotePort=21)
         {
-            string[] address = serAddress.Split(':');
-            IP = address[1].Substring(2);
-            Port =int.Parse(address[2].Substring(0,address[2].Length-1));
-            FTPUser = user;
-            FTPPassword = password;
-            FTPEncoding = encoding;
-            FTPModel = model;
-            //if (ExecTimer == null)
-            //{
-            //    ExecTimer = new Timer(Exec, null, 5000, 5000);//一分钟检查一次
-            //}
+            strRemoteHost = remoteHost;
+            strRemotePath = remotePath;
+            strRemoteUser = remoteUser;
+            strRemotePass = remotePass;
+            strRemotePort = remotePort;
+            Connect();
         }
+        #endregion
+
+        #region 连接和关闭连接等非业务基本操作方法
 
         /// <summary>
-        /// 连接FTP测试
+        /// 建立连接，并登录
         /// </summary>
-        /// <returns>0：成功  非0：失败</returns>
         public int Connect()
         {
             int result = -1;
-            FileTransfer tranfer = new FileTransfer(IP, "/", FTPUser, FTPPassword, Port);
-            tranfer.ASCII = FTPEncoding;
-            tranfer.SetTransferType((FileTransfer.TransferType)(int)FTPModel);
-            result = tranfer.Connect();//开始链接
-            tranfer.DisConnect();//关闭连接
-            return result;
-            //return Connect(IP, Port, FTPUser, FTPPassword, false);
-        }
-
-        /// <summary>
-        /// 上传文件，异步实现
-        /// 注意如果传输中断，下次再上传时，应该是续传
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns>SessionID，用来多个任务时区分</returns>
-        public FTPResult Upload(string filename, string serAddress, string upPath)
-        {
-            //FTPResult result = new FTPResult();
-            //if (File.Exists(filename))
-            //{
-            //    result.Result = 0;
-            //    result.SessionID = Guid.NewGuid().ToString();
-            //    result.NewFilename = string.Concat("ftp://", IP, ":", Port, "/", DateTime.Now.ToString("yyyy/MM/dd"), "/", Guid.NewGuid().ToString(), Path.GetExtension(filename));
-            //    UploadFileList.TryAdd(result.SessionID, new FTPItem()
-            //    {
-            //        SessionID = result.SessionID,
-            //        ServerFilePath = result.NewFilename,
-            //        LocFilePath = filename,
-            //        IsContinue = false
-            //    });
-            //}
-            //else
-            //{
-            //    result.Result = -100;//文件不存在 
-            //}
-            //return result;
-
-            return Upload(filename,serAddress,upPath, string.Empty);
-        }
-
-        /// <summary>
-        /// 上传文件，异步实现
-        /// 注意如果传输中断，下次再上传时，应该是续传
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="serverFileName">服务文件名</param>
-        /// <returns>SessionID，用来多个任务时区分</returns>
-        public FTPResult Upload(string filename, string serAddress,string upPath,string serverFilePath)
-        {
-            FTPResult result = new FTPResult();
-            if (File.Exists(filename))
+            socketControl = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(RemoteHost), strRemotePort);
+            // 链接
+            try
             {
-                result.Result = 0;
-                result.SessionID = Guid.NewGuid().ToString();
-                if (string.IsNullOrWhiteSpace(serverFilePath))
-                {
-                    result.NewFilename = string.Concat(serAddress, upPath, result.SessionID, Path.GetExtension(filename));
-                }
-                else
-                {
-                    result.NewFilename = serverFilePath;
-                }
-                UploadFileList.TryAdd(result.SessionID, new FTPItem()
-                {
-                    SessionID = result.SessionID,
-                    ServerFilePath = result.NewFilename,
-                    LocFilePath = filename,
-                    IsContinue = false
-                });
-                Exec();//执行上传 下载
+                socketControl.Connect(ep);
+            }
+            catch (Exception)
+            {
+                throw new IOException("Couldn't connect to remote server");
+            }
+
+            // 获取应答码
+            ReadReply();
+            result = iReplyCode;
+            if (iReplyCode != 220)
+            {
+                DisConnect();
+                //throw new IOException(strReply.Substring(4));
             }
             else
             {
-                result.Result = -100;//文件不存在 
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 续传
-        /// </summary>
-        /// <param name="fileName">本地文件名</param>
-        /// <param name="serverFileName">服务文件名</param>
-        /// <param name="sessionID">可自定义SessionID,为空自动生成SessionID</param>
-        /// <returns></returns>
-        public FTPResult ContinueUpload(string filename, string serverFileName, string sessionID = "")
-        {
-            return ContinueUploadOp(filename, serverFileName, sessionID);
-        }
-        /// <summary>
-        /// 续传
-        /// </summary>
-        /// <param name="fileName">本地文件名</param>
-        /// <param name="serverFileName">服务文件名</param>
-        /// <returns></returns>
-        FTPResult ContinueUploadOp(string filename, string serverFileName, string sessionID)
-        {
-            FTPResult result = new FTPResult();
-            if (File.Exists(filename))
-            {
-                result.Result = 0;
-                if (string.IsNullOrWhiteSpace(sessionID))
+                // 登陆
+                SendCommand("USER " + strRemoteUser);
+                if (!(iReplyCode == 331 || iReplyCode == 230))
                 {
-                    result.SessionID = Guid.NewGuid().ToString();
+                    CloseSocketConnect();//关闭连接
+                    //throw new IOException(strReply.Substring(4));
+                }
+                result = iReplyCode;
+                //if (iReplyCode != 230)
+                //{
+                SendCommand("PASS " + strRemotePass);
+                result = iReplyCode;
+                if (!(iReplyCode == 230 || iReplyCode == 202))
+                {
+                    CloseSocketConnect();//关闭连接
+                    //throw new IOException(strReply.Substring(4));
                 }
                 else
                 {
-                    result.SessionID = sessionID;
+                    result = 0;//成功登陆
+                    bConnected = true;
                 }
-                result.NewFilename = serverFileName;
-                UploadFileList.TryAdd(result.SessionID, new FTPItem()
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 关闭socket连接(用于登录以前)
+        /// </summary>
+        private void CloseSocketConnect()
+        {
+            if (socketControl != null)
+            {
+                socketControl.Close();
+                socketControl = null;
+            }
+            bConnected = false;
+        }
+
+        /// <summary>
+        /// 关闭连接
+        /// </summary>
+        public void DisConnect()
+        {
+            if (socketControl != null)
+            {
+                SendCommand("QUIT");
+            }
+            CloseSocketConnect();
+        }
+
+        /// <summary>
+        /// 读取Socket返回的所有字符串
+        /// </summary>
+        /// <returns>包含应答码的字符串行</returns>
+        private string ReadLine()
+        {
+            while (true)
+            {
+                int iBytes = socketControl.Receive(buffer, buffer.Length, 0);
+                strMsg += ASCII.GetString(buffer, 0, iBytes);
+                if (iBytes < buffer.Length)
                 {
-                    SessionID = result.SessionID,
-                    ServerFilePath = result.NewFilename,
-                    LocFilePath = filename,
-                    IsContinue = true
-                });
-                Exec();//执行上传 下载
+                    break;
+                }
+            }
+            char[] seperator = { '\n' };
+            string[] mess = strMsg.Split(seperator);
+            if (strMsg.Length > 2)
+            {
+                strMsg = mess[mess.Length - 2];
+                //seperator[0]是10,换行符是由13和0组成的,分隔后10后面虽没有字符串,
+                //但也会分配为空字符串给后面(也是最后一个)字符串数组,
+                //所以最后一个mess是没用的空字符串
+                //但为什么不直接取mess[0],因为只有最后一行字符串应答码与信息之间有空格
             }
             else
             {
-                result.Result = -100;//文件不存在 
+                strMsg = mess[0];
             }
-            return result;
+            if (!strMsg.Substring(3, 1).Equals(" "))//返回字符串正确的是以应答码(如220开头,后面接一空格,再接问候字符串)
+            {
+                return ReadLine();
+            }
+            return strMsg;
         }
 
         /// <summary>
-        /// 终止某个上传或下载任务
+        /// 发送命令并获取应答码和最后一行应答字符串
         /// </summary>
-        /// <param name="sessionID"></param>
+        /// <param name="strCommand">命令</param>
+        private void SendCommand(string strCommand)
+        {
+            //Byte[] cmdBytes = ASCII.GetBytes((strCommand + "\r\n").ToCharArray());
+            Byte[] cmdBytes = Encoding.Default.GetBytes((strCommand + "\r\n").ToCharArray()); //解决文件名称为中文时乱码问题
+            socketControl.Send(cmdBytes, cmdBytes.Length, 0);
+            ReadReply();
+        }
+
+        /// <summary>
+        /// 将一行应答字符串记录在strReply和strMsg
+        /// 应答码记录在iReplyCode
+        /// </summary>
+        private void ReadReply()
+        {
+            strMsg = "";
+            strReply = ReadLine();
+            iReplyCode = Int32.Parse(strReply.Substring(0, 3));
+        }
+
+        #endregion
+
+        #region 其它数据操作
+
+        /// <summary>
+        /// 建立进行数据连接的socket
+        /// </summary>
+        /// <returns>数据连接socket</returns>
+        private Socket CreateDataSocket()
+        {
+            SendCommand("PASV");
+            if (iReplyCode != 227)
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            int index1 = strReply.IndexOf('(');
+            int index2 = strReply.IndexOf(')');
+            string ipData = strReply.Substring(index1 + 1, index2 - index1 - 1);
+            int[] parts = new int[6];
+            int len = ipData.Length;
+            int partCount = 0;
+            string buf = "";
+            for (int i = 0; i < len && partCount <= 6; i++)
+            {
+                char ch = Char.Parse(ipData.Substring(i, 1));
+                if (Char.IsDigit(ch))
+                    buf += ch;
+                else if (ch != ',')
+                {
+                    throw new IOException("Malformed PASV strReply: " +
+                     strReply);
+                }
+                if (ch == ',' || i + 1 == len)
+                {
+                    try
+                    {
+                        parts[partCount++] = Int32.Parse(buf);
+                        buf = "";
+                    }
+                    catch (Exception)
+                    {
+                        throw new IOException("Malformed PASV strReply: " + strReply);
+                    }
+                }
+            }
+            string ipAddress = parts[0] + "." + parts[1] + "." +
+             parts[2] + "." + parts[3];
+            int port = (parts[4] << 8) + parts[5];
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ipAddress), port);
+            try
+            {
+                s.Connect(ep);
+            }
+            catch (Exception)
+            {
+                throw new IOException("Can't connect to remote server");
+            }
+            return s;
+        }
+
+        /// <summary>
+        /// 设置传输模式
+        /// </summary>
+        /// <param name="ttType">传输模式</param>
+        public void SetTransferType(EnumTransferType ttType)
+        {
+            if (ttType == EnumTransferType.Binary)
+            {
+                SendCommand("TYPE I");//binary类型传输
+            }
+            else
+            {
+                SendCommand("TYPE A");//ASCII类型传输
+            }
+            if (iReplyCode != 200)
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            else
+            {
+                TransferType = ttType;
+            }
+        }
+
+        #endregion
+
+        #region 文件操作
+        /// <summary>
+        /// 获得文件列表
+        /// </summary>
+        /// <param name="strMask">文件名的匹配字符串</param>
         /// <returns></returns>
-        public int Abort(string sessionID)
+        public string[] Dir(string strMask)
+        {
+            // 建立链接
+            if (!bConnected)
+            {
+                Connect();
+            }
+
+            //建立进行数据连接的socket
+            Socket socketData = CreateDataSocket();
+
+            //传送命令
+            SendCommand("NLST " + strMask);
+
+            //分析应答代码
+            if (!(iReplyCode == 150 || iReplyCode == 125 || iReplyCode == 226))
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+
+            //获得结果
+            strMsg = "";
+            while (true)
+            {
+                int iBytes = socketData.Receive(buffer, buffer.Length, 0);
+                strMsg += ASCII.GetString(buffer, 0, iBytes);
+                if (iBytes < buffer.Length)
+                {
+                    break;
+                }
+            }
+            string[] seperator = { "\n" };
+            string[] strsFileList = strMsg.Replace("\r", "").Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+            socketData.Close();//数据socket关闭时也会有返回码
+            if (iReplyCode != 226)
+            {
+                ReadReply();
+                if (iReplyCode != 226)
+                {
+                    throw new IOException(strReply.Substring(4));
+                }
+            }
+            return strsFileList;
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="strFileName">待删除文件名</param>
+        public int Delete(string strFileName)
         {
             int result = -1;
-            FTPItem item = null;
-            if (UploadFileList.TryRemove(sessionID, out item))//直接删除
+            if (!bConnected)
             {
-                //item.RunState = FTPRunState.Abort;
-                result = 0;
+                Connect();
             }
-            return result;
-        }
-
-        /// <summary>
-        /// 暂停某个任务
-        /// </summary>
-        /// <param name="sessionID"></param>
-        /// <returns></returns>
-        public int Pause(string sessionID)
-        {
-            int result = -1;
-            FTPItem item = null;
-            if (UploadFileList.TryGetValue(sessionID, out item))
+            SendCommand("DELE " + strFileName);
+            if (iReplyCode != 250)
             {
-                item.RunState = FTPRunState.Pause;
-                result = 0;
+                result = iReplyCode;
+                //throw new IOException(strReply.Substring(4));
             }
+            else { result = 0; }
             return result;
         }
 
         /// <summary>
-        /// 重新开始某个任务
+        /// 重命名(如果新文件名与已有文件重名,将覆盖已有文件)
         /// </summary>
-        /// <param name="sessionID"></param>
-        /// <returns></returns>
-        public int Resume(string sessionID)
+        /// <param name="strOldFileName">旧文件名</param>
+        /// <param name="strNewFileName">新文件名</param>
+        public void Rename(string strOldFileName, string strNewFileName)
         {
-            int result = -1;
-            FTPItem item = null;
-            if (UploadFileList.TryGetValue(sessionID, out item))
+            if (!bConnected)
             {
-                item.IsContinue = true;
-                item.RunState = FTPRunState.None;
-                result = 0;
-                Exec();//执行上传 下载
+                Connect();
             }
-            return result;
-        }
 
-        /// <summary>
-        /// 下载文件，异步实现 非续传
-        /// </summary>
-        /// <param name="saveFilename"></param>
-        /// <param name="saveFilename"></param>
-        /// <returns>SessionID，用来多个任务时区分</returns>
-        public FTPResult Download(string saveFilename, string remotefilename)
-        {
-            FTPResult result = new FTPResult();
 
-            result.SessionID = Guid.NewGuid().ToString();
-            result.NewFilename = remotefilename;
-            UploadFileList.TryAdd(result.SessionID, new FTPItem()
+            SendCommand("RNFR " + strOldFileName);
+            if (iReplyCode != 350)
             {
-                SessionID = result.SessionID,
-                ServerFilePath = result.NewFilename,
-                LocFilePath = saveFilename,
-                IsContinue = false,
-                IsUpload = false
-            });
-            result.Result = 0;
-            Exec();//执行上传 下载
-
-            return result;
-        }
-
-        /// <summary>
-        /// 下载文件，异步实现 续传
-        /// </summary>
-        /// <param name="saveFilename"></param>
-        /// <param name="saveFilename"></param>
-        /// <returns>SessionID，用来多个任务时区分</returns>
-        public FTPResult ContinueDownload(string saveFilename, string remotefilename)
-        {
-            FTPResult result = new FTPResult();
-
-            result.SessionID = Guid.NewGuid().ToString();
-            result.NewFilename = remotefilename;
-            UploadFileList.TryAdd(result.SessionID, new FTPItem()
+                throw new IOException(strReply.Substring(4));
+            }
+            //    如果新文件名与原有文件重名,将覆盖原有文件
+            SendCommand("RNTO " + strNewFileName);
+            if (iReplyCode != 250)
             {
-                SessionID = result.SessionID,
-                ServerFilePath = result.NewFilename,
-                LocFilePath = saveFilename,
-                IsContinue = true,
-                IsUpload = false
-            });
-            result.Result = 0;
-            Exec();//执行上传 下载
-
-            return result;
-        }
-
-        /// <summary>
-        /// 同步实现直接返回结果 0:成功 非0:失败
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public int Delete(string url)
-        {
-            //int result = -1;
-            //FileTransfer tranfer = new FileTransfer(IP, "", FTPUser, FTPPassword, Port);
-            //tranfer.ASCII = FTPEncoding;
-            //tranfer.SetTransferType((FileTransfer.TransferType)(int)FTPModel);
-            //if (tranfer.Connect() == 0)
-            //{//开始链接
-            //    result = tranfer.Delete(url);
-            //    tranfer.DisConnect();//关闭连接
-            //}
-            //return result;
-            return DeleteFtpFile(url, FTPUser, FTPPassword);
-        }
-
-
-        public void Close()
-        {
-            foreach (var item in UploadFileList.Values)
-            {
-                item.CloseState = true;
+                throw new IOException(strReply.Substring(4));
             }
         }
+        #endregion
+
+        #region 上传和下载
+        /// <summary>
+        /// 下载一批文件
+        /// </summary>
+        /// <param name="strFileNameMask">文件名的匹配字符串</param>
+        /// <param name="strFolder">本地目录(不得以\结束)</param>
+        public void Get(string strFileNameMask, string strFolder)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            string[] strFiles = Dir(strFileNameMask);
+            foreach (string strFile in strFiles)
+            {
+                if (!String.IsNullOrEmpty(strFile))//一般来说strFiles的最后一个元素可能是空字符串
+                {
+                    Get(strFile, strFolder, strFile);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 下载一个文件
+        /// </summary>
+        /// <param name="strRemoteFileName">要下载的文件名</param>
+        /// <param name="strFolder">本地目录(不得以\结束)</param>
+        /// <param name="strLocalFileName">保存在本地时的文件名</param>
+        public void Get(string strRemoteFileName, string strFolder, string strLocalFileName)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            SetTransferType(EnumTransferType.Binary);
+            if (String.IsNullOrEmpty(strLocalFileName))
+            {
+                strLocalFileName = strRemoteFileName;
+            }
+            if (!File.Exists(strFolder + strLocalFileName))
+            {
+                Stream st = File.Create(strFolder + strLocalFileName);
+                st.Close();
+            }
+            FileStream output = new
+             FileStream(strFolder + "\\" + strLocalFileName, FileMode.Create);
+            Socket socketData = CreateDataSocket();
+            SendCommand("RETR " + strRemoteFileName);
+            if (!(iReplyCode == 150 || iReplyCode == 125
+             || iReplyCode == 226 || iReplyCode == 250))
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            while (true)
+            {
+                int iBytes = socketData.Receive(buffer, buffer.Length, 0);
+                output.Write(buffer, 0, iBytes);
+                if (iBytes <= 0)
+                {
+                    break;
+                }
+            }
+            output.Close();
+            if (socketData.Connected)
+            {
+                socketData.Close();
+            }
+            if (!(iReplyCode == 226 || iReplyCode == 250))
+            {
+                ReadReply();
+                if (!(iReplyCode == 226 || iReplyCode == 250))
+                {
+                    throw new IOException(strReply.Substring(4));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 上传一批文件
+        /// </summary>
+        /// <param name="strFolder">本地目录(不得以\结束)</param>
+        /// <param name="strFileNameMask">文件名匹配字符(可以包含*和?)</param>
+        public void Put(string strFolder, string strFileNameMask)
+        {
+            string[] strFiles = Directory.GetFiles(strFolder, strFileNameMask);
+            foreach (string strFile in strFiles)
+            {
+                //strFile是完整的文件名(包含路径)
+                Put(strFile);
+            }
+        }
+
+        /// <summary>
+        /// 上传一个文件
+        /// </summary>
+        /// <param name="strFileName">本地文件名</param>
+        public void Put(string strFileName)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            Socket socketData = CreateDataSocket();
+            SendCommand("STOR " + Path.GetFileName(strFileName));
+            if (!(iReplyCode == 125 || iReplyCode == 150))
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            FileStream input = new
+             FileStream(strFileName, FileMode.Open);
+            int iBytes = 0;
+            while ((iBytes = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                socketData.Send(buffer, iBytes, 0);
+            }
+            input.Close();
+            if (socketData.Connected)
+            {
+                socketData.Close();
+            }
+            if (!(iReplyCode == 226 || iReplyCode == 250))
+            {
+                ReadReply();
+                if (!(iReplyCode == 226 || iReplyCode == 250))
+                {
+                    throw new IOException(strReply.Substring(4));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 上传一个文件
+        /// </summary>
+        /// <param name="fileStream">上传文件流</param>
+        /// <param name="strFileName">本地文件名</param>
+        public void PutStream(Stream fileStream, string strFileName)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            Socket socketData = CreateDataSocket();
+            SendCommand("STOR " + Path.GetFileName(strFileName));
+            if (!(iReplyCode == 125 || iReplyCode == 150))
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            Stream input = fileStream;
+            int iBytes = 0;
+            while ((iBytes = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                socketData.Send(buffer, iBytes, 0);
+            }
+            input.Close();
+            if (socketData.Connected)
+            {
+                socketData.Close();
+            }
+            if (!(iReplyCode == 226 || iReplyCode == 250))
+            {
+                ReadReply();
+                if (!(iReplyCode == 226 || iReplyCode == 250))
+                {
+                    throw new IOException(strReply.Substring(4));
+                }
+            }
+        }
+        #endregion
+
+        #region 目录操作
+        /// <summary>
+        /// 创建目录
+        /// </summary>
+        /// <param name="strDirName">目录名</param>
+        public void MkDir(string strDirName)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            SendCommand("MKD " + strDirName);
+            if (iReplyCode != 257)
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+        }
+
+        /// <summary>
+        /// 删除目录
+        /// </summary>
+        /// <param name="strDirName">目录名</param>
+        public void RmDir(string strDirName)
+        {
+            if (!bConnected)
+            {
+                Connect();
+            }
+            SendCommand("RMD " + strDirName);
+            if (iReplyCode != 250)
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+        }
+
+        /// <summary>
+        /// 改变目录
+        /// </summary>
+        /// <param name="strDirName">新的工作目录名</param>
+        public void ChDir(string strDirName)
+        {
+            if (strDirName.Equals(".") || String.IsNullOrEmpty(strDirName))
+            {
+                return;
+            }
+            if (!bConnected)
+            {
+                Connect();
+            }
+            SendCommand("CWD " + strDirName);
+            if (iReplyCode != 250)
+            {
+                throw new IOException(strReply.Substring(4));
+            }
+            this.strRemotePath = strDirName;
+        }
+
+        #endregion
+
     }
 
     /// <summary>
-    /// FTP结果
+    /// 传输模式:二进制类型、ASCII类型
     /// </summary>
-    public class FTPResult
+    public enum EnumTransferType
     {
         /// <summary>
-        /// 返回结果 0：成功 -100：文件不存在  其他:失败
-        /// </summary>
-        public int Result { get; set; }
-        /// <summary>
-        /// 返回新文件名
-        /// </summary>
-        public string NewFilename { get; set; }
-        /// <summary>
-        /// 当前SessionID
-        /// </summary>
-        public string SessionID { get; set; }
-    }
-
-    /// <summary>
-    /// FTP模式
-    /// </summary>
-    public enum FTPModel
-    {
-        /// <summary>
-        /// 二进制传输
+        /// Binary
         /// </summary>
         Binary = 1,
         /// <summary>
-        /// ASCII传输
+        /// ASCII
         /// </summary>
         ASCII = 2
-    }
+    };
 }

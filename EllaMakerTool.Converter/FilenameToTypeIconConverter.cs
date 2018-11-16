@@ -19,8 +19,8 @@ namespace EllaMakerTool.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var para = value.ToString();
-            string extension = para.Substring(para.LastIndexOf('.')+1);
-            if (para.LastIndexOf('.') == -1)
+            string extension = para;
+            if (string.IsNullOrEmpty(para.Trim()))
                 extension = "folder";
             DrawingImage svg_image = XConverter.SvgToXamlConverter.SvgToPic(extension);
             return svg_image;

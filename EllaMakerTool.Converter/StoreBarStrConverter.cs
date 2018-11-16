@@ -10,7 +10,7 @@ namespace EllaMakerTool.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            CompanyStoreStatusApiModel para =(CompanyStoreStatusApiModel)value;
+            UserStoreStatusApiModel para =(UserStoreStatusApiModel)value;
             StringBuilder sb = new StringBuilder();
             
             string m_strSize = "";

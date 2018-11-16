@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿/*******************************************************************
+ * * 版权所有： 郑州点读科技杭州研发中心
+ * * 文件名称： WebApis.cs
+ * * 功   能：  
+ * * 作   者： 王建军
+ * * 编程语言： C# 
+ * * 电子邮箱： 595303122@qq.com
+ * * 创建日期： 2018-10-15 14:47:22
+ * * 修改记录： 
+ * * 日期时间： 2018-10-15 14:47:22  修改人：王建军  创建
+ * *******************************************************************/
 using EllaMakerTool.Message;
 using EllaMakerTool.Message.Data;
 using EllaMakerTool.Message.Param;
 using EllaMakerTool.Message.Request;
+using System;
+using System.Collections.Generic;
 
 namespace EllaMakerTool.Api
 {
@@ -111,9 +118,16 @@ namespace EllaMakerTool.Api
         /// 获取容量使用情况
         /// </summary>
         /// <returns></returns>
-        public TheResult<CompanyStoreStatusApiModel> getCompanyStoreStatus()
+        public ResponseModelBase<UserStoreStatusApiModel> getCompanyStoreStatus()
         {
-            throw new  NotImplementedException();
+            var _data = new UserStoreStatusApiModel()
+            {
+                DocumentsSize = 100,
+                UsedDocumentsSize = 50,
+                OtherSize = 100,
+                UsedOtherSize = 30
+            };
+            return new ResponseModelBase<UserStoreStatusApiModel>(_data);
         }
         /// <summary>
         /// 获取根目录文件列表
